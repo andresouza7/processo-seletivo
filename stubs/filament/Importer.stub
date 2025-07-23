@@ -1,0 +1,41 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Models\{{ model }};
+use Filament\Actions\Imports\ImportColumn;
+use Filament\Actions\Imports\Importer;
+use Filament\Actions\Imports\Models\Import;
+
+class {{ importerClass }} extends Importer
+{
+    protected static ?string $model = {{ modelClass }}::class;
+
+    public static function getColumns(): array
+    {
+        return [
+{{ columns }}
+        ];
+    }
+
+    public function resolveRecord(): ?{{ modelClass }}
+    {
+        // return {{ modelClass }}::firstOrNew([
+        //     // Atualizar registros existentes, correspondendo-os por `$this->data['column_name']`
+        //     'email' => $this->data['email'],
+        // ]);
+
+        return new {{ modelClass }}();
+    }
+
+    public static function getCompletedNotificationBody(Import $import): string
+    {
+        $body = 'A importação de {{ modelLabel }} foi concluída e ' . number_format($import->successful_rows) . ' ' . str('linha')->plural($import->successful_rows) . ' foram importadas.';
+
+        if ($failedRowsCount = $import->getFailedRowsCount()) {
+            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('linha')->plural($failedRowsCount) . ' falharam na importação.';
+        }
+
+        return $body;
+    }
+}

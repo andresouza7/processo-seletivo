@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+[x-cloak] {
+    display: none;
+}
+
+:root {
+    --color-primary: #3b82f6; /* Tailwind blue-500 */
+    --color-primary-hover: #1d4ed8; /* Tailwind blue-700 */
+    --color-secondary: #6366f1; /* Tailwind indigo-600 */
+    --color-secondary-hover: #4f46e5; /* Tailwind indigo-900 */
+    --color-negative: #dc2626; /* Tailwind red-600 */
+    --color-negative-hover: #b91c1c; /* Tailwind red-900 */
+    --color-background: #f3f4f6; /* Tailwind gray-100 */
+    --color-border: #d1d5db; /* Tailwind gray-300 */
+    --color-text-primary: #1f2937; /* Tailwind gray-800 */
+    --color-text-link: #3b82f6; /* Tailwind blue-500 */
+    --color-text-link-hover: #1d4ed8; /* Tailwind blue-700 */
+}
