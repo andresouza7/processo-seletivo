@@ -16,7 +16,7 @@ class ProcessoSeletivo extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logExcept(['id_processo_seletivo', 'idprocesso_seletivo_tipos', 'acessos'])
+            ->logFillable()
             ->dontSubmitEmptyLogs();
     }
 

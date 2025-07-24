@@ -33,6 +33,7 @@ class ResetCandidatoEmailAction
             $senha = Str::random(8);
             $hash = bcrypt($senha);
             $user->forceFill(['password' => $hash]);
+            $user->must_change_password = true;
             $user->save();
 
             // comunica por email

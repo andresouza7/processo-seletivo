@@ -33,7 +33,11 @@
         @endphp
 
         {{-- Welcome --}}
-        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-4">
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-4 relative overflow-hidden">
+            {{-- <div class="absolute top-0 bottom-0 left-0">
+                <div class="bg-gray-400 w-1 h-full rounded-l-md"></div>
+            </div> --}}
+
             <div class="text-sm text-gray-600 dark:text-gray-300 mb-1">
                 Bem-vindo(a),
             </div>
@@ -56,6 +60,9 @@
                 <div class="absolute top-0 left-0 right-0">
                     <div class="bg-green-600 h-1 w-full rounded-t-md"></div>
                 </div>
+                {{-- <div class="absolute top-0 bottom-0 left-0">
+                    <div class="bg-green-600 w-1 h-full rounded-l-md"></div>
+                </div> --}}
 
                 <div class="px-4 py-8 sm:py-4">
                     <div class="grid grid-cols-4 sm:flex sm:flex-wrap sm:justify-start gap-4 justify-items-center">

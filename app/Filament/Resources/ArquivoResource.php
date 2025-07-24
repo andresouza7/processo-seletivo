@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ArquivoResource extends Resource
 {
     protected static ?string $model = Arquivo::class;
+    protected static ?string $modelLabel = 'Arquivos Legados';
     protected static ?string $navigationIcon = 'heroicon-o-circle-stack';
     protected static ?string $navigationGroup = 'Administrador';
     protected static ?int $navigationSort = 3;

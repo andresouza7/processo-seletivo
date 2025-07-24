@@ -135,7 +135,7 @@ class ProcessoSeletivoResource extends Resource
     {
         return $table
             ->heading('Consultar Processos Seletivos')
-            ->description('Utilize o filtro e o campo de busca para localizar registros específicos')
+            ->description('Utilize o campo de pesquisa para filtrar uma informação')
             ->defaultSort('data_publicacao_inicio', 'desc')
             ->columns([
                 //

@@ -51,7 +51,6 @@ class RecursosRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                // Tables\Actions\CreateAction::make(),
                 Action::make('solicitarRecurso')
                     ->visible(fn() => $this->getOwnerRecord()->processo_seletivo->aceita_recurso)
                     ->button()
@@ -167,7 +166,7 @@ class RecursosRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    // Tables\Actions\DeleteBulkAction::make(),
+                    // 
                 ]),
             ]);
     }

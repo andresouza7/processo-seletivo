@@ -27,6 +27,7 @@ class AnexosRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('descricao')
             ->heading('Publicações')
+            ->description('Utilize o campo de pesquisa para filtrar uma informação')
             ->defaultSort('idprocesso_seletivo_anexo', 'desc')
             ->columns([
                 Stack::make([
@@ -47,16 +48,10 @@ class AnexosRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                // 
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // 
             ]);
     }
 }

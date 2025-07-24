@@ -20,7 +20,6 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
         return LogOptions::defaults()
             ->logOnly(['descricao', 'data_publicacao'])
             ->dontSubmitEmptyLogs();
-        // Chain fluent methods for configuration options
     }
 
     protected $table = 'processo_seletivo_anexo';

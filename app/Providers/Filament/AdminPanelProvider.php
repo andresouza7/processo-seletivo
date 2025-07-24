@@ -73,7 +73,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-                ActivitylogPlugin::make()
+                ActivitylogPlugin::make()->resource(ActivityLogResource::class)
             ]);
     }
 }

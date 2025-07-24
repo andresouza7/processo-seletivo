@@ -80,13 +80,13 @@ class ActivityLogResource extends RmsramosActivityLogResource
     public static function table(Table $table): Table
     {
         return $table
-            ->searchable(false)
+            ->heading('Logs de Atividade do Sistema')
+            ->description('Visualize e audite ações de usuários no sistema. Use o filtro lateral para localizar registros conforme critérios definidos.')
             ->columns([
                 // static::getLogNameColumnCompoment(),
                 static::getEventColumnCompoment(),
                 static::getSubjectTypeColumnCompoment(),
                 static::getCauserNameColumnCompoment(),
-                static::getCandidateCauserNameColumnCompoment(),
                 // static::getPropertiesColumnCompoment(),
                 static::getCreatedAtColumnCompoment(),
             ])
@@ -98,6 +98,8 @@ class ActivityLogResource extends RmsramosActivityLogResource
             ])
             ->headerActions([
                 ExportAction::make()
+                    ->label('Exportar Logs')
+                    ->icon('heroicon-o-arrow-down-tray')
                     ->color('primary')
                     ->exporter(ActivityExporter::class)
             ]);

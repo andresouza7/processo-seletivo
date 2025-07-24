@@ -120,6 +120,7 @@ class InscricaoPessoaResource extends Resource
         return $table
             ->heading('Contas de candidatos')
             ->description('Gerência dos dados cadastrais dos dandidatos e redefinição de senha.')
+            ->defaultSort('nome')
             ->columns([
                 Tables\Columns\TextColumn::make('nome')
                     ->searchable(),
