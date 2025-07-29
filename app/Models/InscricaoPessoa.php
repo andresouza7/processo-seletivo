@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 // add must verify email directive later
-class InscricaoPessoa extends Authenticatable implements HasName, MustVerifyEmail
+class InscricaoPessoa extends Authenticatable implements HasName
 {
     use HasFactory, Notifiable, CanResetPassword;
 

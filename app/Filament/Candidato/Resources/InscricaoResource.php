@@ -45,28 +45,7 @@ class InscricaoResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make('Detalhes da Inscrição')
-                    // ->description('Consulte aqui a sua inscrição')
-                    ->columns(3)
-                    ->schema([
-                        TextEntry::make('cod_inscricao')
-                            ->label('Cód. Inscrição'),
-                        TextEntry::make('processo_seletivo.titulo')
-                            ->label('Processo Seletivo'),
-                        TextEntry::make('inscricao_vaga.descricao')
-                            ->label('Vaga'),
-                        TextEntry::make('tipo_vaga.descricao')
-                            ->label('Tipo de Vaga'),
-                        TextEntry::make('necessita_atendimento')
-                            ->label('Necessita Atendimento Especial')
-                            ->badge(),
-
-                        TextEntry::make('qual_atendimento')
-                            ->label('Qual Atendimento')
-                            ->visible(fn($record) => $record->necessita_atendimento === 'S'),
-                    ]),
-
-                Section::make('Dados do Candidato')
+                Section::make('DADOS PESSOAIS')
                     ->columns(3)
                     ->schema([
                         TextEntry::make('inscricao_pessoa.nome')
@@ -74,9 +53,45 @@ class InscricaoResource extends Resource
                         TextEntry::make('inscricao_pessoa.cpf')
                             ->label('CPF'),
                         TextEntry::make('inscricao_pessoa.ci')
-                            ->label('Doc. Identidade'),
-                        TextEntry::make('inscricao_pessoa.email')
-                            ->label('Email'),
+                            ->label('RG'),
+                    ]),
+
+                Section::make('DADOS DA INSCRIÇÃO')
+                    ->columns(3)
+                    ->schema([
+                        TextEntry::make('cod_inscricao')
+                            ->label('Inscrição'),
+                        TextEntry::make('processo_seletivo.titulo')
+                            ->label('Processo Seletivo'),
+                        TextEntry::make('inscricao_vaga.descricao')
+                            ->label('Vaga'),
+                        TextEntry::make('tipo_vaga.descricao')
+                            ->label('Tipo de Vaga'),
+
+                        // TextEntry::make('necessita_atendimento')
+                        //     ->label('Necessita Atendimento Especial')
+                        //     ->badge(),
+
+                        // TextEntry::make('qual_atendimento')
+                        //     ->label('Qual Atendimento')
+                        //     ->visible(fn($record) => $record->necessita_atendimento === 'S'),
+                    ]),
+
+                Section::make('ATENDIMENTO ESPECIAL')
+                    ->columns(3)
+                    ->schema([
+                        TextEntry::make('necessita_atendimento')
+                            ->label('')
+                            ->badge()
+                            ->colors([
+                                'success' => 'S',
+                                'gray' => 'N',
+                            ])
+                            ->formatStateUsing(fn($state) => $state === 'S' ? 'solicitado' : 'não solicitado'),
+
+                        TextEntry::make('qual_atendimento')
+                            ->label('Qual Atendimento')
+                            ->visible(fn($record) => $record->necessita_atendimento === 'S'),
                     ]),
             ]);
     }
@@ -113,7 +128,7 @@ class InscricaoResource extends Resource
                                     ->live(),
 
                                 SpatieMediaLibraryFileUpload::make('documentos_requeridos')
-                                    ->label('Anexar documentos requeridos conforme edital')
+                                    ->label('Anexar documentos')
                                     ->helperText('* Este Processo Seletivo requer o envio de documentação comprobatória no momento da inscrição. Anexe aqui todos os documentos requeridos em um único arquivo em formato PDF.')
                                     // ->hint('* Formato PDF')
                                     ->visible(function (Get $get): bool {

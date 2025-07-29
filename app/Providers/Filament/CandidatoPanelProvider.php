@@ -80,7 +80,7 @@ class CandidatoPanelProvider extends PanelProvider
             ->profile(EditProfile::class)
             ->authPasswordBroker('inscricao_pessoa')
             ->passwordReset(RequestPasswordReset::class, ResetPassword::class)
-            ->emailVerification(ConfirmEmail::class)
+            // ->emailVerification(ConfirmEmail::class)
             ->authMiddleware([
                 Authenticate::class,
             ]);
