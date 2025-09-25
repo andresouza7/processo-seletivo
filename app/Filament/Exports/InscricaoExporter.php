@@ -24,8 +24,30 @@ class InscricaoExporter extends Exporter
             ExportColumn::make('qual_atendimento'),
             ExportColumn::make('observacao'),
             ExportColumn::make('local_prova'),
-            ExportColumn::make('ano_enem'),
-            ExportColumn::make('bonificacao'),
+            ExportColumn::make('link_anexos')
+                ->label('Link Anexos')
+                ->state(function (Inscricao $record): ?string {
+                    $url = $record->getFirstMediaUrl('documentos_requeridos');
+
+                    if (! $url) {
+                        return null;
+                    }
+
+                    // This will display "Abrir Documento" as the clickable text
+                    return '=HYPERLINK("' . $url . '", "Abrir Documento")';
+                }),
+            ExportColumn::make('link_laudo_medico')
+                ->label('Link Laudo Médico')
+                ->state(function (Inscricao $record): ?string {
+                    $url = $record->getFirstMediaUrl('laudo_medico');
+
+                    if (! $url) {
+                        return null;
+                    }
+
+                    // This will display "Abrir Documento" as the clickable text
+                    return '=HYPERLINK("' . $url . '", "Abrir Documento")';
+                }),
             // Dados Pessoa
             ExportColumn::make('inscricao_pessoa.nome')->label('Nome Candidato'),
             ExportColumn::make('inscricao_pessoa.nome_social')->label('Nome Social Candidato'),
