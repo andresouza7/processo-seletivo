@@ -5,6 +5,7 @@ namespace App\Filament\Gps\Resources\InscricaoPessoaResource\Pages;
 use App\Filament\Gps\Resources\InscricaoPessoaResource;
 use Filament\Resources\Pages\ViewRecord;
 use App\Actions\ResetCandidatoEmailAction;
+use App\Actions\ResetCandidatoPasswordAction;
 use App\Models\InscricaoPessoa;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
@@ -25,15 +26,17 @@ class ViewInscricaoPessoa extends ViewRecord
                 ->form([
                     TextInput::make('email')->label('Novo Email')->email()->required()->unique('inscricao_pessoa', 'email', ignoreRecord: true)
                 ])
-                ->action(function (InscricaoPessoa $record, array $data) {
+                ->action(function (InscricaoPessoa $record, array $data, ResetCandidatoPasswordAction $resetAction) {
 
-                    $action = new ResetCandidatoEmailAction();
-                    $action->reset($record, $data['email'], fn() => Notification::make()
-                        ->title('Email alterado com sucesso')
-                        ->body('Uma senha temporária foi enviada para o email do usuário')
-                        ->success()
-                        ->persistent()
-                        ->send());
+                    $resetAction->reset($record);
+
+                    // $action = new ResetCandidatoEmailAction();
+                    // $action->reset($record, $data['email'], fn() => Notification::make()
+                    //     ->title('Email alterado com sucesso')
+                    //     ->body('Uma senha temporária foi enviada para o email do usuário')
+                    //     ->success()
+                    //     ->persistent()
+                    //     ->send());
                 })
                 ->color('danger')
                 ->icon('heroicon-o-key'),

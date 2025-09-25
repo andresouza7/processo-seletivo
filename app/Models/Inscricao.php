@@ -44,7 +44,7 @@ class Inscricao extends Model implements HasMedia
     protected static function booted()
     {
         static::deleting(function ($model) {
-            $model->clearMediaCollection(); // remove todos os arquivos associados
+            $model->clearMediaCollection('documentos_requeridos'); // remove todos os arquivos associados
         });
     }
 
