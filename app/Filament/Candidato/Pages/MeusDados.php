@@ -3,6 +3,7 @@
 namespace App\Filament\Candidato\Pages;
 
 use App\Models\InscricaoPessoa;
+use Canducci\Cep\Facades\Cep;
 use Filament\Forms;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
@@ -107,6 +108,29 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
                 Section::make('Endereço e contato')
                     ->columns(2)
                     ->schema([
+
+                        Forms\Components\TextInput::make('cep')
+                        ->label('CEP')
+                        ->required()
+                        ->rules(['formato_cep'])
+                        ->mask('99999-999')
+                        ->debounce(1000)
+                        ->afterStateUpdated(function (callable $set, $state, $livewire) {
+                            if (blank($state)) return;
+
+                            try {
+                                $cepData = Cep::find($state);
+                                $cep = $cepData->getCepModel();
+
+                                if ($cep) {
+                                    $set('endereco', $cep->logradouro);
+                                    $set('bairro', $cep->bairro);
+                                    $set('cidade', $cep->localidade);
+                                }
+                            } catch (\Exception $e) {
+                                // Handle error silently
+                            }
+                        }),
                         Forms\Components\TextInput::make('endereco')
                             ->label('Endereço')
                             ->required(),
@@ -154,6 +178,8 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
             ->title('Tudo certo')
             ->body('Dados atualizados com sucesso!')
             ->send();
+
+            
 
         $this->redirectRoute('filament.candidato.pages.dashboard');
     }
