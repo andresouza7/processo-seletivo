@@ -3,10 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Inscricao;
-use App\Models\Pessoa;
+use App\Models\InscricaoPessoa;
+use App\Models\InscricaoVaga;
 use App\Models\ProcessoSeletivo;
-use App\Models\User;
-use App\Models\Vaga;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,39 +15,48 @@ class InscricaoFactory extends Factory
 {
     protected $model = Inscricao::class;
 
+    protected $filesCount = 1; // default 1 file
+
     public function definition()
     {
+        $atendimento = $this->faker->randomElement(['S', 'N']);
+
         return [
             'cod_inscricao' => Inscricao::generateUniqueCode(),
-            'necessita_atendimento' => $this->faker->boolean,
-            'qual_atendimento' => $this->faker->optional()->sentence,
+            'idprocesso_seletivo' => ProcessoSeletivo::factory(),
+            'idinscricao_vaga' => InscricaoVaga::factory(),
+            'idinscricao_pessoa' => InscricaoPessoa::factory(),
+            'idtipo_vaga' => $this->faker->numberBetween(1, 3),
+            'data_hora' => now(),
+            'necessita_atendimento' => $atendimento,
+            'qual_atendimento' => $atendimento === 'S' ? $this->faker->optional()->sentence() : null,
+            'observacao' => $this->faker->optional()->paragraph(),
+            'local_prova' => $this->faker->optional()->city(),
+            'ano_enem' => null,
+            'bonificacao' => null,
         ];
     }
 
-    public function forPessoa(Pessoa $pessoa)
+    /**
+     * Set how many files to attach to the Inscricao.
+     */
+    public function withFiles(int $count = 1): static
     {
-        return $this->state(function (array $attributes) use ($pessoa) {
-            return [
-                'pessoa_id' => $pessoa->id,
-            ];
-        });
-    }
+        return $this->afterCreating(function ($inscricao) use ($count) {
+            $content = file_get_contents(storage_path('app/public/template.pdf'));
+            $processoSeletivo = $inscricao->processo_seletivo;
+            $tipo = optional($processoSeletivo->tipo)->chave;
+            $diretorio = $processoSeletivo->diretorio;
+            $id = $inscricao->idinscricao;
 
-    public function forProcesso(ProcessoSeletivo $processo)
-    {
-        return $this->state(function (array $attributes) use ($processo) {
-            return [
-                'psel_id' => $processo->id,
-            ];
-        });
-    }
+            for ($i = 1; $i <= $count; $i++) {
+                $filepath = "{$tipo}/{$diretorio}/inscricoes/{$id}/template_{$i}.pdf";
 
-    public function forVaga(Vaga $vaga)
-    {
-        return $this->state(function (array $attributes) use ($vaga) {
-            return [
-                'vaga_id' => $vaga->id,
-            ];
+                $inscricao
+                    ->addMediaFromString($content)
+                    ->usingFileName($filepath)
+                    ->toMediaCollection('documentos_requeridos');
+            }
         });
     }
 }

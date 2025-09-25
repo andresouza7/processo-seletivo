@@ -51,6 +51,15 @@ class ProcessoSeletivo extends Model
         'link_recurso'
     ];
 
+    protected static function booted()
+    {
+        static::deleting(function ($processo) {
+            $processo->inscricoes()->each(function ($inscricao) {
+                $inscricao->clearMediaCollection('documentos_requeridos');
+            });
+        });
+    }
+
     // public $timestamps = false;
 
     public function getAceitaInscricaoAttribute()
@@ -70,7 +79,8 @@ class ProcessoSeletivo extends Model
             ->exists();
     }
 
-    public function getLinkRecursoAttribute() {
+    public function getLinkRecursoAttribute()
+    {
         $etapa = EtapaRecurso::where('idprocesso_seletivo', $this->idprocesso_seletivo)->orderBy('idetapa_recurso', 'desc')->first();
 
         return $etapa ? route('filament.candidato.resources.etapa-recursos.edit', $etapa->idetapa_recurso) : null;
