@@ -15,6 +15,12 @@ class AnexoController extends Controller
         return $this->serveMedia($recurso, 'anexo_recurso');
     }
 
+    public function showAnexoResposta($id)
+    {
+        $recurso = Recurso::findOrFail($id);
+        return $this->serveMedia($recurso, 'anexo_resposta_recurso');
+    }
+
     public function showAnexoInscricao($id)
     {
         $inscricao = Inscricao::findOrFail($id);

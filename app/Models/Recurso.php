@@ -44,6 +44,13 @@ class Recurso extends Model implements HasMedia
 
     // public $timestamps = false;
 
+    public function getRespostaUrlAttribute()
+    {
+        if (!$this->hasMedia('anexo_resposta_recurso')) return null;
+
+        return $this->getFirstMediaUrl('anexo_resposta_recurso');
+    }
+
     public function inscricao()
     {
         return $this->belongsTo(Inscricao::class, 'idinscricao');
@@ -57,5 +64,10 @@ class Recurso extends Model implements HasMedia
     public function inscricao_pessoa()
     {
         return $this->belongsTo(InscricaoPessoa::class, 'idinscricao_pessoa', 'idpessoa');
+    }
+
+    public function etapa_recurso()
+    {
+        return $this->belongsTo(EtapaRecurso::class, 'idetapa_recurso', 'idetapa_recurso');
     }
 }
