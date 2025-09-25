@@ -43,7 +43,12 @@ class RecursosRelationManager extends RelationManager
             ->schema([
                 TextEntry::make('descricao'),
                 TextEntry::make('resposta'),
-                TextEntry::make('situacao')
+                TextEntry::make('situacao'),
+                TextEntry::make('resposta_url')
+                    ->label('Anexo')
+                    ->formatStateUsing(fn() => 'Visualizar')
+                    ->url(fn($record) => $record->resposta_url)
+                    ->openUrlInNewTab()
             ]);
     }
 
@@ -89,7 +94,7 @@ class RecursosRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('idrecurso')
             ->heading('Recursos Enviados')
-            ->description('Para interpor um recurso, utilize o botão "Abrir Recurso". Certifique-se de estar atento aos prazos estabelecidos e às condições previstas no edital.')
+            ->description('Para interpor um recurso, utilize o botão "Abrir Recurso". Atente-se ao prazo previsto no edital.')
             ->paginated(false)
             ->columns([
                 Tables\Columns\TextColumn::make('descricao')->limit()->label('Descrição'),
@@ -104,7 +109,7 @@ class RecursosRelationManager extends RelationManager
                     ->modalSubmitActionLabel("Confirmar")
                     ->createAnother(false)
                     ->visible(fn() => !$this->bloquear_recurso)
-                    ->mutateFormDataUsing(function (array $data) {
+                    ->mutateFormDataUsing(function (array $data, $record) {
                         // $inscricao = Inscricao::where('idinscricao', $data['idinscricao'])->first();
 
                         // $data['idprocesso_seletivo'] = $inscricao->idprocesso_seletivo;
@@ -116,7 +121,7 @@ class RecursosRelationManager extends RelationManager
 
                         return $data;
                     })
-                    ->after(function($livewire, $record) {
+                    ->after(function ($livewire, $record) {
                         $livewire->redirect(route('filament.candidato.resources.etapa-recursos.edit', $this->getOwnerRecord()->idetapa_recurso));
                     })
                     ->successNotification(function ($record) {

@@ -7,6 +7,7 @@ use Filament\Actions;
 use Filament\Forms;
 use Filament\Forms\Components\Actions as ComponentsActions;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
@@ -17,7 +18,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ManageRecursos extends ManageRelatedRecords
 {
     protected static string $resource = ProcessoSeletivoResource::class;
+
     protected static ?string $title = 'Gerenciar Recursos';
+
     protected static string $relationship = 'recursos';
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
@@ -44,12 +47,20 @@ class ManageRecursos extends ManageRelatedRecords
                     ->required()
                     ->options([
                         'D' => 'Deferido',
-                        'I' => 'Indeferido'
+                        'I' => 'Indeferido',
+                        'P' => 'Parcialmente Deferido',
                     ]),
                 Forms\Components\Textarea::make('resposta')
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
+
+                SpatieMediaLibraryFileUpload::make('anexo_reposta_recurso')
+                    ->columnSpanFull()
+                    ->maxFiles(1)
+                    ->disk('public')
+                    ->collection('anexo_resposta_recurso')
+                    ->rules(['file', 'mimes:pdf', 'max:10240'])
             ]);
     }
 
@@ -61,12 +72,10 @@ class ManageRecursos extends ManageRelatedRecords
             ->defaultSort('idrecurso', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('idrecurso'),
-                Tables\Columns\TextColumn::make('inscricao.cod_inscricao'),
-                Tables\Columns\TextColumn::make('inscricao.processo_seletivo.titulo')
-                    ->label('Processo Seletivo')
-                    ->limit(),
-                Tables\Columns\TextColumn::make('inscricao.inscricao_vaga.descricao')
-                    ->label('Descrição Vaga'),
+                Tables\Columns\TextColumn::make('etapa_recurso.descricao')
+                    ->label('Etapa'),
+                Tables\Columns\TextColumn::make('descricao')
+                    ->label('Justificativa'),
                 Tables\Columns\TextColumn::make('situacao')
                     ->badge()
             ])
@@ -81,6 +90,10 @@ class ManageRecursos extends ManageRelatedRecords
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->label('Responder'),
+                Tables\Actions\Action::make('resposta_anexo')->label('Resposta Anexo')
+                    ->url(fn($record) => $record->getFirstMediaUrl('anexo_resposta_recurso'))
+                    ->openUrlInNewTab()
+                    ->visible(fn($record) => $record->hasMedia('anexo_resposta_recurso')),
                 // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
