@@ -32,6 +32,7 @@ class InscricaoPessoa extends Authenticatable implements HasName
         'cpf',
         'matricula',
         'endereco',
+        'cep',
         'bairro',
         'numero',
         'complemento',
