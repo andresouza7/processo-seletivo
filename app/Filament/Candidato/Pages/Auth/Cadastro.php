@@ -84,9 +84,11 @@ class Cadastro extends Register
                 ->date()
                 ->minDate('1950-01-01')
                 ->required(),
+
             Select::make('sexo')
                 ->label('Identidade de gênero')
                 ->options([
+<<<<<<< Updated upstream
                     'A' => 'Cisgênero Masculino',
                     'B' => 'Cisgênero Feminino',
                     'C' => 'Transgênero Masculino',
@@ -94,17 +96,60 @@ class Cadastro extends Register
                     'E' => 'Travesti',
                     'F' => 'Não-binário',
                     'G' => 'Outro'
+=======
+                    'M' => 'Masculino',
+                    'F' => 'Feminino',
+                    
+>>>>>>> Stashed changes
                 ])
                 ->reactive()
                 ->required(),
-            TextInput::make('identidade_genero')
-                ->label('Me identifico como:')
+
+            Select::make('identidade_genero')
+                ->label('Identidade de gênero')
+                ->options(fn (Get $get) => match ($get('sexo')) {
+                    'M' => [
+                        'CM' => 'Cisgênero Masculino',
+                        'TF' => 'Transgênero Feminino',
+                        'NB' => 'Não-binário',
+                        'TV' => 'Travesti',
+                        'NB' => 'Não-binário',
+                        'O'  => 'Outro',
+                    ],
+                    'F' => [
+                        'CF' => 'Cisgênero Feminino',
+                        'TM' => 'Transgênero Masculino',
+                        'NB' => 'Não-binário',
+                        'TV' => 'Travesti',
+                        'NB' => 'Não-binário',
+                        'O'  => 'Outro',
+                    ],
+                    
+                    default => []
+                })
+                
+                ->reactive()
+                ->required(),
+                
+            TextInput::make('identidade_genero_descricao')
+                ->label('Minha identidade de genero é')                
                 ->columnSpanFull()
+<<<<<<< Updated upstream
                 ->visible(fn(Get $get) => $get('sexo') === 'G'),                      
             Checkbox::make('usar_nome_social')
                 ->label('Usar nome social')
                 ->reactive()
                 ->visible(fn(Get $get) => in_array($get('sexo'), ['C', 'D', 'E', 'F', 'G'])),
+=======
+                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['O']))
+                ->required(),
+
+            Checkbox::make('usar_nome_social')
+                ->label('Usar nome social')
+                ->reactive()
+                ->columnSpanFull()
+                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['TM','TF', 'TV', 'NB', 'O'])),
+>>>>>>> Stashed changes
 
 
             TextInput::make('nome_social')
