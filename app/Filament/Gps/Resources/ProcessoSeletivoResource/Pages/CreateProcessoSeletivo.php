@@ -7,6 +7,7 @@ use App\Models\ProcessoSeletivo;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class CreateProcessoSeletivo extends CreateRecord
 {
@@ -14,12 +15,15 @@ class CreateProcessoSeletivo extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        // $idprocesso_seletivo = ProcessoSeletivo::latest('idprocesso_seletivo')->value('idprocesso_seletivo') ?? 0;
-        // $data['idprocesso_seletivo'] = $idprocesso_seletivo + 1;
-        
-        $data['situacao'] = $data['situacao'] ?? '';
-        $data['acessos'] = 0;
-
+        try {
+            $data['situacao'] = $data['situacao'] ?? '';
+            $data['acessos'] = 0;
+            $data['diretorio'] = str_replace('/', '_', $data['numero']);
+        } catch (\Throwable $th) {
+            Log::error("create processo seletivo failed: " . $th->getMessage());
+            throw $th;
+        }
+            
         return $data;
     }
 
