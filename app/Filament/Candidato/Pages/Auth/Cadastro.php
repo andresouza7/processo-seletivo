@@ -85,21 +85,28 @@ class Cadastro extends Register
                 ->minDate('1950-01-01')
                 ->required(),
             Select::make('sexo')
-                ->label('Sexo')
+                ->label('Identidade de gênero')
                 ->options([
-                    'M' => 'Masculino',
-                    'F' => 'Feminino',
-                    'O' => 'Outro'
+                    'A' => 'Cisgênero Masculino',
+                    'B' => 'Cisgênero Feminino',
+                    'C' => 'Transgênero Masculino',
+                    'D' => 'Transgênero Feminino',
+                    'E' => 'Travesti',
+                    'F' => 'Não-binário',
+                    'G' => 'Outro'
                 ])
                 ->reactive()
                 ->required(),
             TextInput::make('identidade_genero')
                 ->label('Me identifico como:')
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('sexo') === 'O'),
+                ->visible(fn(Get $get) => $get('sexo') === 'G'),                      
             Checkbox::make('usar_nome_social')
                 ->label('Usar nome social')
-                ->reactive(),
+                ->reactive()
+                ->visible(fn(Get $get) => in_array($get('sexo'), ['C', 'D', 'E', 'F', 'G'])),
+
+
             TextInput::make('nome_social')
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('usar_nome_social')),
