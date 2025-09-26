@@ -41,6 +41,7 @@ class InscricaoPessoaResource extends Resource
                 \Filament\Infolists\Components\Section::make('Dados Cadastrais')
                     ->columns(2)
                     ->schema([
+
                         TextEntry::make('nome')->label('Nome'),
                         TextEntry::make('mae')->label('Nome da Mãe'),
                         TextEntry::make('cpf')->label('CPF'),
@@ -60,6 +61,7 @@ class InscricaoPessoaResource extends Resource
                         \Filament\Infolists\Components\Fieldset::make('Endereço')
                             ->extraAttributes(['class' => 'mt-4'])
                             ->schema([
+                                TextEntry::make('cep')->label('CEP'),
                                 TextEntry::make('endereco')->label('Logradouro'),
                                 TextEntry::make('bairro')->label('Bairro'),
                                 TextEntry::make('numero')->label('Número'),
@@ -141,12 +143,7 @@ class InscricaoPessoaResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    // Tables\Actions\DeleteBulkAction::make(),
-                ]),
+
             ]);
     }
 
@@ -161,7 +158,7 @@ class InscricaoPessoaResource extends Resource
     {
         return [
             'index' => Pages\ListInscricaoPessoas::route('/'),
-            'edit' => Pages\EditInscricaoPessoa::route('/{record}/edit'),
+            // 'edit' => Pages\EditInscricaoPessoa::route('/{record}/edit'),
             'view' => Pages\ViewInscricaoPessoa::route('/{record}/view'),
         ];
     }

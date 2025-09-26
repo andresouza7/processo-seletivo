@@ -51,6 +51,7 @@ class ProcessoSeletivoResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'titulo';
     protected static int $globalSearchResultsLimit = 20;
+
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
@@ -70,46 +71,40 @@ class ProcessoSeletivoResource extends Resource
                     Group::make([
                         TextInput::make('titulo')
                             ->label('Título')
+                            ->columnSpan(2)
                             ->required(),
                         Select::make('idprocesso_seletivo_tipo')
                             ->label('Tipo')
                             ->relationship('tipo', 'descricao')
                             ->required(),
-                        RichEditor::make('descricao')
-                            ->required()
-                            ->label('Descrição'),
-                        Checkbox::make('requer_anexos')
-                            ->label('Requer documentos anexos na inscrição?'),
+                    ])->columns(3),
 
+                    Group::make([
+                        TextInput::make('numero')
+                            ->disabledOn('edit')
+                            ->placeholder('Ex: 01/2025')
+                            ->required(),
+                        DatePicker::make('data_criacao')
+                            ->label('Data do Edital')
+                            ->required(),
                         Select::make('publicado')
                             ->required()
                             ->options([
                                 'S' => 'Sim',
                                 'N' => 'Não'
                             ]),
-                        TextInput::make('numero')
-                            ->disabledOn('edit')
-                            ->placeholder('Ex: 01/2025')
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(fn(Set $set, $state) => $set('diretorio',  str_replace('/', '_', $state)))
-                            ->required(),
-                        TextInput::make('diretorio')
-                            ->disabledOn('edit')
-                            ->label('Diretório')
-                            ->required()
-                            ->unique('processo_seletivo', 'diretorio', ignoreRecord: true),
-                        Select::make('psu')
-                            ->label('PSU')
-                            ->required()
-                            ->options([
-                                'S' => 'Sim',
-                                'N' => 'Não'
-                            ]),
-                    ]),
+                    ])->columns(3),
+
                     Group::make([
-                        DatePicker::make('data_criacao')
-                            ->label('Data do Edital')
-                            ->required(),
+
+                        RichEditor::make('descricao')
+                            ->required()
+                            ->label('Descrição'),
+                        Checkbox::make('requer_anexos')
+                            ->label('Requer anexos na inscrição?'),
+                    ]),
+
+                    Group::make([
                         Fieldset::make('Período de Publicação')
                             ->schema([
                                 DatePicker::make('data_publicacao_inicio')
@@ -154,7 +149,9 @@ class ProcessoSeletivoResource extends Resource
                     ->color(fn($state) => $state === 'S' ? 'success' : 'danger'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('tipo')
+                    ->label('Tipo')
+                    ->relationship('tipo', 'descricao'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
