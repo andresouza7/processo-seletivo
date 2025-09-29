@@ -30,7 +30,13 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name'),
-                TextInput::make('email')
+                TextInput::make('email'),
+                Forms\Components\Select::make('roles')
+                    ->label('Perfil')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
             ]);
     }
 

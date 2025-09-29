@@ -5,6 +5,7 @@ namespace App\Filament\Gps\Resources;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\EditProcessoSeletivo;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\ManageAnexos;
+use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\ManageAvaliadores;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\ManageEtapaRecurso;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\ManageInscritos;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\ManageRecursos;
@@ -38,6 +39,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ProcessoSeletivoResource extends Resource
@@ -51,6 +53,11 @@ class ProcessoSeletivoResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'titulo';
     protected static int $globalSearchResultsLimit = 20;
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasRole('gestor|admin');
+    }
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
@@ -182,6 +189,7 @@ class ProcessoSeletivoResource extends Resource
             ManageVagas::class,
             ManageEtapaRecurso::class,
             ManageRecursos::class,
+            ManageAvaliadores::class,
         ]);
     }
 
@@ -193,6 +201,7 @@ class ProcessoSeletivoResource extends Resource
             'edit' => Pages\EditProcessoSeletivo::route('/{record}/edit'),
             'anexos' => Pages\ManageAnexos::route('/{record}/anexos'),
             'inscritos' => Pages\ManageInscritos::route('/{record}/inscritos'),
+            'avaliadores' => Pages\ManageAvaliadores::route('/{record}/avaliadores'),
             'vagas' => Pages\ManageVagas::route('/{record}/vagas'),
             'recursos' => Pages\ManageRecursos::route('/{record}/recursos'),
             'etapas_recurso' => Pages\ManageEtapaRecurso::route('/{record}/etapas_recurso'),

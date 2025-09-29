@@ -116,6 +116,19 @@ class ProcessoSeletivo extends Model
         return $this->hasMany(EtapaRecurso::class, 'idprocesso_seletivo', 'idprocesso_seletivo');
     }
 
+    public function avaliadores()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'avaliador_processo_seletivo',
+            'idprocesso_seletivo',
+            'user_id',
+            'idprocesso_seletivo'
+        )->whereHas('roles', function ($query) {
+            $query->where('name', 'avaliador');
+        });
+    }
+
     public function scopeInscricoesAbertas(Builder $query): void
     {
         $query->where('publicado', 'S')

@@ -66,7 +66,10 @@ class ManageEtapaRecurso extends ManageRelatedRecords
                 Tables\Actions\CreateAction::make()
                     ->createAnother(false)
                     ->before(function (CreateAction $action) {
-                        $exists = \App\Models\EtapaRecurso::whereDate('data_fim_recebimento', '>=', now())->exists();
+                        $processo = $this->getRecord();
+                        
+                        $exists = $processo->etapa_recurso()
+                            ->whereDate('data_fim_recebimento', '>=', now())->exists();
 
                         if ($exists) {
                             \Filament\Notifications\Notification::make()
