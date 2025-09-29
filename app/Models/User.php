@@ -68,4 +68,16 @@ class User extends Authenticatable implements FilamentUser
 
         return true;
     }
+
+    public function processos_seletivos()
+    {
+        return $this->belongsToMany(
+            ProcessoSeletivo::class,
+            'avaliador_processo_seletivo',
+            'user_id',
+            'idprocesso_seletivo',
+            'id',
+            'idprocesso_seletivo'
+        );
+    }
 }

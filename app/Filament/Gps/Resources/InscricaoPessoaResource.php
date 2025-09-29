@@ -22,6 +22,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class InscricaoPessoaResource extends Resource
@@ -33,6 +34,11 @@ class InscricaoPessoaResource extends Resource
     protected static ?string $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 2;
     protected static ?string $recordTitleAttribute = 'nome';
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasRole('gestor|admin');
+    }
 
     public static function infolist(Infolist $infolist): Infolist
     {
