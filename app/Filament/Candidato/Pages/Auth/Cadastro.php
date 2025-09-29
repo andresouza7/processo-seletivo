@@ -86,21 +86,11 @@ class Cadastro extends Register
                 ->required(),
 
             Select::make('sexo')
-                ->label('Identidade de gênero')
+                ->label('Sexo')
                 ->options([
-<<<<<<< Updated upstream
-                    'A' => 'Cisgênero Masculino',
-                    'B' => 'Cisgênero Feminino',
-                    'C' => 'Transgênero Masculino',
-                    'D' => 'Transgênero Feminino',
-                    'E' => 'Travesti',
-                    'F' => 'Não-binário',
-                    'G' => 'Outro'
-=======
                     'M' => 'Masculino',
                     'F' => 'Feminino',
                     
->>>>>>> Stashed changes
                 ])
                 ->reactive()
                 ->required(),
@@ -109,16 +99,16 @@ class Cadastro extends Register
                 ->label('Identidade de gênero')
                 ->options(fn (Get $get) => match ($get('sexo')) {
                     'M' => [
-                        'CM' => 'Cisgênero Masculino',
-                        'TF' => 'Transgênero Feminino',
+                        'C' => 'Cisgênero',
+                        'T' => 'Transgênero',
                         'NB' => 'Não-binário',
                         'TV' => 'Travesti',
                         'NB' => 'Não-binário',
                         'O'  => 'Outro',
                     ],
                     'F' => [
-                        'CF' => 'Cisgênero Feminino',
-                        'TM' => 'Transgênero Masculino',
+                        'C' => 'Cisgênero',
+                        'T' => 'Transgênero',
                         'NB' => 'Não-binário',
                         'TV' => 'Travesti',
                         'NB' => 'Não-binário',
@@ -130,17 +120,31 @@ class Cadastro extends Register
                 
                 ->reactive()
                 ->required(),
+
+            ////////////////
+
+            Placeholder::make('')
+            ->content(fn (Get $get) => match ($get('identidade_genero')) {
+                'C' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'
+                ),
+                'T' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'
+                ),
+                'NB' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'
+                ),
+                default => null,
+            })
+            ->visible(fn (Get $get) => in_array($get('identidade_genero'), ['C','T','NB']))
+            ->columnSpanFull(),
+
+            ///////////////
+            
                 
             TextInput::make('identidade_genero_descricao')
                 ->label('Minha identidade de genero é')                
                 ->columnSpanFull()
-<<<<<<< Updated upstream
-                ->visible(fn(Get $get) => $get('sexo') === 'G'),                      
-            Checkbox::make('usar_nome_social')
-                ->label('Usar nome social')
-                ->reactive()
-                ->visible(fn(Get $get) => in_array($get('sexo'), ['C', 'D', 'E', 'F', 'G'])),
-=======
                 ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['O']))
                 ->required(),
 
@@ -148,8 +152,7 @@ class Cadastro extends Register
                 ->label('Usar nome social')
                 ->reactive()
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['TM','TF', 'TV', 'NB', 'O'])),
->>>>>>> Stashed changes
+                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['T', 'TV', 'NB', 'O'])),
 
 
             TextInput::make('nome_social')
