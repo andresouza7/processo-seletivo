@@ -84,22 +84,77 @@ class Cadastro extends Register
                 ->date()
                 ->minDate('1950-01-01')
                 ->required(),
+
             Select::make('sexo')
                 ->label('Sexo')
                 ->options([
                     'M' => 'Masculino',
                     'F' => 'Feminino',
-                    'O' => 'Outro'
+                    
                 ])
                 ->reactive()
                 ->required(),
-            TextInput::make('identidade_genero')
-                ->label('Me identifico como:')
+
+            Select::make('identidade_genero')
+                ->label('Identidade de gênero')
+                ->options(fn (Get $get) => match ($get('sexo')) {
+                    'M' => [
+                        'C' => 'Cisgênero',
+                        'T' => 'Transgênero',
+                        'NB' => 'Não-binário',
+                        'TV' => 'Travesti',
+                        'NB' => 'Não-binário',
+                        'O'  => 'Outro',
+                    ],
+                    'F' => [
+                        'C' => 'Cisgênero',
+                        'T' => 'Transgênero',
+                        'NB' => 'Não-binário',
+                        'TV' => 'Travesti',
+                        'NB' => 'Não-binário',
+                        'O'  => 'Outro',
+                    ],
+                    
+                    default => []
+                })
+                
+                ->reactive()
+                ->required(),
+
+            ////////////////
+
+            Placeholder::make('')
+            ->content(fn (Get $get) => match ($get('identidade_genero')) {
+                'C' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'
+                ),
+                'T' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'
+                ),
+                'NB' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'
+                ),
+                default => null,
+            })
+            ->visible(fn (Get $get) => in_array($get('identidade_genero'), ['C','T','NB']))
+            ->columnSpanFull(),
+
+            ///////////////
+            
+                
+            TextInput::make('identidade_genero_descricao')
+                ->label('Minha identidade de genero é')                
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('sexo') === 'O'),
+                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['O']))
+                ->required(),
+
             Checkbox::make('usar_nome_social')
                 ->label('Usar nome social')
-                ->reactive(),
+                ->reactive()
+                ->columnSpanFull()
+                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['T', 'TV', 'NB', 'O'])),
+
+
             TextInput::make('nome_social')
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('usar_nome_social')),

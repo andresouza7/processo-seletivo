@@ -27,6 +27,7 @@ class InscricaoPessoa extends Authenticatable implements HasName
         'data_nascimento',
         'orientacao_sexual',
         'identidade_genero',
+        'identidade_genero_descricao',
         'sexo',
         'ci',
         'cpf',
