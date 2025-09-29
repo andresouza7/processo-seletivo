@@ -3,6 +3,7 @@
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
+use App\Models\ProcessoSeletivoAnexo;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -35,6 +36,7 @@ class ManageAnexos extends ManageRelatedRecords
                     ->maxLength(255),
                 SpatieMediaLibraryFileUpload::make('arquivo')
                     ->label('Arquivo')
+                    ->acceptedFileTypes(['application/pdf'])
                     ->helperText('* É necessário salvar as alterações após a inclusão do arquivo.')
             ]);
     }
@@ -45,6 +47,7 @@ class ManageAnexos extends ManageRelatedRecords
             ->recordTitleAttribute('descricao')
             ->heading('Anexos')
             ->columns([
+                Tables\Columns\TextColumn::make('idprocesso_seletivo_anexo')->searchable()->limit(70),
                 Tables\Columns\TextColumn::make('descricao')->searchable()->limit(70),
             ])
             ->headerActions([
@@ -54,7 +57,9 @@ class ManageAnexos extends ManageRelatedRecords
                     ->databaseTransaction()
                     ->mutateFormDataUsing(function (array $data) {
 
-                        // $data['idarquivo'] = $this->arquivo->idarquivo;
+                        $id = ProcessoSeletivoAnexo::latest('idprocesso_seletivo_anexo')
+                            ->value('idprocesso_seletivo_anexo') ?? 0;
+                        $data['idprocesso_seletivo_anexo'] = $id + 1;
                         $data['data_publicacao'] = now();
                         $data['acessos'] = 0;
 
@@ -66,10 +71,10 @@ class ManageAnexos extends ManageRelatedRecords
                     ->hidden(fn($record) => Carbon::parse($record->data_publicacao)->lt(Carbon::parse('2024-11-01'))),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('download')
-                    ->disabled(fn($record) => !$record->url_arquivo)
+                    // ->disabled(fn($record) => !$record->url_arquivo)
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->url(fn($record) => $record->url_arquivo)
+                    // ->url(fn($record) => dd('anexo.show', $record->getFirstMedia('documentos_requeridos')))
                     ->openUrlInNewTab(),
             ]);
     }

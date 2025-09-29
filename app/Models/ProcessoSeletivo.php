@@ -124,9 +124,10 @@ class ProcessoSeletivo extends Model
             'idprocesso_seletivo',
             'user_id',
             'idprocesso_seletivo'
-        )->whereHas('roles', function ($query) {
-            $query->where('name', 'avaliador');
-        });
+        );
+        // ->whereHas('roles', function ($query) {
+        //     $query->where('name', 'avaliador');
+        // });
     }
 
     public function scopeInscricoesAbertas(Builder $query): void

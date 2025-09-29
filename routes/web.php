@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AnexoController;
+use App\Http\Controllers\MediaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -24,11 +24,12 @@ Route::get('/login', function () {
     return redirect()->route('filament.candidato.auth.login');
 })->name('login');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/recurso/{id}/anexo', [AnexoController::class, 'showAnexoRecurso'])
-        ->name('recurso.anexo');
-    Route::get('/inscricoes/{id}/anexo', [AnexoController::class, 'showAnexoInscricao'])
-        ->name('inscricoes.anexo');
-    Route::get('/inscricoes/{id}/laudo', [AnexoController::class, 'showAnexoLaudoMedico'])
-        ->name('inscricoes.laudo');
-});
+// rota que entrega o arquivo
+Route::get('/media/{uuid}', [MediaController::class, 'serveMedia'])
+    ->name('media.serve')
+    ->middleware('signed');
+
+// rota que gera URL temporária sob demanda
+Route::get('/media/temp/{media}', [MediaController::class, 'getTemporaryUrl'])
+    ->name('media.temp')
+    ->middleware('auth'); // só usuásrios logado
