@@ -188,7 +188,7 @@ class ProcessoSeletivoResource extends Resource
             ManageInscritos::class,
             ManageVagas::class,
             ManageEtapaRecurso::class,
-            ManageRecursos::class,
+            // ManageRecursos::class,
             ManageAvaliadores::class,
         ]);
     }
@@ -203,7 +203,7 @@ class ProcessoSeletivoResource extends Resource
             'inscritos' => Pages\ManageInscritos::route('/{record}/inscritos'),
             'avaliadores' => Pages\ManageAvaliadores::route('/{record}/avaliadores'),
             'vagas' => Pages\ManageVagas::route('/{record}/vagas'),
-            'recursos' => Pages\ManageRecursos::route('/{record}/recursos'),
+            // 'recursos' => Pages\ManageRecursos::route('/{record}/recursos'),
             'etapas_recurso' => Pages\ManageEtapaRecurso::route('/{record}/etapas_recurso'),
         ];
     }

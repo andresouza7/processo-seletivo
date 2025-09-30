@@ -141,7 +141,6 @@ class InscricaoResource extends Resource
                                     ->required()
                                     ->maxFiles(1)
                                     ->disk('local')
-                                    ->collection('documentos_requeridos')
                                     ->rules(['file', 'mimes:pdf', 'max:10240'])
                                     ->columnSpanFull(),
 
@@ -202,9 +201,6 @@ class InscricaoResource extends Resource
 
                                 Forms\Components\Checkbox::make('aceita_termos')
                                     ->label('Declaro que li e concordo com os termos do edital')
-                                    ->helperText(
-                                        'Declaro que as informações fornecidas são verdadeiras e de minha responsabilidade, e confirmo que atendo aos requisitos estabelecidos no edital.'
-                                    )
                                     ->required()
                                     ->columnSpanFull(),
                             ]),
@@ -253,9 +249,6 @@ class InscricaoResource extends Resource
                         ->size('sm')
                         ->color('gray'),
                 ]),
-
-
-
             ])
             ->filters([
                 //
