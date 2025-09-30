@@ -28,7 +28,7 @@ class RecursoResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::user()->hasRole('avaliador');
+        return Auth::user()->hasAnyRole('admin|avaliador');
     }
 
     public static function form(Form $form): Form
@@ -56,11 +56,11 @@ class RecursoResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                SpatieMediaLibraryFileUpload::make('anexo_reposta_recurso')
+                SpatieMediaLibraryFileUpload::make('anexo_avaliador')
                     ->columnSpanFull()
                     ->maxFiles(1)
-                    ->disk('public')
-                    ->collection('anexo_resposta_recurso')
+                    ->disk('local')
+                    ->collection('anexo_avaliador')
                     ->rules(['file', 'mimes:pdf', 'max:10240'])
             ]);
     }
@@ -86,6 +86,10 @@ class RecursoResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('anexo_candidato')->label('Anexo')
+                    ->url(fn($record) => tempMediaUrl($record, 'anexo_candidato'))
+                    ->openUrlInNewTab()
+                    ->visible(fn($record) => $record->hasMedia('anexo_candidato')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -106,7 +110,7 @@ class RecursoResource extends Resource
         return [
             'index' => Pages\ListRecursos::route('/'),
             'create' => Pages\CreateRecurso::route('/create'),
-            'view' => Pages\ViewRecurso::route('/{record}'),
+            // 'view' => Pages\ViewRecurso::route('/{record}'),
             'edit' => Pages\EditRecurso::route('/{record}/edit'),
         ];
     }

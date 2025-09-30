@@ -32,57 +32,50 @@ class ManageInscritos extends ManageRelatedRecords
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-        ->schema([
-            // Candidato Section
-            Section::make('Candidato')
-                ->schema([
-                    TextEntry::make('inscricao_pessoa.nome')->label('Nome'),
-                    TextEntry::make('inscricao_pessoa.ci')->label('Documento Identidade'),
-                    TextEntry::make('inscricao_pessoa.cpf')->label('CPF'),
-                    TextEntry::make('inscricao_pessoa.endereco')->label('Endereço'),
-                    TextEntry::make('inscricao_pessoa.bairro')->label('Bairro'),
-                    TextEntry::make('inscricao_pessoa.cidade')->label('Cidade'),
-                    TextEntry::make('inscricao_pessoa.email')->label('Email'),
-                ])
-                ->columns(2),
+            ->schema([
+                // Candidato Section
+                Section::make('Candidato')
+                    ->schema([
+                        TextEntry::make('inscricao_pessoa.nome')->label('Nome'),
+                        TextEntry::make('inscricao_pessoa.ci')->label('Documento Identidade'),
+                        TextEntry::make('inscricao_pessoa.cpf')->label('CPF'),
+                        TextEntry::make('inscricao_pessoa.endereco')->label('Endereço'),
+                        TextEntry::make('inscricao_pessoa.bairro')->label('Bairro'),
+                        TextEntry::make('inscricao_pessoa.cidade')->label('Cidade'),
+                        TextEntry::make('inscricao_pessoa.email')->label('Email'),
+                    ])
+                    ->columns(2),
 
-            // Inscrição Section
-            Section::make('Inscrição')
-                ->schema([
-                    TextEntry::make('cod_inscricao')->label('Cód. Inscrição'),
-                    TextEntry::make('inscricao_vaga.descricao')->label('Vaga'),
-                    TextEntry::make('tipo_vaga.descricao')->label('Tipo de Vaga'),
-                ])
-                ->columns(2),
-        ]);
+                // Inscrição Section
+                Section::make('Inscrição')
+                    ->schema([
+                        TextEntry::make('cod_inscricao')->label('Cód. Inscrição'),
+                        TextEntry::make('inscricao_vaga.descricao')->label('Vaga'),
+                        TextEntry::make('tipo_vaga.descricao')->label('Tipo de Vaga'),
+                    ])
+                    ->columns(2),
+            ]);
     }
 
     public function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('cod_inscricao')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+            ->schema([]);
     }
 
     public function table(Table $table): Table
     {
         return $table
             ->recordTitleAttribute('cod_inscricao')
+            ->defaultSort('idinscricao', 'desc')
             ->heading('Inscrições')
             ->columns([
                 Tables\Columns\TextColumn::make('cod_inscricao')
                     ->label('Cód. Inscrição')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('inscricao_pessoa.nome')
-                ->label('Candidato')
-                ->searchable(),
-                // Tables\Columns\TextColumn::make('inscricao_vaga.descricao')
-                //     ->label('Vaga'),
-                // Tables\Columns\TextColumn::make('tipo_vaga.descricao')
-                //     ->label('Tipo'),
+                    ->label('Candidato')
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -101,13 +94,14 @@ class ManageInscritos extends ManageRelatedRecords
                 Tables\Actions\Action::make('ver_anexo')
                     ->label('Anexos')
                     ->icon('heroicon-o-eye')
-                    ->url(fn($record) => route('inscricoes.anexo', $record->idinscricao))
+                    ->url(fn($record) => tempMediaUrl($record))
                     ->openUrlInNewTab()
-                    ->visible(fn($record) => $record->hasMedia('documentos_requeridos')),
-                Tables\Actions\Action::make('ver_anexo')
+                    ->visible(fn($record) => $record->hasMedia()),
+
+                Tables\Actions\Action::make('ver_laudo')
                     ->label('Laudo')
                     ->icon('heroicon-o-eye')
-                    ->url(fn($record) => route('inscricoes.laudo', $record->idinscricao))
+                    ->url(fn($record) => tempMediaUrl($record))
                     ->openUrlInNewTab()
                     ->visible(fn($record) => $record->hasMedia('laudo_medico')),
             ])

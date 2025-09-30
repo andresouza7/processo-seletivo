@@ -91,9 +91,9 @@ class ManageRecursos extends ManageRelatedRecords
             ->actions([
                 Tables\Actions\EditAction::make()->label('Responder'),
                 Tables\Actions\Action::make('resposta_anexo')->label('Resposta Anexo')
-                    ->url(fn($record) => $record->getFirstMediaUrl('anexo_resposta_recurso'))
+                    ->url(fn($record) => tempMediaUrl($record, 'anexo_candidato'))
                     ->openUrlInNewTab()
-                    ->visible(fn($record) => $record->hasMedia('anexo_resposta_recurso')),
+                    ->visible(fn($record) => $record->hasMedia('anexo_candidato')),
                 // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

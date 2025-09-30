@@ -141,7 +141,6 @@ class InscricaoResource extends Resource
                                     ->required()
                                     ->maxFiles(1)
                                     ->disk('local')
-                                    ->collection('documentos_requeridos')
                                     ->rules(['file', 'mimes:pdf', 'max:10240'])
                                     ->columnSpanFull(),
 
@@ -253,9 +252,6 @@ class InscricaoResource extends Resource
                         ->size('sm')
                         ->color('gray'),
                 ]),
-
-
-
             ])
             ->filters([
                 //

@@ -8,6 +8,8 @@ use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Infolists\Components\Actions;
+use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
@@ -44,11 +46,13 @@ class RecursosRelationManager extends RelationManager
                 TextEntry::make('descricao'),
                 TextEntry::make('resposta'),
                 TextEntry::make('situacao'),
-                TextEntry::make('resposta_url')
-                    ->label('Anexo')
-                    ->formatStateUsing(fn() => 'Visualizar')
-                    ->url(fn($record) => $record->resposta_url)
-                    ->openUrlInNewTab()
+                Actions::make([
+                    Action::make('anexo_avaliador')
+                        ->label('Documento')
+                        ->url(fn($record) => tempMediaUrl($record, 'anexo_avaliador'))
+                        ->openUrlInNewTab()
+                        ->visible(fn($record) => $record->hasMedia('anexo_avaliador')),
+                ])
             ]);
     }
 
@@ -79,12 +83,12 @@ class RecursosRelationManager extends RelationManager
                     ->label('Justificativa')
                     ->required()
                     ->columnSpanFull(),
-                SpatieMediaLibraryFileUpload::make('anexo_recurso')
+                SpatieMediaLibraryFileUpload::make('anexo_candidato')
                     ->visible(fn() => $this->getOwnerRecord()->requer_anexos)
                     ->columnSpanFull()
                     ->maxFiles(1)
                     ->disk('local')
-                    ->collection('anexo_recurso')
+                    ->collection('anexo_candidato')
                     ->rules(['file', 'mimes:pdf', 'max:10240'])
             ]);
     }

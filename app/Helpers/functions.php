@@ -5,6 +5,9 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Enums\Platform;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 function applyFilamentPanelStyles(Panel $panel): Panel
 {
@@ -28,6 +31,13 @@ function applyFilamentPanelStyles(Panel $panel): Panel
         ->assets([
             Css::make('filament-stylesheet', resource_path('css/filament.css'))
         ]);
+}
+
+function tempMediaUrl(Model $record, $collection = 'default')
+{
+    if (!$record->HasMedia($collection)) return;
+
+    return route('media.temp', $record->getFirstMedia($collection)?->uuid);
 }
 
 class HtmlHelper

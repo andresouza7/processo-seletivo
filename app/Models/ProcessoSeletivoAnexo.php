@@ -27,6 +27,7 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
     protected $primaryKey = 'idprocesso_seletivo_anexo';
 
     protected $fillable = [
+        'idprocesso_seletivo_anexo',
         'idprocesso_seletivo',
         'idarquivo',
         'descricao',
@@ -48,8 +49,11 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
 
         // Check if `data_publicacao` is older than the reference date
         if (Carbon::parse($this->data_publicacao)->lt($systemMigrationReferenceDate)) {
-            $oldFilePath =  $this->processo_seletivo->tipo->chave .'/' . $this->processo_seletivo->diretorio . '/' . optional($this->arquivo)->codname . '.pdf';
-            return Storage::url($oldFilePath); // Return the direct file path
+            $oldFilePath = $this->processo_seletivo->tipo->chave . '/' .
+                $this->processo_seletivo->diretorio . '/' .
+                optional($this->arquivo)->codname . '.pdf';
+
+            return Storage::url($oldFilePath);
         }
 
         // Otherwise, return the URL from Spatie Media Library
