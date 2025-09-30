@@ -10,7 +10,9 @@ use App\Models\InscricaoVaga;
 use App\Models\ProcessoSeletivo;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -132,21 +134,29 @@ class InscricaoResource extends Resource
                                     ->preload()
                                     ->required()
                                     ->columnSpanFull()
-                                    ->live(),
+                                    ->live()
+                                    ->afterStateUpdated(function ($set, $state) {
+                                        // Fetch anexos JSON for selected processo_seletivo
+                                        $anexos = ProcessoSeletivo::find($state)?->anexos ?? [];
 
-                                Group::make([
-                                    ...collect(self::documentos)->map(function ($item, $index) {
-                                        return SpatieMediaLibraryFileUpload::make("documentos_requeridos_$index")
-                                            ->label($item)
-                                            ->disk('local')
-                                            ->maxFiles(1)
-                                            ->rules(['file', 'mimes:pdf', 'max:10240'])
-                                            ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file) use ($item): string {
-                                                return $item . '.' . $file->getClientOriginalExtension();
-                                            })
-                                            ->columnSpan(1);
-                                    })
-                                ])->columns(2),
+                                        // Set repeater state dynamically
+                                        $set('anexos', $anexos);
+                                    }),
+
+                                Group::make()
+                                    ->schema(fn(Get $get) => [
+                                        ...collect($get('anexos'))->map(function ($item, $index) {
+                                            return SpatieMediaLibraryFileUpload::make("documentos_requeridos_$index")
+                                                ->label(fn() => $item['item'])
+                                                ->disk('local')
+                                                ->maxFiles(1)
+                                                ->rules(['file', 'mimes:pdf', 'max:10240'])
+                                                ->acceptedFileTypes(['application/pdf'])
+                                                ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file) use ($item): string {
+                                                    return $item['item'] . '.' . $file->getClientOriginalExtension();
+                                                });
+                                        })
+                                    ])->columnSpanFull(),
 
                                 // SpatieMediaLibraryFileUpload::make('documentos_requeridos')
                                 //     ->label('Anexar documentos')

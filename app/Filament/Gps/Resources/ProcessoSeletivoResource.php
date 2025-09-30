@@ -22,6 +22,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -109,7 +110,24 @@ class ProcessoSeletivoResource extends Resource
                             ->label('Descrição'),
                         Checkbox::make('requer_anexos')
                             ->label('Requer anexos na inscrição?'),
+
                     ]),
+
+                    Repeater::make('anexos')
+                        ->label('Documentos Requeridos')
+                        ->schema([
+                            TextInput::make('item')
+                                ->label('Nome do Documento')
+                                ->required()
+                        ])
+                        ->cloneable()
+                        ->collapsed()
+                        ->columnSpanFull()
+                        ->minItems(1)
+                        ->addActionLabel('Adicionar Documento')
+                        ->defaultItems(function ($record) {
+                            return $record->anexos ?? [];
+                        }),
 
                     Group::make([
                         Fieldset::make('Período de Publicação')
