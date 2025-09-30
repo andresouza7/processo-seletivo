@@ -216,27 +216,26 @@ class Cadastro extends Register
             ->visible(fn (Get $get) => in_array($get('orientacao_sexual'), ['A','B','C','D','E']))
             ->columnSpanFull(),
                 
-                
-                /////////////// SELECT: RAÇA
-                Select::make('raca')
-                    ->label('Raça/Cor')
-                    ->options([
-                        'A' => 'Negro de cor preta',
-                        'B' => 'Negro de cor parda',
-                        'C' => 'Branca',
-                        'D' => 'Indígena',
-                        'E' => 'Amarela',
-                        
-                    ])
-                    ->reactive()
-                    ->columnSpanFull()
-                    ->required(),
-
             ///////// CHECKBOX PARA DEFICIENCIA (default: não usar)
             Checkbox::make('deficiencia')
                 ->label('Possui deficiência, transtorno global do desenvolvimento, altas habilidades ou superdotação?')
                 ->reactive()
                 ->columnSpanFull(),
+
+
+            /////////////// SELECT: RAÇA
+            Select::make('raca')
+                ->label('Raça/Cor')
+                ->options([
+                    'A' => 'Negro de cor preta',
+                    'B' => 'Negro de cor parda',
+                    'C' => 'Branca',
+                    'D' => 'Indígena',
+                    'E' => 'Amarela',
+                    
+                ])
+                ->reactive()
+                ->required(),           
                 
 
             ///////// TEXTBOX DA DEFICIENCIA
