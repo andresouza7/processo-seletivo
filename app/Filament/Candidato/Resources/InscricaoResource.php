@@ -9,6 +9,7 @@ use App\Models\Inscricao;
 use App\Models\InscricaoVaga;
 use App\Models\ProcessoSeletivo;
 use Filament\Forms;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class InscricaoResource extends Resource
 {
@@ -40,6 +42,11 @@ class InscricaoResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
     protected static ?string $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 1;
+
+    protected const documentos = [
+        'rg',
+        'cpf',
+    ];
 
     public static function infolist(InfoList $infolist): Infolist
     {
@@ -127,22 +134,36 @@ class InscricaoResource extends Resource
                                     ->columnSpanFull()
                                     ->live(),
 
-                                SpatieMediaLibraryFileUpload::make('documentos_requeridos')
-                                    ->label('Anexar documentos')
-                                    ->helperText('* Este Processo Seletivo requer o envio de documentação comprobatória no momento da inscrição. Anexe aqui todos os documentos requeridos em um único arquivo em formato PDF.')
-                                    // ->hint('* Formato PDF')
-                                    ->visible(function (Get $get): bool {
-                                        $id = $get('idprocesso_seletivo');
-                                        if (!$id) return false;
-
-                                        $processoSeletivo = ProcessoSeletivo::where('idprocesso_seletivo', $id)->first();
-                                        return $processoSeletivo?->requer_anexos;
+                                Group::make([
+                                    ...collect(self::documentos)->map(function ($item, $index) {
+                                        return SpatieMediaLibraryFileUpload::make("documentos_requeridos_$index")
+                                            ->label($item)
+                                            ->disk('local')
+                                            ->maxFiles(1)
+                                            ->rules(['file', 'mimes:pdf', 'max:10240'])
+                                            ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file) use ($item): string {
+                                                return $item . '.' . $file->getClientOriginalExtension();
+                                            })
+                                            ->columnSpan(1);
                                     })
-                                    ->required()
-                                    ->maxFiles(1)
-                                    ->disk('local')
-                                    ->rules(['file', 'mimes:pdf', 'max:10240'])
-                                    ->columnSpanFull(),
+                                ])->columns(2),
+
+                                // SpatieMediaLibraryFileUpload::make('documentos_requeridos')
+                                //     ->label('Anexar documentos')
+                                //     ->helperText('* Este Processo Seletivo requer o envio de documentação comprobatória no momento da inscrição. Anexe aqui todos os documentos requeridos em um único arquivo em formato PDF.')
+                                //     ->hint('* Formato PDF')
+                                //     ->visible(function (Get $get): bool {
+                                //         $id = $get('idprocesso_seletivo');
+                                //         if (!$id) return false;
+
+                                //         $processoSeletivo = ProcessoSeletivo::where('idprocesso_seletivo', $id)->first();
+                                //         return $processoSeletivo?->requer_anexos;
+                                //     })
+                                //     ->required()
+                                //     ->maxFiles(1)
+                                //     ->disk('local')
+                                //     ->rules(['file', 'mimes:pdf', 'max:10240'])
+                                //     ->columnSpanFull(),
 
                                 Forms\Components\Select::make('idinscricao_vaga')
                                     ->label('Vaga')

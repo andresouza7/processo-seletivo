@@ -54,6 +54,20 @@ class ManageInscritos extends ManageRelatedRecords
                         TextEntry::make('tipo_vaga.descricao')->label('Tipo de Vaga'),
                     ])
                     ->columns(2),
+
+
+
+                TextEntry::make('cod_inscricao')
+                    ->label('Documentos')
+                    ->formatStateUsing(function ($record) {
+                        // $record é a instância do modelo
+                        $links = $record->getMedia()->map(function ($media) use ($record) {
+                            return '<a href="' . tempMediaUrl($record) . '" target="_blank" class="text-blue-600 hover:underline">' . $media->file_name . '</a>';
+                        })->implode('<br>');
+
+                        return $links ?: '-';
+                    })
+                    ->html(), // precisa habilitar HTML
             ]);
     }
 
