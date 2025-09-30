@@ -61,6 +61,10 @@ class Cadastro extends Register
             Section::make('Identificação')
                 ->columns(2)
                 ->schema($this->getIdentificacaoSection()),
+            
+            Section::make('Informações Sociais')
+                ->columns(2)
+                ->schema($this->getInformacoesSociaisSection()),
 
             Section::make('Contato')
                 ->schema($this->getContatoSection()),
@@ -94,7 +98,24 @@ class Cadastro extends Register
                 ])
                 ->reactive()
                 ->required(),
+        ];
+    }
 
+
+    //////////////////
+    ////////////////// sociais
+    //////////////////
+    //////////////////
+
+
+    /////////// NOVO GRUPO DE INFORMAÇÕES
+    protected function getInformacoesSociaisSection(): array
+    {
+        return [
+
+           
+
+            /////// SELECT: DADOS DE GÊNERO
             Select::make('identidade_genero')
                 ->label('Identidade de gênero')
                 ->options(fn (Get $get) => match ($get('sexo')) {
@@ -119,10 +140,10 @@ class Cadastro extends Register
                 })
                 
                 ->reactive()
+                ->columnSpanFull()
                 ->required(),
 
-            ////////////////
-
+            //////////////// AVISO DINÂMICO GENERO
             Placeholder::make('')
             ->content(fn (Get $get) => match ($get('identidade_genero')) {
                 'C' => new HtmlString(
@@ -138,28 +159,128 @@ class Cadastro extends Register
             })
             ->visible(fn (Get $get) => in_array($get('identidade_genero'), ['C','T','NB']))
             ->columnSpanFull(),
-
-            ///////////////
-            
-                
+                        
+            //////////// INPUT ESPECIFICANDO GENERO: OUTROS    
             TextInput::make('identidade_genero_descricao')
                 ->label('Minha identidade de genero é')                
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['O']))
-                ->required(),
+                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['O'])),
 
+            ///////// CHECKBOX PARA USO DE NOME SOCIAL (default: não usar)
             Checkbox::make('usar_nome_social')
                 ->label('Usar nome social')
                 ->reactive()
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['T', 'TV', 'NB', 'O'])),
 
-
+            ///////// TEXTBOX DO NOME SOCIAL
             TextInput::make('nome_social')
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('usar_nome_social')),
+
+                
+            /////// SELECT ORIENTACAO SEXUAL  
+            Select::make('orientacao_sexual')
+                ->label('Orientação sexual:')
+                ->options([
+                    'A' => 'Heterossexual',
+                    'B' => 'Homossexual',
+                    'C' => 'Bissexual',
+                    'D' => 'Panssexual',
+                    'E' => 'Assexual',
+                ])
+                ->reactive()
+                ->columnSpanFull()
+                ->required(),
+            
+            //////// AVISO DINAMICO ORIENTACAO
+            Placeholder::make('')
+            ->content(fn (Get $get) => match ($get('orientacao_sexual')) {
+                'A' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
+                ),
+                'B' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se atrai ao mesmo gênero</em></span>'
+                ),
+                'C' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se atrai a ambos gêneros</em></span>'
+                ),
+                'D' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se atrai a todos os gêneros</em></span>'
+                ),
+                'E' => new HtmlString(
+                    '<span style="color:grey;"><em>* pessoa que se não se atrai a nenhum gênero</em></span>'
+                ),
+                default => null,
+            })
+            ->visible(fn (Get $get) => in_array($get('orientacao_sexual'), ['A','B','C','D','E']))
+            ->columnSpanFull(),
+                
+            ///////// CHECKBOX PARA DEFICIENCIA (default: não usar)
+            Checkbox::make('deficiencia')
+                ->label('Possui deficiência, transtorno global do desenvolvimento, altas habilidades ou superdotação?')
+                ->reactive()
+                ->columnSpanFull(),
+
+
+            /////////////// SELECT: RAÇA
+            Select::make('raca')
+                ->label('Raça/Cor')
+                ->options([
+                    'A' => 'Negro de cor preta',
+                    'B' => 'Negro de cor parda',
+                    'C' => 'Branca',
+                    'D' => 'Indígena',
+                    'E' => 'Amarela',
+                    
+                ])
+                ->reactive()
+                ->required(),           
+                
+
+            ///////// TEXTBOX DA DEFICIENCIA
+            TextInput::make('deficiencia_descricao')
+                ->label('Caso possuia deficiência, favor especificar qual:')
+                ->columnSpanFull()
+                ->visible(fn(Get $get) => $get('deficiencia')),
+
+            /////////////// SELECT: ESTADO CIVIL
+                Select::make('estado_civil')
+                ->label('Estado civil:')
+                ->options([
+                    'A' => 'Casado (a)',
+                    'B' => 'Solteiro (a)',
+                    'C' => 'Divorciado (a)',
+                    'D' => 'Viúvo(a)',
+                    'E' => 'União estável',
+                    'F' => 'Separado(a)',
+                    
+                ])
+                ->reactive()
+                ->required(),
+
+            /////////////// SELECT: COMUNIDADE
+                Select::make('comunidade')
+                ->label('Você é pertencente à comunidade:')
+                ->options([
+                    'A' => 'Comunidade Ribeirinha',
+                    'B' => 'Comunidade Quilombola',
+                    'C' => 'Comunidade Indígena',
+                    'D' => 'Comunidade Tradicional (extrativistas)',
+                    'E' => 'Não se aplica',
+                    
+                ])
+                ->reactive()
+                ->required(),
+
         ];
     }
+
+
+    //////////////////
+    ////////////////// dados de contato
+    //////////////////
+    //////////////////
 
     protected function getContatoSection(): array
     {
