@@ -44,50 +44,56 @@ class CustomPathGenerator implements PathGenerator
 {
     public function getPath(Media $media): string
     {
-        return $this->getBasePath($media);
+        return $this->basePath($media);
     }
 
     public function getPathForConversions(Media $media): string
     {
-        return $this->getBasePath($media) . 'conversions/';
+        return $this->basePath($media) . 'conversions/';
     }
 
     public function getPathForResponsiveImages(Media $media): string
     {
-        return $this->getBasePath($media) . 'responsive-images/';
+        return $this->basePath($media) . 'responsive-images/';
     }
 
-    private function getBasePath(Media $media): string
+    private function basePath(Media $media): string
     {
-        if (! $this->shouldHaveCustomPath($media)) {
-            return $this->getDefaultPath($media);
-        }
-
         $model = $media->model;
 
-        $subfolder = match (true) {
-            $model instanceof ProcessoSeletivoAnexo => $model->getAttribute('idprocesso_seletivo_anexo'),
-            $model instanceof Inscricao             => 'inscricoes',
-            $model instanceof Recurso               => 'recursos',
-            default                                 => 'outros',
-        };
+        $subfolder = $this->resolveSubfolder($model);
+
+        if ($subfolder === null) {
+            // fallback to default path when model not supported
+            return $this->defaultPath($media) . '/';
+        }
 
         $processoSeletivo = optional($model->getAttribute('processo_seletivo'));
         $tipo = optional($processoSeletivo->tipo)->chave;
         $diretorio = $processoSeletivo->diretorio;
 
-        return "{$tipo}/{$diretorio}/{$subfolder}/";
+        return rtrim("{$tipo}/{$diretorio}/{$subfolder}", '/') . '/';
     }
 
-    private function getDefaultPath(Media $media): string
+    /**
+     * Map model types to subfolders.
+     * Return `''` for no subfolder, or `null` if not supported.
+     */
+    private function resolveSubfolder($model): ?string
+    {
+        return match (true) {
+            $model instanceof ProcessoSeletivoAnexo => '',           // no subfolder
+            $model instanceof Inscricao             => 'inscricoes',
+            $model instanceof Recurso               => 'recursos',
+            // 🔮 easy to extend here later:
+            // $model instanceof LaudoMedico           => 'laudos',
+            default                                 => null,         // fallback to default path
+        };
+    }
+
+    private function defaultPath(Media $media): string
     {
         return md5($media->id . config('app.key'));
     }
-
-    private function shouldHaveCustomPath(Media $media): bool
-    {
-        return $media->model instanceof ProcessoSeletivoAnexo
-            || $media->model instanceof Inscricao
-            || $media->model instanceof Recurso;
-    }
 }
+

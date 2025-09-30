@@ -71,10 +71,10 @@ class ManageAnexos extends ManageRelatedRecords
                     ->hidden(fn($record) => Carbon::parse($record->data_publicacao)->lt(Carbon::parse('2024-11-01'))),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('download')
-                    // ->disabled(fn($record) => !$record->url_arquivo)
+                    ->disabled(fn($record) => !$record->url_arquivo)
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')
-                    // ->url(fn($record) => dd('anexo.show', $record->getFirstMedia('documentos_requeridos')))
+                    ->url(fn($record) => $record->url_arquivo)
                     ->openUrlInNewTab(),
             ]);
     }

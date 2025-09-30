@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Filament\Candidato\Resources\EtapaRecursoResource;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -61,6 +63,23 @@ class ProcessoSeletivo extends Model
     }
 
     // public $timestamps = false;
+
+    public function getUrlArquivoAttribute()
+    {
+        $systemMigrationReferenceDate = Carbon::parse('2024-11-01');
+
+        // Check if `data_publicacao` is older than the reference date
+        if (Carbon::parse($this->data_publicacao)->lt($systemMigrationReferenceDate)) {
+            $oldFilePath = $this->processo_seletivo->tipo->chave . '/' .
+                $this->processo_seletivo->diretorio . '/' .
+                optional($this->arquivo)->codname . '.pdf';
+
+            return Storage::url($oldFilePath);
+        }
+
+        // Otherwise, return the URL from Spatie Media Library
+        return $this->getFirstMediaUrl();
+    }
 
     public function getAceitaInscricaoAttribute()
     {
