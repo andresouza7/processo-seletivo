@@ -61,7 +61,7 @@ class RecursoResource extends Resource
                     ->maxFiles(1)
                     ->disk('local')
                     ->collection('anexo_avaliador')
-                    ->rules(['file', 'mimes:pdf', 'max:10240'])
+                    ->rules(['file', 'mimes:pdf', 'max:2048'])
             ]);
     }
 

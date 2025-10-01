@@ -60,7 +60,7 @@ class ManageRecursos extends ManageRelatedRecords
                     ->maxFiles(1)
                     ->disk('public')
                     ->collection('anexo_resposta_recurso')
-                    ->rules(['file', 'mimes:pdf', 'max:10240'])
+                    ->rules(['file', 'mimes:pdf', 'max:2048'])
             ]);
     }
 

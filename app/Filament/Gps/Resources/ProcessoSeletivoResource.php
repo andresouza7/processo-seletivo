@@ -22,6 +22,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -102,14 +103,9 @@ class ProcessoSeletivoResource extends Resource
                             ]),
                     ])->columns(3),
 
-                    Group::make([
-
-                        RichEditor::make('descricao')
-                            ->required()
-                            ->label('Descrição'),
-                        Checkbox::make('requer_anexos')
-                            ->label('Requer anexos na inscrição?'),
-                    ]),
+                    RichEditor::make('descricao')
+                        ->required()
+                        ->label('Descrição'),
 
                     Group::make([
                         Fieldset::make('Período de Publicação')
@@ -120,7 +116,7 @@ class ProcessoSeletivoResource extends Resource
                                 DatePicker::make('data_publicacao_fim')
                                     ->label('Fim')
                                     ->required()
-                            ]),
+                            ])->columnSpan(1),
                         Fieldset::make('Período de Inscrições')
                             ->schema([
                                 DatePicker::make('data_inscricao_inicio')
@@ -129,8 +125,24 @@ class ProcessoSeletivoResource extends Resource
                                 DatePicker::make('data_inscricao_fim')
                                     ->label('Fim')
                                     ->required(),
-                            ]),
-                    ]),
+                            ])->columnSpan(1),
+                    ])->columns(2),
+
+                    Repeater::make('anexos')
+                        ->label('Documentos Requeridos')
+                        ->schema([
+                            TextInput::make('item')
+                                ->label('Nome do Documento')
+                                ->required()
+                        ])
+                        ->cloneable()
+                        ->collapsed()
+                        ->columnSpanFull()
+                        ->minItems(1)
+                        ->addActionLabel('Adicionar Documento')
+                        ->defaultItems(function ($record) {
+                            return $record->anexos ?? [];
+                        }),
                 ])
             ])->columns(2);
     }
