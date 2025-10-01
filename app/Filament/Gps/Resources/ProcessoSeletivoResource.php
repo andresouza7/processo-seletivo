@@ -103,15 +103,30 @@ class ProcessoSeletivoResource extends Resource
                             ]),
                     ])->columns(3),
 
+                    RichEditor::make('descricao')
+                        ->required()
+                        ->label('Descrição'),
+
                     Group::make([
-
-                        RichEditor::make('descricao')
-                            ->required()
-                            ->label('Descrição'),
-                        Checkbox::make('requer_anexos')
-                            ->label('Requer anexos na inscrição?'),
-
-                    ]),
+                        Fieldset::make('Período de Publicação')
+                            ->schema([
+                                DatePicker::make('data_publicacao_inicio')
+                                    ->label('Início')
+                                    ->required(),
+                                DatePicker::make('data_publicacao_fim')
+                                    ->label('Fim')
+                                    ->required()
+                            ])->columnSpan(1),
+                        Fieldset::make('Período de Inscrições')
+                            ->schema([
+                                DatePicker::make('data_inscricao_inicio')
+                                    ->label('Início')
+                                    ->required(),
+                                DatePicker::make('data_inscricao_fim')
+                                    ->label('Fim')
+                                    ->required(),
+                            ])->columnSpan(1),
+                    ])->columns(2),
 
                     Repeater::make('anexos')
                         ->label('Documentos Requeridos')
@@ -128,27 +143,6 @@ class ProcessoSeletivoResource extends Resource
                         ->defaultItems(function ($record) {
                             return $record->anexos ?? [];
                         }),
-
-                    Group::make([
-                        Fieldset::make('Período de Publicação')
-                            ->schema([
-                                DatePicker::make('data_publicacao_inicio')
-                                    ->label('Início')
-                                    ->required(),
-                                DatePicker::make('data_publicacao_fim')
-                                    ->label('Fim')
-                                    ->required()
-                            ]),
-                        Fieldset::make('Período de Inscrições')
-                            ->schema([
-                                DatePicker::make('data_inscricao_inicio')
-                                    ->label('Início')
-                                    ->required(),
-                                DatePicker::make('data_inscricao_fim')
-                                    ->label('Fim')
-                                    ->required(),
-                            ]),
-                    ]),
                 ])
             ])->columns(2);
     }

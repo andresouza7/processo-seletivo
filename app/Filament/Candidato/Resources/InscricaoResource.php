@@ -9,24 +9,17 @@ use App\Models\Inscricao;
 use App\Models\InscricaoVaga;
 use App\Models\ProcessoSeletivo;
 use Filament\Forms;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Infolists\Components\Actions;
-use Filament\Infolists\Components\Actions\Action;
-use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use Filament\Infolists\Infolist;
 use Filament\Navigation\NavigationItem;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,11 +37,6 @@ class InscricaoResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
     protected static ?string $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 1;
-
-    protected const documentos = [
-        'rg',
-        'cpf',
-    ];
 
     public static function infolist(InfoList $infolist): Infolist
     {
@@ -76,14 +64,6 @@ class InscricaoResource extends Resource
                             ->label('Vaga'),
                         TextEntry::make('tipo_vaga.descricao')
                             ->label('Tipo de Vaga'),
-
-                        // TextEntry::make('necessita_atendimento')
-                        //     ->label('Necessita Atendimento Especial')
-                        //     ->badge(),
-
-                        // TextEntry::make('qual_atendimento')
-                        //     ->label('Qual Atendimento')
-                        //     ->visible(fn($record) => $record->necessita_atendimento === 'S'),
                     ]),
 
                 Section::make('ATENDIMENTO ESPECIAL')
@@ -144,36 +124,24 @@ class InscricaoResource extends Resource
                                     }),
 
                                 Group::make()
+                                    ->visible(fn(Get $get) => $get('idprocesso_seletivo'))
                                     ->schema(fn(Get $get) => [
-                                        ...collect($get('anexos'))->map(function ($item, $index) {
-                                            return SpatieMediaLibraryFileUpload::make("documentos_requeridos_$index")
-                                                ->label(fn() => $item['item'])
-                                                ->disk('local')
-                                                ->maxFiles(1)
-                                                ->rules(['file', 'mimes:pdf', 'max:10240'])
-                                                ->acceptedFileTypes(['application/pdf'])
-                                                ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file) use ($item): string {
-                                                    return $item['item'] . '.' . $file->getClientOriginalExtension();
-                                                });
-                                        })
+                                        Fieldset::make('Documentos Requeridos')
+                                            ->schema([
+                                                ...collect($get('anexos'))->map(function ($item, $index) {
+                                                    return SpatieMediaLibraryFileUpload::make("documentos_requeridos_$index")
+                                                        ->label(fn() => $item['item'])
+                                                        ->disk('local')
+                                                        ->maxFiles(1)
+                                                        ->rules(['file', 'mimes:pdf', 'max:2048'])
+                                                        ->acceptedFileTypes(['application/pdf'])
+                                                        ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file) use ($item): string {
+                                                            return $item['item'] . '.' . $file->getClientOriginalExtension();
+                                                        });
+                                                })
+                                            ])
+
                                     ])->columnSpanFull(),
-
-                                // SpatieMediaLibraryFileUpload::make('documentos_requeridos')
-                                //     ->label('Anexar documentos')
-                                //     ->helperText('* Este Processo Seletivo requer o envio de documentação comprobatória no momento da inscrição. Anexe aqui todos os documentos requeridos em um único arquivo em formato PDF.')
-                                //     ->hint('* Formato PDF')
-                                //     ->visible(function (Get $get): bool {
-                                //         $id = $get('idprocesso_seletivo');
-                                //         if (!$id) return false;
-
-                                //         $processoSeletivo = ProcessoSeletivo::where('idprocesso_seletivo', $id)->first();
-                                //         return $processoSeletivo?->requer_anexos;
-                                //     })
-                                //     ->required()
-                                //     ->maxFiles(1)
-                                //     ->disk('local')
-                                //     ->rules(['file', 'mimes:pdf', 'max:10240'])
-                                //     ->columnSpanFull(),
 
                                 Forms\Components\Select::make('idinscricao_vaga')
                                     ->label('Vaga')
@@ -191,11 +159,6 @@ class InscricaoResource extends Resource
                                             })
                                             : [];
                                     }),
-
-                                // Forms\Components\Select::make('idtipo_vaga')
-                                //     ->relationship('tipo_vaga', 'descricao')
-                                //     ->columnSpanFull()
-                                //     ->required(),
 
                                 Forms\Components\Select::make('necessita_atendimento')
                                     ->label('Precisa de Atendimento Especial?')
@@ -227,7 +190,7 @@ class InscricaoResource extends Resource
                                     ->maxFiles(1)
                                     ->disk('local')
                                     ->collection('laudo_medico')
-                                    ->rules(['file', 'mimes:pdf', 'max:10240'])
+                                    ->rules(['file', 'mimes:pdf', 'max:2048'])
                                     ->columnSpanFull(),
 
                                 Forms\Components\Checkbox::make('aceita_termos')

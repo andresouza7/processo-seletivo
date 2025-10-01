@@ -89,7 +89,7 @@ class RecursosRelationManager extends RelationManager
                     ->maxFiles(1)
                     ->disk('local')
                     ->collection('anexo_candidato')
-                    ->rules(['file', 'mimes:pdf', 'max:10240'])
+                    ->rules(['file', 'mimes:pdf', 'max:2048'])
             ]);
     }
 
