@@ -217,6 +217,15 @@ class Cadastro extends Register
                 ->columnSpanFull(),
 
 
+                    
+                
+
+            ///////// TEXTBOX DA DEFICIENCIA
+            TextInput::make('deficiencia_descricao')
+                ->label('Caso possuia deficiência, favor especificar qual:')
+                ->columnSpanFull()
+                ->visible(fn(Get $get) => $get('deficiencia')),
+
             /////////////// SELECT: RAÇA
             Select::make('raca')
                 ->label('Raça/Cor')
@@ -229,14 +238,7 @@ class Cadastro extends Register
                     
                 ])
                 ->reactive()
-                ->required(),           
-                
-
-            ///////// TEXTBOX DA DEFICIENCIA
-            TextInput::make('deficiencia_descricao')
-                ->label('Caso possuia deficiência, favor especificar qual:')
-                ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('deficiencia')),
+                ->required(),  
 
             /////////////// SELECT: ESTADO CIVIL
                 Select::make('estado_civil')
