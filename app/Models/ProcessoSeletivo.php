@@ -44,13 +44,18 @@ class ProcessoSeletivo extends Model
         'data_recurso_inicio',
         'data_recurso_fim',
         'psu',
-        'requer_anexos'
+        'requer_anexos',
+        'anexos'
     ];
 
     protected $appends = [
         'aceita_inscricao',
         'aceita_recurso',
         'link_recurso'
+    ];
+
+    protected $casts = [
+        'anexos' => 'array'
     ];
 
     protected static function booted()
