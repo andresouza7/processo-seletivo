@@ -32,4 +32,4 @@ Route::get('/media/{uuid}', [MediaController::class, 'serveMedia'])
 // rota que gera URL temporária sob demanda
 Route::get('/media/temp/{media}', [MediaController::class, 'getTemporaryUrl'])
     ->name('media.temp')
-    ->middleware('auth'); // só usuásrios logado
+    ->middleware('auth'); // só usuários logados

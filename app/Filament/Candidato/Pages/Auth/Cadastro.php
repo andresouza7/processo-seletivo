@@ -102,12 +102,6 @@ class Cadastro extends Register
     }
 
 
-    //////////////////
-    ////////////////// sociais
-    //////////////////
-    //////////////////
-
-
     /////////// NOVO GRUPO DE INFORMAÇÕES
     protected function getInformacoesSociaisSection(): array
     {
@@ -183,11 +177,11 @@ class Cadastro extends Register
             Select::make('orientacao_sexual')
                 ->label('Orientação sexual:')
                 ->options([
-                    'A' => 'Heterossexual',
-                    'B' => 'Homossexual',
-                    'C' => 'Bissexual',
-                    'D' => 'Panssexual',
-                    'E' => 'Assexual',
+                    'HT' => 'Heterossexual',
+                    'HM' => 'Homossexual',
+                    'B' => 'Bissexual',
+                    'P' => 'Panssexual',
+                    'A' => 'Assexual',
                 ])
                 ->reactive()
                 ->columnSpanFull()
@@ -196,19 +190,19 @@ class Cadastro extends Register
             //////// AVISO DINAMICO ORIENTACAO
             Placeholder::make('')
             ->content(fn (Get $get) => match ($get('orientacao_sexual')) {
-                'A' => new HtmlString(
+                'HT' => new HtmlString(
                     '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
                 ),
-                'B' => new HtmlString(
+                'HM' => new HtmlString(
                     '<span style="color:grey;"><em>* pessoa que se atrai ao mesmo gênero</em></span>'
                 ),
-                'C' => new HtmlString(
+                'B' => new HtmlString(
                     '<span style="color:grey;"><em>* pessoa que se atrai a ambos gêneros</em></span>'
                 ),
-                'D' => new HtmlString(
+                'P' => new HtmlString(
                     '<span style="color:grey;"><em>* pessoa que se atrai a todos os gêneros</em></span>'
                 ),
-                'E' => new HtmlString(
+                'A' => new HtmlString(
                     '<span style="color:grey;"><em>* pessoa que se não se atrai a nenhum gênero</em></span>'
                 ),
                 default => null,
@@ -227,11 +221,11 @@ class Cadastro extends Register
             Select::make('raca')
                 ->label('Raça/Cor')
                 ->options([
-                    'A' => 'Negro de cor preta',
-                    'B' => 'Negro de cor parda',
-                    'C' => 'Branca',
-                    'D' => 'Indígena',
-                    'E' => 'Amarela',
+                    'NA' => 'Negro de cor preta',
+                    'NB' => 'Negro de cor parda',
+                    'B' => 'Branca',
+                    'I' => 'Indígena',
+                    'A' => 'Amarela',
                     
                 ])
                 ->reactive()
@@ -248,12 +242,12 @@ class Cadastro extends Register
                 Select::make('estado_civil')
                 ->label('Estado civil:')
                 ->options([
-                    'A' => 'Casado (a)',
-                    'B' => 'Solteiro (a)',
-                    'C' => 'Divorciado (a)',
-                    'D' => 'Viúvo(a)',
-                    'E' => 'União estável',
-                    'F' => 'Separado(a)',
+                    'C' => 'Casado (a)',
+                    'S' => 'Solteiro (a)',
+                    'D' => 'Divorciado (a)',
+                    'V' => 'Viúvo(a)',
+                    'U' => 'União estável',
+                    'SP' => 'Separado(a)',
                     
                 ])
                 ->reactive()
@@ -263,11 +257,11 @@ class Cadastro extends Register
                 Select::make('comunidade')
                 ->label('Você é pertencente à comunidade:')
                 ->options([
-                    'A' => 'Comunidade Ribeirinha',
-                    'B' => 'Comunidade Quilombola',
-                    'C' => 'Comunidade Indígena',
-                    'D' => 'Comunidade Tradicional (extrativistas)',
-                    'E' => 'Não se aplica',
+                    'R' => 'Comunidade Ribeirinha',
+                    'Q' => 'Comunidade Quilombola',
+                    'I' => 'Comunidade Indígena',
+                    'T' => 'Comunidade Tradicional (extrativistas)',
+                    'O' => 'Não se aplica',
                     
                 ])
                 ->reactive()
@@ -276,11 +270,6 @@ class Cadastro extends Register
         ];
     }
 
-
-    //////////////////
-    ////////////////// dados de contato
-    //////////////////
-    //////////////////
 
     protected function getContatoSection(): array
     {
