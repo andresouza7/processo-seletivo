@@ -61,7 +61,7 @@ class Cadastro extends Register
             Section::make('Identificação')
                 ->columns(2)
                 ->schema($this->getIdentificacaoSection()),
-            
+
             Section::make('Informações Sociais')
                 ->columns(2)
                 ->schema($this->getInformacoesSociaisSection()),
@@ -94,7 +94,7 @@ class Cadastro extends Register
                 ->options([
                     'M' => 'Masculino',
                     'F' => 'Feminino',
-                    
+
                 ])
                 ->reactive()
                 ->required(),
@@ -107,12 +107,12 @@ class Cadastro extends Register
     {
         return [
 
-           
+
 
             /////// SELECT: DADOS DE GÊNERO
             Select::make('identidade_genero')
                 ->label('Identidade de gênero')
-                ->options(fn (Get $get) => match ($get('sexo')) {
+                ->options(fn(Get $get) => match ($get('sexo')) {
                     'M' => [
                         'C' => 'Cisgênero',
                         'T' => 'Transgênero',
@@ -129,34 +129,33 @@ class Cadastro extends Register
                         'NB' => 'Não-binário',
                         'O'  => 'Outro',
                     ],
-                    
+
                     default => []
                 })
-                
+
                 ->reactive()
-                ->columnSpanFull()
-                ->required(),
+                ->columnSpanFull(),
 
             //////////////// AVISO DINÂMICO GENERO
             Placeholder::make('')
-            ->content(fn (Get $get) => match ($get('identidade_genero')) {
-                'C' => new HtmlString(
-                    '<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'
-                ),
-                'T' => new HtmlString(
-                    '<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'
-                ),
-                'NB' => new HtmlString(
-                    '<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'
-                ),
-                default => null,
-            })
-            ->visible(fn (Get $get) => in_array($get('identidade_genero'), ['C','T','NB']))
-            ->columnSpanFull(),
-                        
+                ->content(fn(Get $get) => match ($get('identidade_genero')) {
+                    'C' => new HtmlString(
+                        '<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'
+                    ),
+                    'T' => new HtmlString(
+                        '<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'
+                    ),
+                    'NB' => new HtmlString(
+                        '<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'
+                    ),
+                    default => null,
+                })
+                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['C', 'T', 'NB']))
+                ->columnSpanFull(),
+
             //////////// INPUT ESPECIFICANDO GENERO: OUTROS    
             TextInput::make('identidade_genero_descricao')
-                ->label('Minha identidade de genero é')                
+                ->label('Me identifico como')
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['O'])),
 
@@ -172,7 +171,7 @@ class Cadastro extends Register
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('usar_nome_social')),
 
-                
+
             /////// SELECT ORIENTACAO SEXUAL  
             Select::make('orientacao_sexual')
                 ->label('Orientação sexual:')
@@ -186,36 +185,41 @@ class Cadastro extends Register
                 ->reactive()
                 ->columnSpanFull()
                 ->required(),
-            
+
             //////// AVISO DINAMICO ORIENTACAO
             Placeholder::make('')
-            ->content(fn (Get $get) => match ($get('orientacao_sexual')) {
-                'HT' => new HtmlString(
-                    '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
-                ),
-                'HM' => new HtmlString(
-                    '<span style="color:grey;"><em>* pessoa que se atrai ao mesmo gênero</em></span>'
-                ),
-                'B' => new HtmlString(
-                    '<span style="color:grey;"><em>* pessoa que se atrai a ambos gêneros</em></span>'
-                ),
-                'P' => new HtmlString(
-                    '<span style="color:grey;"><em>* pessoa que se atrai a todos os gêneros</em></span>'
-                ),
-                'A' => new HtmlString(
-                    '<span style="color:grey;"><em>* pessoa que se não se atrai a nenhum gênero</em></span>'
-                ),
-                default => null,
-            })
-            ->visible(fn (Get $get) => in_array($get('orientacao_sexual'), ['A','B','C','D','E']))
-            ->columnSpanFull(),
-                
+                ->content(fn(Get $get) => match ($get('orientacao_sexual')) {
+                    'HT' => new HtmlString(
+                        '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
+                    ),
+                    'HM' => new HtmlString(
+                        '<span style="color:grey;"><em>* pessoa que se atrai ao mesmo gênero</em></span>'
+                    ),
+                    'B' => new HtmlString(
+                        '<span style="color:grey;"><em>* pessoa que se atrai a ambos gêneros</em></span>'
+                    ),
+                    'P' => new HtmlString(
+                        '<span style="color:grey;"><em>* pessoa que se atrai a todos os gêneros</em></span>'
+                    ),
+                    'A' => new HtmlString(
+                        '<span style="color:grey;"><em>* pessoa que se não se atrai a nenhum gênero</em></span>'
+                    ),
+                    default => null,
+                })
+                ->visible(fn(Get $get) => in_array($get('orientacao_sexual'), ['A', 'B', 'C', 'D', 'E']))
+                ->columnSpanFull(),
+
             ///////// CHECKBOX PARA DEFICIENCIA (default: não usar)
             Checkbox::make('deficiencia')
                 ->label('Possui deficiência, transtorno global do desenvolvimento, altas habilidades ou superdotação?')
                 ->reactive()
                 ->columnSpanFull(),
 
+            ///////// TEXTBOX DA DEFICIENCIA
+            TextInput::make('deficiencia_descricao')
+                ->label('Caso possuia deficiência, favor especificar qual:')
+                ->columnSpanFull()
+                ->visible(fn(Get $get) => $get('deficiencia')),
 
             /////////////// SELECT: RAÇA
             Select::make('raca')
@@ -226,20 +230,13 @@ class Cadastro extends Register
                     'B' => 'Branca',
                     'I' => 'Indígena',
                     'A' => 'Amarela',
-                    
+
                 ])
                 ->reactive()
-                ->required(),           
-                
-
-            ///////// TEXTBOX DA DEFICIENCIA
-            TextInput::make('deficiencia_descricao')
-                ->label('Caso possuia deficiência, favor especificar qual:')
-                ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('deficiencia')),
+                ->required(),
 
             /////////////// SELECT: ESTADO CIVIL
-                Select::make('estado_civil')
+            Select::make('estado_civil')
                 ->label('Estado civil:')
                 ->options([
                     'C' => 'Casado (a)',
@@ -248,13 +245,13 @@ class Cadastro extends Register
                     'V' => 'Viúvo(a)',
                     'U' => 'União estável',
                     'SP' => 'Separado(a)',
-                    
+
                 ])
                 ->reactive()
                 ->required(),
 
             /////////////// SELECT: COMUNIDADE
-                Select::make('comunidade')
+            Select::make('comunidade')
                 ->label('Você é pertencente à comunidade:')
                 ->options([
                     'R' => 'Comunidade Ribeirinha',
@@ -262,7 +259,7 @@ class Cadastro extends Register
                     'I' => 'Comunidade Indígena',
                     'T' => 'Comunidade Tradicional (extrativistas)',
                     'O' => 'Não se aplica',
-                    
+
                 ])
                 ->reactive()
                 ->required(),
