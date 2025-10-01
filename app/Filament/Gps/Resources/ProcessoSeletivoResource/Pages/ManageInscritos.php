@@ -55,14 +55,13 @@ class ManageInscritos extends ManageRelatedRecords
                     ])
                     ->columns(2),
 
-
-
                 TextEntry::make('cod_inscricao')
                     ->label('Documentos')
                     ->formatStateUsing(function ($record) {
                         // $record é a instância do modelo
-                        $links = $record->getMedia()->map(function ($media) use ($record) {
-                            return '<a href="' . tempMediaUrl($record) . '" target="_blank" class="text-blue-600 hover:underline">' . $media->file_name . '</a>';
+                        $links = $record->getMedia()->map(function ($media) {
+                            $route = route('media.temp', $media?->uuid);
+                            return '<a href="' . $route . '" target="_blank" class="text-blue-600 hover:underline">' . $media->file_name . '</a>';
                         })->implode('<br>');
 
                         return $links ?: '-';
@@ -105,12 +104,6 @@ class ManageInscritos extends ManageRelatedRecords
                 Tables\Actions\ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\Action::make('ver_anexo')
-                    ->label('Anexos')
-                    ->icon('heroicon-o-eye')
-                    ->url(fn($record) => tempMediaUrl($record))
-                    ->openUrlInNewTab()
-                    ->visible(fn($record) => $record->hasMedia()),
 
                 Tables\Actions\Action::make('ver_laudo')
                     ->label('Laudo')

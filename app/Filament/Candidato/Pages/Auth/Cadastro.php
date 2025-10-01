@@ -328,18 +328,6 @@ class Cadastro extends Register
     {
         try {
             return DB::transaction(function () use ($data) {
-                // $data['senha'] = $data['password']; 
-                // unset($data['password']); 
-
-                // $data['sexo'] = 'M';
-                // $data['ci'] = '165465321';
-                // $data['matricula'] = '1324654';
-                // $data['endereco'] = 'Av professor tostes';
-                // $data['bairro'] = 'buritizal';
-                // $data['numero'] = '123';
-                // $data['complemento'] = '.';
-                // $data['cidade'] = 'Macapá';
-                // $data['telefone'] = '99999-9999';
                 $lastId = InscricaoPessoa::max('idpessoa') ?? 0; // If no rows, start at 0
                 $data['idpessoa'] = $lastId + 1;
                 $data['perfil'] = '';
