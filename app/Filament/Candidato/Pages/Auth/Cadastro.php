@@ -112,26 +112,14 @@ class Cadastro extends Register
             /////// SELECT: DADOS DE GÊNERO
             Select::make('identidade_genero')
                 ->label('Identidade de gênero')
-                ->options(fn(Get $get) => match ($get('sexo')) {
-                    'M' => [
-                        'C' => 'Cisgênero',
-                        'T' => 'Transgênero',
-                        'NB' => 'Não-binário',
-                        'TV' => 'Travesti',
-                        'NB' => 'Não-binário',
-                        'O'  => 'Outro',
-                    ],
-                    'F' => [
-                        'C' => 'Cisgênero',
-                        'T' => 'Transgênero',
-                        'NB' => 'Não-binário',
-                        'TV' => 'Travesti',
-                        'NB' => 'Não-binário',
-                        'O'  => 'Outro',
-                    ],
-
-                    default => []
-                })
+                ->options([
+                    'C' => 'Cisgênero',
+                    'T' => 'Transgênero',
+                    'NB' => 'Não-binário',
+                    'TV' => 'Travesti',
+                    'NB' => 'Não-binário',
+                    'O'  => 'Outro',
+                ])
 
                 ->reactive()
                 ->columnSpanFull(),
