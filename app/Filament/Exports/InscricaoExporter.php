@@ -24,29 +24,27 @@ class InscricaoExporter extends Exporter
             ExportColumn::make('qual_atendimento'),
             ExportColumn::make('observacao'),
             ExportColumn::make('local_prova'),
-            ExportColumn::make('link_anexos')
-                ->label('Link Anexos')
+            ExportColumn::make('link_inscricao')
+                ->label('Link Inscrição')
                 ->state(function (Inscricao $record): ?string {
-                    $url = $record->getFirstMediaUrl('documentos_requeridos');
+                    try {
+                        $url = route(
+                            'filament.gps.resources.processos.inscritos',
+                            [
+                                $record->processo_seletivo->idprocesso_seletivo,
+                                'tableSearch' => $record->cod_inscricao
+                            ]
+                        );
 
-                    if (! $url) {
-                        return null;
+                        if (!$url || !$record) {
+                            return null;
+                        }
+
+                        return '=HYPERLINK("' . $url . '", "Visualizar Inscrição")';
+                    } catch (\Throwable $th) {
+                        throw $th;
+                        return '';
                     }
-
-                    // This will display "Abrir Documento" as the clickable text
-                    return '=HYPERLINK("' . $url . '", "Abrir Documento")';
-                }),
-            ExportColumn::make('link_laudo_medico')
-                ->label('Link Laudo Médico')
-                ->state(function (Inscricao $record): ?string {
-                    $url = $record->getFirstMediaUrl('laudo_medico');
-
-                    if (! $url) {
-                        return null;
-                    }
-
-                    // This will display "Abrir Documento" as the clickable text
-                    return '=HYPERLINK("' . $url . '", "Abrir Documento")';
                 }),
             // Dados Pessoa
             ExportColumn::make('inscricao_pessoa.nome')->label('Nome Candidato'),

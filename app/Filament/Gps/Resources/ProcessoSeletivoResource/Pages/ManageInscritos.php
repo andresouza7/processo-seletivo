@@ -67,6 +67,16 @@ class ManageInscritos extends ManageRelatedRecords
                         return $links ?: '-';
                     })
                     ->html(), // precisa habilitar HTML
+
+                    TextEntry::make('cod_inscricao')
+                    ->label('Laudo Médico')
+                    ->formatStateUsing(function ($record) {
+                        $link = tempMediaUrl($record, 'laudo_medico');
+                        $text = '<a href="' . $link . '" target="_blank" class="text-blue-600 hover:underline">Abrir</a>';
+
+                        return $link ? $text : '-';
+                    })
+                    ->html(), // precisa habilitar HTML
             ]);
     }
 
@@ -104,13 +114,6 @@ class ManageInscritos extends ManageRelatedRecords
                 Tables\Actions\ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-
-                Tables\Actions\Action::make('ver_laudo')
-                    ->label('Laudo')
-                    ->icon('heroicon-o-eye')
-                    ->url(fn($record) => tempMediaUrl($record))
-                    ->openUrlInNewTab()
-                    ->visible(fn($record) => $record->hasMedia('laudo_medico')),
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([
