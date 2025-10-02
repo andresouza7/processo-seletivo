@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('estado_civil', 2)->nullable();
             $table->string('comunidade', 2)->nullable();
             $table->string('identidade_genero', 255)->nullable();
+            $table->text('identidade_genero_descricao')->nullable();
             $table->string('sexo', 255)->nullable();
             $table->string('ci', 255)->nullable();
             $table->char('cpf', 11);
@@ -42,6 +43,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('remember_token', 100)->nullable();
             $table->boolean('must_change_password')->default(0);
+            
             $table->timestamps();
         });
     }

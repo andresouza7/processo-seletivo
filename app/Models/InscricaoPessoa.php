@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 // add must verify email directive later
-class InscricaoPessoa extends Authenticatable implements HasName
+class InscricaoPessoa extends Authenticatable implements HasName, FilamentUser
 {
     use HasFactory, Notifiable, CanResetPassword;
 
@@ -86,7 +88,13 @@ class InscricaoPessoa extends Authenticatable implements HasName
         return $this->nome;
     }
 
-    public function inscricoes() {
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
+
+    public function inscricoes()
+    {
         return $this->hasMany(Inscricao::class, 'idinscricao_pessoa', 'idpessoa');
     }
 }

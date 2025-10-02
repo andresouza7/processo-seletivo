@@ -52,7 +52,7 @@ class InscricaoPessoaFactory extends Factory
             'senha' => bcrypt('password'), 
             'password' => bcrypt('password'),
             'perfil' => 'S',
-            'situacao' => '1234567890',
+            'situacao' => 'A',
             'link_lattes' => $this->faker->url(),
             'resumo' => 'RESUMO',
         ];

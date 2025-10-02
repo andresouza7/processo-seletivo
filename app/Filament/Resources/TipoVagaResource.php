@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Gps\Resources;
+namespace App\Filament\Resources;
 
 use App\Filament\Resources\TipoVagaResource\Pages;
 use App\Models\TipoVaga;
