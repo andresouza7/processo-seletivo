@@ -117,6 +117,7 @@ class InscricaoResource extends Resource
                                 ->afterStateUpdated(function (callable $set, $state) {
                                     // Ensure anexos is always set as an array (avoid null/string issues)
                                     $processo = ProcessoSeletivo::find($state);
+                                    $set('possui_isencao', $processo?->possui_isencao);
                                     $anexos = (array) ($processo?->anexos ?? []);
                                     $set('anexos', $anexos);
                                 }),
@@ -202,6 +203,23 @@ class InscricaoResource extends Resource
                                 ->maxFiles(1)
                                 ->disk('local')
                                 ->collection('laudo_medico')
+                                ->rules(['file', 'mimes:pdf', 'max:2048'])
+                                ->columnSpanFull(),
+
+                            Checkbox::make('pedir_isencao')
+                                ->label('Solicitar isenção da taxa de inscrição')
+                                ->visible(fn(Get $get): bool => (bool) $get('possui_isencao'))
+                                ->columnSpanFull()
+                                ->live()
+                                ->default(false),
+
+                            SpatieMediaLibraryFileUpload::make('isencao_taxa')
+                                ->label('Comprovante de isenção de taxa')
+                                ->visible(fn(Get $get): bool => (bool) $get('pedir_isencao'))
+                                ->required(fn(Get $get): bool => (bool) $get('pedir_isencao'))
+                                ->maxFiles(1)
+                                ->disk('local')
+                                ->collection('isencao_taxa')
                                 ->rules(['file', 'mimes:pdf', 'max:2048'])
                                 ->columnSpanFull(),
 

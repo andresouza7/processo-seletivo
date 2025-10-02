@@ -44,7 +44,7 @@ class ProcessoSeletivo extends Model
         'data_recurso_inicio',
         'data_recurso_fim',
         'psu',
-        'requer_anexos',
+        'possui_isencao',
         'anexos'
     ];
 

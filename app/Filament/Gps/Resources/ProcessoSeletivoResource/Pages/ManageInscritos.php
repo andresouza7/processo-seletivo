@@ -22,12 +22,8 @@ class ManageInscritos extends ManageRelatedRecords
     protected static string $resource = ProcessoSeletivoResource::class;
     protected static ?string $title = 'Gerenciar Inscrições';
     protected static string $relationship = 'inscricoes';
+    protected static ?string $navigationLabel = 'Inscrições';
     protected static ?string $navigationIcon = 'heroicon-o-users';
-
-    public static function getNavigationLabel(): string
-    {
-        return 'Inscricoes';
-    }
 
     public function infolist(Infolist $infolist): Infolist
     {
@@ -66,7 +62,8 @@ class ManageInscritos extends ManageRelatedRecords
 
                         return $links ?: '-';
                     })
-                    ->html(), // precisa habilitar HTML
+                    ->color('primary')
+                    ->html(), 
 
                     TextEntry::make('cod_inscricao')
                     ->label('Laudo Médico')
@@ -76,7 +73,19 @@ class ManageInscritos extends ManageRelatedRecords
 
                         return $link ? $text : '-';
                     })
-                    ->html(), // precisa habilitar HTML
+                    ->color('primary')
+                    ->html(), 
+
+                    TextEntry::make('cod_inscricao')
+                    ->label('Isenção Taxa')
+                    ->formatStateUsing(function ($record) {
+                        $link = tempMediaUrl($record, 'isencao_taxa');
+                        $text = '<a href="' . $link . '" target="_blank" class="text-blue-600 hover:underline">Abrir</a>';
+
+                        return $link ? $text : '-';
+                    })
+                    ->color('primary')
+                    ->html(),
             ]);
     }
 

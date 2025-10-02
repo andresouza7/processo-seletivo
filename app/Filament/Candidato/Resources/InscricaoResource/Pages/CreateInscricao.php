@@ -9,6 +9,7 @@ use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\Action;
 use App\Notifications\NovaInscricaoNotification;
+use Filament\Notifications\Notification;
 
 class CreateInscricao extends CreateRecord
 {
@@ -30,6 +31,28 @@ class CreateInscricao extends CreateRecord
         $data['idtipo_vaga'] = $data['pcd'] ? 3 : 1;
 
         return $data;
+    }
+
+    protected function beforeCreate(): void
+    {
+        // 1. Verificar dados pendentes do usuário
+        $pessoa = Auth::guard('candidato')->user();
+
+        if ($pessoa && $pessoa->possuiDadosPendentes()) {
+            Notification::make()
+                ->danger()
+                ->title('Dados incompletos!')
+                ->body('Você precisa completar seus dados antes de realizar a inscrição.')
+                ->persistent()
+                ->actions([
+                    \Filament\Notifications\Actions\Action::make('editarPerfil')
+                        ->button()
+                        ->url(route('filament.candidato.pages.meus-dados'), shouldOpenInNewTab: false),
+                ])
+                ->send();
+
+            $this->halt();
+        }
     }
 
     protected function getCreateFormAction(): Action

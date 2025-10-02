@@ -128,6 +128,9 @@ class ProcessoSeletivoResource extends Resource
                             ])->columnSpan(1),
                     ])->columns(2),
 
+                    Checkbox::make('possui_isencao')
+                        ->label('Possui isenção da taxa de inscrição'),
+
                     Repeater::make('anexos')
                         ->label('Documentos Requeridos')
                         ->schema([

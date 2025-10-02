@@ -20,9 +20,7 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
     protected static ?string $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 3;
-
     protected static string $view = 'filament.candidato.pages.meus-dados';
-
     public InscricaoPessoa $record;
     public ?array $data = [];
 
@@ -32,7 +30,7 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
         $this->record = $record;
         $this->form->fill([
             ...$record->toArray(),
-            'usar_nome_social' => !blank($record->nome_social),
+            'usar_nome_social' => filled($record->nome_social),
         ]);
     }
 
@@ -47,12 +45,12 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
                     ->schema([
                         Forms\Components\TextInput::make('nome')
                             ->label('Nome')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->nome))
                             ->required(),
 
                         Forms\Components\TextInput::make('mae')
                             ->label('Nome da Mãe')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->mae))
                             ->required(),
 
                         Forms\Components\TextInput::make('cpf')
@@ -62,17 +60,17 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
 
                         Forms\Components\TextInput::make('ci')
                             ->label('RG')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->ci))
                             ->required(),
 
                         Forms\Components\DatePicker::make('data_nascimento')
                             ->label('Data de Nascimento')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->data_nascimento))
                             ->required(),
 
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->email))
                             ->email()
                             ->required(),
 
@@ -110,27 +108,27 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
                     ->schema([
 
                         Forms\Components\TextInput::make('cep')
-                        ->label('CEP')
-                        ->required()
-                        ->rules(['formato_cep'])
-                        ->mask('99999-999')
-                        ->debounce(1000)
-                        ->afterStateUpdated(function (callable $set, $state, $livewire) {
-                            if (blank($state)) return;
+                            ->label('CEP')
+                            ->required()
+                            ->rules(['formato_cep'])
+                            ->mask('99999-999')
+                            ->debounce(1000)
+                            ->afterStateUpdated(function (callable $set, $state, $livewire) {
+                                if (blank($state)) return;
 
-                            try {
-                                $cepData = Cep::find($state);
-                                $cep = $cepData->getCepModel();
+                                try {
+                                    $cepData = Cep::find($state);
+                                    $cep = $cepData->getCepModel();
 
-                                if ($cep) {
-                                    $set('endereco', $cep->logradouro);
-                                    $set('bairro', $cep->bairro);
-                                    $set('cidade', $cep->localidade);
+                                    if ($cep) {
+                                        $set('endereco', $cep->logradouro);
+                                        $set('bairro', $cep->bairro);
+                                        $set('cidade', $cep->localidade);
+                                    }
+                                } catch (\Exception $e) {
+                                    // Handle error silently
                                 }
-                            } catch (\Exception $e) {
-                                // Handle error silently
-                            }
-                        }),
+                            }),
                         Forms\Components\TextInput::make('endereco')
                             ->label('Endereço')
                             ->required(),
@@ -178,8 +176,6 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
             ->title('Tudo certo')
             ->body('Dados atualizados com sucesso!')
             ->send();
-
-            
 
         $this->redirectRoute('filament.candidato.pages.dashboard');
     }
