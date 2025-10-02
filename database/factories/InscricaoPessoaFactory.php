@@ -51,10 +51,10 @@ class InscricaoPessoaFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'senha' => bcrypt('password'), 
             'password' => bcrypt('password'),
-            'perfil' => $this->faker->randomElement(['S']),
-            'situacao' => $this->faker->randomElement(['1234567890']),
+            'perfil' => 'S',
+            'situacao' => '1234567890',
             'link_lattes' => $this->faker->url(),
-            'resumo' => $this->faker->paragraph(),
+            'resumo' => 'RESUMO',
         ];
     }
 }
