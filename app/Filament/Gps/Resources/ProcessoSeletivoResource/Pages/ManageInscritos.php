@@ -22,12 +22,8 @@ class ManageInscritos extends ManageRelatedRecords
     protected static string $resource = ProcessoSeletivoResource::class;
     protected static ?string $title = 'Gerenciar Inscrições';
     protected static string $relationship = 'inscricoes';
+    protected static ?string $navigationLabel = 'Inscrições';
     protected static ?string $navigationIcon = 'heroicon-o-users';
-
-    public static function getNavigationLabel(): string
-    {
-        return 'Inscricoes';
-    }
 
     public function infolist(Infolist $infolist): Infolist
     {
