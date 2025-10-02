@@ -112,27 +112,14 @@ class Cadastro extends Register
             /////// SELECT: DADOS DE GÊNERO
             Select::make('identidade_genero')
                 ->label('Identidade de gênero')
-                ->options(fn (Get $get) => match ($get('sexo')) {
-                    'M' => [
-                        'C' => 'Cisgênero',
-                        'T' => 'Transgênero',
-                        'NB' => 'Não-binário',
-                        'TV' => 'Travesti',
-                        'NB' => 'Não-binário',
-                        'O'  => 'Outro',
-                    ],
-                    'F' => [
-                        'C' => 'Cisgênero',
-                        'T' => 'Transgênero',
-                        'NB' => 'Não-binário',
-                        'TV' => 'Travesti',
-                        'NB' => 'Não-binário',
-                        'O'  => 'Outro',
-                    ],
-                    
-                    default => []
-                })
-                
+                ->options([                                
+                    'C' => 'Cisgênero',
+                    'T' => 'Transgênero',
+                    'NB' => 'Não-binário',
+                    'TV' => 'Travesti',
+                    'O'  => 'Outro',
+                ])
+                ->default('C')
                 ->reactive()
                 ->columnSpanFull()
                 ->required(),
@@ -183,6 +170,7 @@ class Cadastro extends Register
                     'P' => 'Panssexual',
                     'A' => 'Assexual',
                 ])
+                ->default('HT')
                 ->reactive()
                 ->columnSpanFull()
                 ->required(),
@@ -234,8 +222,7 @@ class Cadastro extends Register
                     'NB' => 'Negro de cor parda',
                     'B' => 'Branca',
                     'I' => 'Indígena',
-                    'A' => 'Amarela',
-                    
+                    'A' => 'Amarela',                    
                 ])
                 ->reactive()
                 ->required(),  

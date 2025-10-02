@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Pessoa;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -24,11 +24,9 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $pessoa = Pessoa::factory()->create();
-
+      
         return [
-            'pessoa_id' => $pessoa->id,
-            'name' => $pessoa->nome,
+            'name' => fake()->firstName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

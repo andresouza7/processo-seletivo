@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('inscricao_pessoa', function (Blueprint $table) {
-            //
+            $table->string('identidade_genero_descricao')->after('identidade_genero');
         });
     }
 
@@ -22,7 +22,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('inscricao_pessoa', function (Blueprint $table) {
-            //
+            $table->dropColumn([
+                'identidade_genero_descricao',                
+            ]);
         });
     }
 };

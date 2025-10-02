@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class areacandidato_aceita_termos_edital extends TestCase
+class areacandidato_aceita_termos_edital_Test extends TestCase
 {
     /**
      * A basic feature test example.
