@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('processo_seletivo', function (Blueprint $table) {
-            $table->boolean('requer_anexos')->default(false);
+            $table->boolean('possui_isencao')->default(false);
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('processo_seletivo', function (Blueprint $table) {
-            $table->dropColumn('requer_anexos');
+            $table->dropColumn('possui_isencao');
         });
     }
 };
