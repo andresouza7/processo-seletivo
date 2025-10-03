@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Candidato\Pages\MeusDados;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use App\Models\InscricaoPessoa;
+use Livewire\Livewire;
 
 class CandidatoNaoPodeEditarCamposTest extends TestCase
 {
@@ -32,8 +34,12 @@ class CandidatoNaoPodeEditarCamposTest extends TestCase
         $response->assertStatus(200);
 
         // VERIFICA SE OS CAMPOS ESTÃO DESABILITADOS
-        $response->assertSee('value="12345678901" disabled', false); // CPF
-        $response->assertSee('value="tester@example.com" disabled', false); // Email
-        $response->assertSee('value="MG123456" disabled', false); // CI
+        Livewire::test(MeusDados::class)
+            ->assertFormFieldIsDisabled('nome')
+            ->assertFormFieldIsDisabled('mae')
+            ->assertFormFieldIsDisabled('cpf')
+            ->assertFormFieldIsDisabled('ci')
+            ->assertFormFieldIsDisabled('data_nascimento')
+            ->assertFormFieldIsDisabled('email');
     }
 }

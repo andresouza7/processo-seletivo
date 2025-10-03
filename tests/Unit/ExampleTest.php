@@ -9,8 +9,8 @@ class ExampleTest extends TestCase
     /**
      * A basic test example.
      */
-    public function test_que_verdadeiro_e_verdadeiro(): void
-    {
-        $this->assertTrue(true);
-    }
+    // public function test_que_verdadeiro_e_verdadeiro(): void
+    // {
+    //     $this->assertTrue(true);
+    // }
 }

@@ -12,7 +12,7 @@ use Filament\Notifications\Auth\VerifyEmail;
 use Filament\Notifications\Notification;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 
-class ConfirmEmail extends BaseConfirmEmail {
+class ConfirmCandidatoEmail extends BaseConfirmEmail {
     protected function sendEmailVerificationNotification(MustVerifyEmail $user): void
     {
         if ($user->hasVerifiedEmail()) {

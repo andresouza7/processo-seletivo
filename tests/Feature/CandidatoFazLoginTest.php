@@ -8,6 +8,8 @@ use Tests\TestCase;
 use App\Models\InscricaoPessoa;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\assertTrue;
+
 class CandidatoFazLoginTest extends TestCase
 {
     use RefreshDatabase;
@@ -21,6 +23,8 @@ class CandidatoFazLoginTest extends TestCase
             'password' => Hash::make('pwd'),
         ]);
 
+        $successfulLogin = Auth::guard('candidato')->attempt(['cpf' => '12345678901', 'password' => 'pwd']);
+
         // LOGA PELO GUARD CORRETO
         $this->actingAs($user, 'candidato');
 
@@ -30,5 +34,6 @@ class CandidatoFazLoginTest extends TestCase
         // ASSERT DE SUCESSO
         $response->assertStatus(200);
         $response->assertSee('tester');
+        assertTrue($successfulLogin);
     }
 }
