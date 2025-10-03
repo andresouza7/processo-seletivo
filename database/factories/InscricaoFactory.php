@@ -6,6 +6,7 @@ use App\Models\Inscricao;
 use App\Models\InscricaoPessoa;
 use App\Models\InscricaoVaga;
 use App\Models\ProcessoSeletivo;
+use App\Models\TipoVaga;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,13 +21,14 @@ class InscricaoFactory extends Factory
     public function definition()
     {
         $atendimento = $this->faker->randomElement(['S', 'N']);
+        $tipo = TipoVaga::factory()->create();
 
         return [
             'cod_inscricao' => Inscricao::generateUniqueCode(),
             'idprocesso_seletivo' => ProcessoSeletivo::factory(),
             'idinscricao_vaga' => InscricaoVaga::factory(),
             'idinscricao_pessoa' => InscricaoPessoa::factory(),
-            'idtipo_vaga' => $this->faker->numberBetween(1, 3),
+            'idtipo_vaga' =>$tipo->id_tipo_vaga,
             'data_hora' => now(),
             'necessita_atendimento' => $atendimento,
             'qual_atendimento' => $atendimento === 'S' ? $this->faker->optional()->sentence() : null,

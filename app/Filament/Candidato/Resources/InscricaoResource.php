@@ -15,6 +15,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -79,7 +80,7 @@ class InscricaoResource extends Resource
             ]);
     }
 
-    public static function form(Forms\Form $form): Forms\Form
+    public static function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -207,7 +208,7 @@ class InscricaoResource extends Resource
 
                             Checkbox::make('aceita_termos')
                                 ->label('Declaro que li e concordo com os termos do edital')
-                                ->required()
+                                ->accepted()
                                 ->columnSpanFull(),
                         ]),
 

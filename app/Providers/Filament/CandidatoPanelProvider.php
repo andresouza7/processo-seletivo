@@ -81,7 +81,7 @@ class CandidatoPanelProvider extends PanelProvider
             ->passwordReset(RequestPasswordReset::class, ResetPassword::class)
             // ->emailVerification(ConfirmEmail::class)
             ->authMiddleware([
-                Authenticate::class,
+                // Authenticate::class,
             ]);
     }
 }
