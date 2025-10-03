@@ -6,6 +6,7 @@ use App\Models\InscricaoPessoa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 use App\Models\InscricaoVaga;
+use App\Models\ProcessoSeletivoTipo;
 use Illuminate\Support\Str;
 
 /**
@@ -21,8 +22,11 @@ class ProcessoSeletivoFactory extends Factory
         $numero = $this->faker->bothify('##/####');
         $diretorio = str_replace('/', '_', $numero);
 
+        $tipo = \App\Models\ProcessoSeletivoTipo::factory()->create();
+
         return [
-            'idprocesso_seletivo_tipo' => $this->faker->numberBetween(1, 4),
+            // 'idprocesso_seletivo_tipo' => $this->faker->numberBetween(1, 4),
+            'idprocesso_seletivo_tipo' => $tipo->idprocesso_seletivo_tipo,
             'titulo' => $this->faker->sentence(4),
             'descricao' => $this->faker->paragraph(),
             'numero' => $this->faker->bothify('##/####'),
@@ -39,10 +43,10 @@ class ProcessoSeletivoFactory extends Factory
             'data_inscricao_fim' => $oneMonthLater,
             'data_recurso_inicio' => $today,
             'data_recurso_fim' => $oneMonthLater,
-            'psu' => $this->faker->randomElement(['S', 'N']),
+            // 'psu' => $this->faker->randomElement(['S', 'N']),
             'created_at' => now(),
             'updated_at' => now(),
-            'requer_anexos' => $this->faker->boolean(),
+            // 'requer_anexos' => $this->faker->boolean(),
         ];
     }
 
