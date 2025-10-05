@@ -5,7 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Candidato\Pages\Auth\Cadastro;
 use App\Filament\Candidato\Pages\Auth\EditProfile;
 use App\Filament\Candidato\Pages\Auth\Login;
-use App\Filament\App\Resources\ProcessoSeletivoResource;
+use App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
 use App\Filament\Candidato\Pages\Auth\ConfirmEmail;
 use App\Helpers\FilamentSettings;
 use Filament\Http\Middleware\Authenticate;

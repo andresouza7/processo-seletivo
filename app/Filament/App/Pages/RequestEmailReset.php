@@ -2,13 +2,13 @@
 
 namespace App\Filament\App\Pages;
 
-use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Actions;
 use Filament\Actions\Action;
 use App\Actions\ResetCandidatoEmailAction;
 use App\Models\InscricaoPessoa;
 use App\Notifications\ResetEmailNotification;
+use BackedEnum;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Facades\Filament;
@@ -18,13 +18,17 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
 
-class RequestEmailReset extends Page implements HasForms
+class RequestEmailReset extends Page implements HasSchemas
 {
-    use InteractsWithForms, WithRateLimiting;
+    use InteractsWithSchemas, WithRateLimiting;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::DocumentText;
 
     protected static ?string $title = 'Redefinir Email';
 
@@ -36,7 +40,7 @@ class RequestEmailReset extends Page implements HasForms
 
     public array $data;
 
-    public function form(Schema $schema): Schema
+    public function content(Schema $schema): Schema
     {
         return $schema
             ->statePath('data')
@@ -46,7 +50,6 @@ class RequestEmailReset extends Page implements HasForms
                     ->columns(2)
                     ->schema([
                         TextInput::make('nome')
-                            ->columnSpanFull()
                             ->label('Nome completo')
                             ->required()
                             ->reactive(),

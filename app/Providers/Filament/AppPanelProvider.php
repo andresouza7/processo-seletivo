@@ -5,7 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\App\Pages\Auth\Cadastro;
 use App\Filament\App\Pages\Auth\Login;
 use App\Filament\App\Pages\RequestEmailReset;
-use App\Filament\App\Resources\ProcessoSeletivoResource;
+use App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -38,7 +38,7 @@ class AppPanelProvider extends PanelProvider
 
         return $panel
             ->id('app')
-            ->path('')
+            ->path('app')
             ->viteTheme('resources/css/filament/app/theme.css')
             ->navigationItems([
                 NavigationItem::make('Login')

@@ -46,21 +46,21 @@
                         'label' => 'Área do Candidato',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
                             'status' => 'inscricoes_abertas',
                         ]),
                         'img' => '/img/menu/inscricoes-abertas.jpg',
                         'label' => 'Inscrições Abertas',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
                             'status' => 'em_andamento',
                         ]),
                         'img' => '/img/menu/editais-andamento.jpg',
                         'label' => 'Editais em Andamento',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
                             'status' => 'finalizados',
                         ]),
                         'img' => '/img/menu/editais-finalizados.jpg',
