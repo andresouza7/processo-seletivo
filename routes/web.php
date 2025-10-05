@@ -4,12 +4,6 @@ use App\Http\Controllers\MediaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return (Auth::guard('candidato')->check())
-        ? redirect()->route('filament.candidato.pages.dashboard')
-        : redirect()->route('filament.app.pages.dashboard');
-})->name('home');
-
 Route::get('/login', function () {
     // Check if the user is coming from a protected route
     $protectedRoutes = [
