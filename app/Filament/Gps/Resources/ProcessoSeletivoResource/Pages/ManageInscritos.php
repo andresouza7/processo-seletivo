@@ -2,17 +2,19 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 use App\Filament\Exports\InscricaoExporter;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
 use Filament\Actions;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
-use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,12 +25,12 @@ class ManageInscritos extends ManageRelatedRecords
     protected static ?string $title = 'Gerenciar Inscrições';
     protected static string $relationship = 'inscricoes';
     protected static ?string $navigationLabel = 'Inscrições';
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 // Candidato Section
                 Section::make('Candidato')
                     ->schema([
@@ -89,10 +91,10 @@ class ManageInscritos extends ManageRelatedRecords
             ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([]);
+        return $schema
+            ->components([]);
     }
 
     public function table(Table $table): Table
@@ -102,10 +104,10 @@ class ManageInscritos extends ManageRelatedRecords
             ->defaultSort('idinscricao', 'desc')
             ->heading('Inscrições')
             ->columns([
-                Tables\Columns\TextColumn::make('cod_inscricao')
+                TextColumn::make('cod_inscricao')
                     ->label('Cód. Inscrição')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('inscricao_pessoa.nome')
+                TextColumn::make('inscricao_pessoa.nome')
                     ->label('Candidato')
                     ->searchable(),
             ])
@@ -119,12 +121,12 @@ class ManageInscritos extends ManageRelatedRecords
                     ->color('primary')
                     ->exporter(InscricaoExporter::class)
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DissociateBulkAction::make(),
                 //     Tables\Actions\DeleteBulkAction::make(),

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\InscricaoResource\Pages;
 
+use Filament\Actions\EditAction;
 use App\Filament\Gps\Resources\InscricaoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
@@ -13,7 +14,7 @@ class ViewInscricao extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            EditAction::make(),
         ];
     }
 }

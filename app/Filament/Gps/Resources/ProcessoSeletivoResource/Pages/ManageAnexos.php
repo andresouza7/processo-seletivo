@@ -2,12 +2,18 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
 use App\Models\ProcessoSeletivoAnexo;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,19 +25,19 @@ class ManageAnexos extends ManageRelatedRecords
     protected static string $resource = ProcessoSeletivoResource::class;
     protected static ?string $title = 'Gerenciar Anexos';
     protected static string $relationship = 'anexos';
-    protected static ?string $navigationIcon = 'heroicon-o-paper-clip';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-paper-clip';
 
     public static function getNavigationLabel(): string
     {
         return 'Anexos';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns(1)
-            ->schema([
-                Forms\Components\TextInput::make('descricao')
+            ->components([
+                TextInput::make('descricao')
                     ->required()
                     ->maxLength(255),
                 SpatieMediaLibraryFileUpload::make('arquivo')
@@ -47,15 +53,15 @@ class ManageAnexos extends ManageRelatedRecords
             ->recordTitleAttribute('descricao')
             ->heading('Anexos')
             ->columns([
-                Tables\Columns\TextColumn::make('idprocesso_seletivo_anexo')->searchable()->limit(70),
-                Tables\Columns\TextColumn::make('descricao')->searchable()->limit(70),
+                TextColumn::make('idprocesso_seletivo_anexo')->searchable()->limit(70),
+                TextColumn::make('descricao')->searchable()->limit(70),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->label('Novo Anexo')
                     ->createAnother(false)
                     ->databaseTransaction()
-                    ->mutateFormDataUsing(function (array $data) {
+                    ->mutateDataUsing(function (array $data) {
 
                         $id = ProcessoSeletivoAnexo::latest('idprocesso_seletivo_anexo')
                             ->value('idprocesso_seletivo_anexo') ?? 0;
@@ -66,11 +72,11 @@ class ManageAnexos extends ManageRelatedRecords
                         return $data;
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->hidden(fn($record) => Carbon::parse($record->data_publicacao)->lt(Carbon::parse('2024-11-01'))),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\Action::make('download')
+                DeleteAction::make(),
+                Action::make('download')
                     ->disabled(fn($record) => !$record->url_arquivo)
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')

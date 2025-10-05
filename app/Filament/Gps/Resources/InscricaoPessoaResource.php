@@ -2,20 +2,23 @@
 
 namespace App\Filament\Gps\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use App\Filament\Gps\Resources\InscricaoPessoaResource\Pages\ListInscricaoPessoas;
+use App\Filament\Gps\Resources\InscricaoPessoaResource\Pages\ViewInscricaoPessoa;
 use App\Filament\Gps\Resources\InscricaoPessoaResource\Pages;
 use App\Filament\Resources\InscricaoPessoaResource\RelationManagers;
 use App\Models\InscricaoPessoa;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Wizard\Step;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -30,8 +33,8 @@ class InscricaoPessoaResource extends Resource
     protected static ?string $model = InscricaoPessoa::class;
     protected static ?string $modelLabel = 'Candidato';
     protected static ?string $slug = 'candidatos';
-    protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'Gerenciar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 2;
     protected static ?string $recordTitleAttribute = 'nome';
 
@@ -40,11 +43,11 @@ class InscricaoPessoaResource extends Resource
         return Auth::user()->hasRole('gestor|admin');
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
-                \Filament\Infolists\Components\Section::make('Dados Cadastrais')
+        return $schema
+            ->components([
+                Section::make('Dados Cadastrais')
                     ->columns(2)
                     ->schema([
 
@@ -64,7 +67,7 @@ class InscricaoPessoaResource extends Resource
                         TextEntry::make('telefone')->label('Telefone'),
                         TextEntry::make('email')->label('Email'),
 
-                        \Filament\Infolists\Components\Fieldset::make('Endereço')
+                        Fieldset::make('Endereço')
                             ->extraAttributes(['class' => 'mt-4'])
                             ->schema([
                                 TextEntry::make('cep')->label('CEP'),
@@ -78,10 +81,10 @@ class InscricaoPessoaResource extends Resource
             ]);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Dados Cadastrais')
                     ->columns(2)
                     ->schema([
@@ -130,25 +133,25 @@ class InscricaoPessoaResource extends Resource
             ->description('Gerência dos dados cadastrais dos dandidatos e redefinição de senha.')
             ->defaultSort('nome')
             ->columns([
-                Tables\Columns\TextColumn::make('nome')
+                TextColumn::make('nome')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('sexo')
+                TextColumn::make('sexo')
                     ->badge()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('ci')
+                TextColumn::make('ci')
                     ->label('RG')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('cpf')
+                TextColumn::make('cpf')
                     ->label('CPF')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
 
             ]);
     }
@@ -163,9 +166,9 @@ class InscricaoPessoaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInscricaoPessoas::route('/'),
+            'index' => ListInscricaoPessoas::route('/'),
             // 'edit' => Pages\EditInscricaoPessoa::route('/{record}/edit'),
-            'view' => Pages\ViewInscricaoPessoa::route('/{record}/view'),
+            'view' => ViewInscricaoPessoa::route('/{record}/view'),
         ];
     }
 }

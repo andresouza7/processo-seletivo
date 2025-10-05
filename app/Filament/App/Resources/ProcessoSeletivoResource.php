@@ -2,18 +2,20 @@
 
 namespace App\Filament\App\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use App\Filament\App\Resources\ProcessoSeletivoResource\Pages\ListProcessoSeletivos;
+use App\Filament\App\Resources\ProcessoSeletivoResource\Pages\ViewProcessoSeletivo;
 use App\Filament\App\Resources\ProcessoSeletivoResource\Pages;
 use App\Filament\App\Resources\ProcessoSeletivoResource\RelationManagers\AnexosRelationManager;
 use App\Models\ProcessoSeletivo;
 use Carbon\Carbon;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Actions;
-use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\Group;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Split;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -31,7 +33,7 @@ use Illuminate\Support\HtmlString;
 class ProcessoSeletivoResource extends Resource
 {
     protected static ?string $model = ProcessoSeletivo::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static bool $shouldRegisterNavigation = false;
     protected static ?string $recordTitleAttribute = 'titulo';
     protected static int $globalSearchResultsLimit = 20;
@@ -80,18 +82,18 @@ class ProcessoSeletivoResource extends Resource
         return $query;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Section::make([
                     TextEntry::make('titulo')
                         ->label('Nome')
@@ -175,12 +177,12 @@ class ProcessoSeletivoResource extends Resource
                         };
                     }),
             ])
-            ->actions([
+            ->recordActions([
                 // Tables\Actions\ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -197,9 +199,9 @@ class ProcessoSeletivoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProcessoSeletivos::route('/'),
+            'index' => ListProcessoSeletivos::route('/'),
             // 'create' => Pages\CreateProcessoSeletivo::route('/create'),
-            'view' => Pages\ViewProcessoSeletivo::route('/{record}'),
+            'view' => ViewProcessoSeletivo::route('/{record}'),
             // 'edit' => Pages\EditProcessoSeletivo::route('/{record}/edit'),
         ];
     }

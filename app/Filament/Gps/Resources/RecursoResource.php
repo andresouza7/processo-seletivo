@@ -2,14 +2,24 @@
 
 namespace App\Filament\Gps\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use App\Filament\Gps\Resources\RecursoResource\Pages\ListRecursos;
+use App\Filament\Gps\Resources\RecursoResource\Pages\CreateRecurso;
+use App\Filament\Gps\Resources\RecursoResource\Pages\EditRecurso;
 use App\Filament\Gps\Resources\RecursoResource\Pages;
 use App\Filament\Gps\Resources\RecursoResource\RelationManagers;
 use App\Models\Recurso;
 use Filament\Forms;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -22,8 +32,8 @@ class RecursoResource extends Resource
     protected static ?string $model = Recurso::class;
 
     // protected static ?string $slug = 'processos';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Gerenciar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 3;
 
     public static function canAccess(): bool
@@ -31,11 +41,11 @@ class RecursoResource extends Resource
         return Auth::user()->hasAnyRole('admin|avaliador');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Textarea::make('descricao')
+        return $schema
+            ->components([
+                Textarea::make('descricao')
                     ->columnSpanFull()
                     ->disabled(),
                 Actions::make([
@@ -44,14 +54,14 @@ class RecursoResource extends Resource
                         ->url(fn($record) => route('recurso.anexo', $record->idrecurso))
                         ->openUrlInNewTab()
                 ])->columnSpanFull(),
-                Forms\Components\Select::make('situacao')
+                Select::make('situacao')
                     ->required()
                     ->options([
                         'D' => 'Deferido',
                         'I' => 'Indeferido',
                         'P' => 'Parcialmente Deferido',
                     ]),
-                Forms\Components\Textarea::make('resposta')
+                Textarea::make('resposta')
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
@@ -69,30 +79,30 @@ class RecursoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('idrecurso'),
-                Tables\Columns\TextColumn::make('etapa_recurso.descricao')
+                TextColumn::make('idrecurso'),
+                TextColumn::make('etapa_recurso.descricao')
                     ->label('Etapa'),
-                Tables\Columns\TextColumn::make('descricao')
+                TextColumn::make('descricao')
                     ->label('Justificativa'),
-                Tables\Columns\TextColumn::make('situacao')
+                TextColumn::make('situacao')
                     ->badge()
             ])
             ->filters([
-                Tables\Filters\Filter::make('situacao_null')
+                Filter::make('situacao_null')
                     ->label('Pendentes')
                     ->query(fn(Builder $query): Builder => $query->whereNull('situacao'))
                     ->default(true),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('anexo_candidato')->label('Anexo')
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                Action::make('anexo_candidato')->label('Anexo')
                     ->url(fn($record) => tempMediaUrl($record, 'anexo_candidato'))
                     ->openUrlInNewTab()
                     ->visible(fn($record) => $record->hasMedia('anexo_candidato')),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -108,10 +118,10 @@ class RecursoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRecursos::route('/'),
-            'create' => Pages\CreateRecurso::route('/create'),
+            'index' => ListRecursos::route('/'),
+            'create' => CreateRecurso::route('/create'),
             // 'view' => Pages\ViewRecurso::route('/{record}'),
-            'edit' => Pages\EditRecurso::route('/{record}/edit'),
+            'edit' => EditRecurso::route('/{record}/edit'),
         ];
     }
 

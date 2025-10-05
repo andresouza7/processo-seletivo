@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\RecursoResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Gps\Resources\RecursoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -13,7 +14,7 @@ class ListRecursos extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

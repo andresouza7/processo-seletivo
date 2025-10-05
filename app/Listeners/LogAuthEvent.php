@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Auth\Events\Login;
@@ -26,7 +27,7 @@ class LogAuthEvent
     {
         $type = Str::of((new ReflectionClass($event))->getShortName())->kebab();
 
-        if ($event->user && $event->user instanceof \App\Models\User) {
+        if ($event->user && $event->user instanceof User) {
             activity()
                 ->causedBy($event->user)
                 ->performedOn($event->user)

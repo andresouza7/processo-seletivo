@@ -2,9 +2,9 @@
 
 namespace App\Filament\Candidato\Pages\Auth;
 
+use Filament\Auth\Pages\EmailVerification\EmailVerificationPrompt;
 use App\Notifications\ConfirmEmailNotification;
 use Exception;
-use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt as BaseConfirmEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
@@ -12,7 +12,7 @@ use Filament\Notifications\Auth\VerifyEmail;
 use Filament\Notifications\Notification;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 
-class ConfirmEmail extends BaseConfirmEmail {
+class ConfirmEmail extends EmailVerificationPrompt {
     protected function sendEmailVerificationNotification(MustVerifyEmail $user): void
     {
         if ($user->hasVerifiedEmail()) {

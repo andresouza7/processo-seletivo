@@ -2,14 +2,21 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Checkbox;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Notifications\Notification;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
 use App\Models\EtapaRecurso;
 use Filament\Actions;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -20,31 +27,31 @@ class ManageEtapaRecurso extends ManageRelatedRecords
     protected static ?string $title = 'Gerenciar Etapas de Recurso';
     protected static string $relationship = 'etapa_recurso';
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
     public static function getNavigationLabel(): string
     {
         return 'Etapas de Recurso';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('descricao')
+        return $schema
+            ->components([
+                TextInput::make('descricao')
                     ->placeholder('Ex: Resultado preliminar')
                     ->columnSpanFull(),
-                Forms\Components\DatePicker::make('data_inicio_recebimento')
+                DatePicker::make('data_inicio_recebimento')
                     ->helperText('Período para recebimento dos recursos'),
-                Forms\Components\DatePicker::make('data_fim_recebimento'),
-                Forms\Components\DatePicker::make('data_inicio_resultado')
+                DatePicker::make('data_fim_recebimento'),
+                DatePicker::make('data_inicio_resultado')
                     ->helperText('Período para consulta dos resultados'),
-                Forms\Components\DatePicker::make('data_fim_resultado'),
-                Forms\Components\Checkbox::make('requer_anexos')
+                DatePicker::make('data_fim_resultado'),
+                Checkbox::make('requer_anexos')
                     ->label('Requer envio de anexos?')
                     ->helperText('Será disponibilizado campo de upload de pdf ao usuário')
                     ->columnSpanFull(),
-                Forms\Components\Checkbox::make('permite_multiplos_recursos')
+                Checkbox::make('permite_multiplos_recursos')
                     ->label('Permitir mais de um recurso por candidato')
                     ->columnSpanFull()
             ]);
@@ -57,13 +64,13 @@ class ManageEtapaRecurso extends ManageRelatedRecords
             ->heading('Etapas')
             ->defaultSort('idetapa_recurso', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('descricao'),
-                Tables\Columns\TextColumn::make('data_inicio_recebimento'),
-                Tables\Columns\TextColumn::make('data_fim_recebimento'),
+                TextColumn::make('descricao'),
+                TextColumn::make('data_inicio_recebimento'),
+                TextColumn::make('data_fim_recebimento'),
             ])
             ->filters([])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->createAnother(false)
                     ->before(function (CreateAction $action) {
                         $processo = $this->getRecord();
@@ -72,7 +79,7 @@ class ManageEtapaRecurso extends ManageRelatedRecords
                             ->whereDate('data_fim_recebimento', '>=', now())->exists();
 
                         if ($exists) {
-                            \Filament\Notifications\Notification::make()
+                            Notification::make()
                                 ->title('Já existe uma etapa em andamento.')
                                 ->body('Você não pode criar outra enquanto houver uma ainda não finalizada.')
                                 ->danger()
@@ -83,11 +90,11 @@ class ManageEtapaRecurso extends ManageRelatedRecords
                     }),
 
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DissociateBulkAction::make(),
                 //     Tables\Actions\DeleteBulkAction::make(),

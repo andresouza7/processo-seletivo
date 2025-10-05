@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use App\ActivityLog\ActivityLogger;
 use App\Listeners\LogAuthEvent;
 use App\Services\ActivityLog\CustomCauserResolver;
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;

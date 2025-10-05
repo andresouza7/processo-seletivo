@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
+use Throwable;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
 use App\Models\ProcessoSeletivo;
 use Filament\Actions;
@@ -19,7 +20,7 @@ class CreateProcessoSeletivo extends CreateRecord
             $data['situacao'] = $data['situacao'] ?? '';
             $data['acessos'] = 0;
             $data['diretorio'] = str_replace('/', '_', $data['numero']);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error("create processo seletivo failed: " . $th->getMessage());
             throw $th;
         }

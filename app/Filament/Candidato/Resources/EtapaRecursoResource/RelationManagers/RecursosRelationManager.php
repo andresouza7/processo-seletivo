@@ -2,16 +2,20 @@
 
 namespace App\Filament\Candidato\Resources\EtapaRecursoResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\BulkActionGroup;
 use App\Models\Inscricao;
 use App\Models\Recurso;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Infolists\Components\Actions;
-use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -39,10 +43,10 @@ class RecursosRelationManager extends RelationManager
         $this->bloquear_recurso = ($recurso_existente && !$etapa_recurso->permite_multiplos_recursos) || $periodo_recurso_encerrado;
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('descricao'),
                 TextEntry::make('resposta'),
                 TextEntry::make('situacao'),
@@ -56,10 +60,10 @@ class RecursosRelationManager extends RelationManager
             ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 // Forms\Components\Select::make('idinscricao')
                 //     ->label('Inscrição')
                 //     ->helperText('* Selecione a inscrição para a qual deseja entrar com recurso')
@@ -79,7 +83,7 @@ class RecursosRelationManager extends RelationManager
                 //                 return [$inscricao->idinscricao => $label];
                 //             });
                 //     }),
-                Forms\Components\Textarea::make('descricao')
+                Textarea::make('descricao')
                     ->label('Justificativa')
                     ->required()
                     ->columnSpanFull(),
@@ -101,19 +105,19 @@ class RecursosRelationManager extends RelationManager
             ->description('Para interpor um recurso, utilize o botão "Abrir Recurso". Atente-se ao prazo previsto no edital.')
             ->paginated(false)
             ->columns([
-                Tables\Columns\TextColumn::make('descricao')->limit()->label('Descrição'),
-                Tables\Columns\TextColumn::make('data_hora')->dateTime('d/m/Y H:i'),
+                TextColumn::make('descricao')->limit()->label('Descrição'),
+                TextColumn::make('data_hora')->dateTime('d/m/Y H:i'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->label('Abrir Recurso')
                     ->modalSubmitActionLabel("Confirmar")
                     ->createAnother(false)
                     ->visible(fn() => !$this->bloquear_recurso)
-                    ->mutateFormDataUsing(function (array $data, $record) {
+                    ->mutateDataUsing(function (array $data, $record) {
                         // $inscricao = Inscricao::where('idinscricao', $data['idinscricao'])->first();
 
                         // $data['idprocesso_seletivo'] = $inscricao->idprocesso_seletivo;
@@ -137,13 +141,13 @@ class RecursosRelationManager extends RelationManager
                             ->send();
                     }),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->visible(fn() => $this->getOwnerRecord()->resultado_disponivel)
                     ->label('Consultar Resultado'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

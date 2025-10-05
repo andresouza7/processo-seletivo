@@ -2,20 +2,20 @@
 
 namespace App\Filament\App\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
 use App\Actions\ResetCandidatoEmailAction;
 use App\Models\InscricaoPessoa;
 use App\Notifications\ResetEmailNotification;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Str;
@@ -24,11 +24,11 @@ class RequestEmailReset extends Page implements HasForms
 {
     use InteractsWithForms, WithRateLimiting;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $title = 'Redefinir Email';
 
-    protected static string $view = 'filament.app.pages.request-email-reset';
+    protected string $view = 'filament.app.pages.request-email-reset';
 
     protected static bool $shouldRegisterNavigation = false;
 
@@ -36,11 +36,11 @@ class RequestEmailReset extends Page implements HasForms
 
     public array $data;
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->statePath('data')
-            ->schema([
+            ->components([
                 Section::make('Solicitação de Redefinição de E-mail')
                     ->description('Informe seus dados pessoais para validarmos sua identidade')
                     ->columns(2)

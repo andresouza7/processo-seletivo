@@ -2,13 +2,17 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Textarea;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Actions\EditAction;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
 use Filament\Actions;
 use Filament\Forms;
-use Filament\Forms\Components\Actions as ComponentsActions;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -23,34 +27,34 @@ class ManageRecursos extends ManageRelatedRecords
 
     protected static string $relationship = 'recursos';
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
     public static function getNavigationLabel(): string
     {
         return 'Recursos';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Textarea::make('descricao')
+        return $schema
+            ->components([
+                Textarea::make('descricao')
                     ->columnSpanFull()
                     ->disabled(),
-                ComponentsActions::make([
+                \Filament\Schemas\Components\Actions::make([
                     Action::make('ver_anexo')
                         ->visible(fn($record) => $record->hasMedia('anexo_recurso'))
                         ->url(fn($record) => route('recurso.anexo', $record->idrecurso))
                         ->openUrlInNewTab()
                 ])->columnSpanFull(),
-                Forms\Components\Select::make('situacao')
+                Select::make('situacao')
                     ->required()
                     ->options([
                         'D' => 'Deferido',
                         'I' => 'Indeferido',
                         'P' => 'Parcialmente Deferido',
                     ]),
-                Forms\Components\Textarea::make('resposta')
+                Textarea::make('resposta')
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
@@ -71,16 +75,16 @@ class ManageRecursos extends ManageRelatedRecords
             ->heading('Recursos')
             ->defaultSort('idrecurso', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('idrecurso'),
-                Tables\Columns\TextColumn::make('etapa_recurso.descricao')
+                TextColumn::make('idrecurso'),
+                TextColumn::make('etapa_recurso.descricao')
                     ->label('Etapa'),
-                Tables\Columns\TextColumn::make('descricao')
+                TextColumn::make('descricao')
                     ->label('Justificativa'),
-                Tables\Columns\TextColumn::make('situacao')
+                TextColumn::make('situacao')
                     ->badge()
             ])
             ->filters([
-                Tables\Filters\Filter::make('situacao_null')
+                Filter::make('situacao_null')
                     ->label('Pendentes')
                     ->query(fn(Builder $query): Builder => $query->whereNull('situacao'))
                     ->default(true),
@@ -88,15 +92,15 @@ class ManageRecursos extends ManageRelatedRecords
             ->headerActions([
                 // Tables\Actions\CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()->label('Responder'),
-                Tables\Actions\Action::make('resposta_anexo')->label('Resposta Anexo')
+            ->recordActions([
+                EditAction::make()->label('Responder'),
+                Action::make('resposta_anexo')->label('Resposta Anexo')
                     ->url(fn($record) => tempMediaUrl($record, 'anexo_candidato'))
                     ->openUrlInNewTab()
                     ->visible(fn($record) => $record->hasMedia('anexo_candidato')),
                 // Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DissociateBulkAction::make(),
                 //     Tables\Actions\DeleteBulkAction::make(),

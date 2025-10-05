@@ -2,6 +2,7 @@
 
 namespace App\Filament\Exports;
 
+use Throwable;
 use App\Models\Inscricao;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
@@ -41,7 +42,7 @@ class InscricaoExporter extends Exporter
                         }
 
                         return '=HYPERLINK("' . $url . '", "Visualizar Inscrição")';
-                    } catch (\Throwable $th) {
+                    } catch (Throwable $th) {
                         throw $th;
                         return '';
                     }

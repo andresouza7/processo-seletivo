@@ -2,23 +2,28 @@
 
 namespace App\Filament\Candidato\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use App\Filament\Candidato\Resources\InscricaoResource\Pages\ListInscricaos;
+use App\Filament\Candidato\Resources\InscricaoResource\Pages\CreateInscricao;
+use App\Filament\Candidato\Resources\InscricaoResource\Pages\ViewInscricao;
 use App\Filament\Candidato\Resources\InscricaoResource\Pages;
 use App\Models\Inscricao;
 use App\Models\InscricaoVaga;
 use App\Models\ProcessoSeletivo;
 use Filament\Forms;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Get;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Navigation\NavigationItem;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -35,14 +40,14 @@ class InscricaoResource extends Resource
     protected static ?string $modelLabel = 'Inscrição';
     protected static ?string $pluralModelLabel = 'Minhas Inscrições';
     protected static ?string $slug = 'inscricoes';
-    protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
-    protected static ?string $navigationGroup = 'Área do Candidato';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-list-bullet';
+    protected static string | \UnitEnum | null $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 1;
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('DADOS PESSOAIS')
                     ->columns(3)
                     ->schema([
@@ -79,10 +84,10 @@ class InscricaoResource extends Resource
             ]);
     }
 
-    public static function form(Forms\Form $form): Forms\Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Grid::make([
                     'default' => 1,
                     'lg' => 2,
@@ -254,36 +259,36 @@ class InscricaoResource extends Resource
             ->description('Use a caixa de busca para filtrar uma informação.')
             ->columns([
                 Stack::make([
-                    \Filament\Tables\Columns\TextColumn::make('cod_inscricao')
+                    TextColumn::make('cod_inscricao')
                         ->label('Código')
                         ->searchable()
                         ->weight('bold')
                         ->size('sm'),
 
-                    \Filament\Tables\Columns\TextColumn::make('processo_seletivo.titulo')
+                    TextColumn::make('processo_seletivo.titulo')
                         ->label('Processo Seletivo')
                         ->searchable()
                         ->size('sm')
                         ->color('gray'),
 
-                    \Filament\Tables\Columns\TextColumn::make('inscricao_vaga.codigo')
+                    TextColumn::make('inscricao_vaga.codigo')
                         ->label('Cód. Vaga')
                         ->size('sm')
                         ->color('gray'),
 
-                    \Filament\Tables\Columns\TextColumn::make('inscricao_vaga.descricao')
+                    TextColumn::make('inscricao_vaga.descricao')
                         ->label('Descrição')
                         ->size('sm')
                         ->color('gray'),
 
-                    \Filament\Tables\Columns\TextColumn::make('tipo_vaga.descricao')
+                    TextColumn::make('tipo_vaga.descricao')
                         ->label('Tipo')
                         ->size('sm')
                         ->color('gray'),
                 ]),
             ])
-            ->actions([
-                \Filament\Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ]);
     }
 
@@ -295,9 +300,9 @@ class InscricaoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInscricaos::route('/'),
-            'create' => Pages\CreateInscricao::route('/create'),
-            'view' => Pages\ViewInscricao::route('/{record}'),
+            'index' => ListInscricaos::route('/'),
+            'create' => CreateInscricao::route('/create'),
+            'view' => ViewInscricao::route('/{record}'),
         ];
     }
 

@@ -2,9 +2,10 @@
 
 namespace App\Filament\App\Resources\ProcessoSeletivoResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\Layout\Stack;
@@ -16,10 +17,10 @@ class AnexosRelationManager extends RelationManager
 {
     protected static string $relationship = 'anexos';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([]);
+        return $schema
+            ->components([]);
     }
 
     public function table(Table $table): Table
@@ -31,13 +32,13 @@ class AnexosRelationManager extends RelationManager
             ->defaultSort('idprocesso_seletivo_anexo', 'desc')
             ->columns([
                 Stack::make([
-                    Tables\Columns\TextColumn::make('data_publicacao')
+                    TextColumn::make('data_publicacao')
                         ->formatStateUsing(fn($record) => sprintf(
                             "<div class='text-xs font-semibold flex gap-3'><span>%s</span></div>",
                             Carbon::parse($record->data_publicacao)->format('d/m/Y'),
                         ))->html()
                         ->color('gray'),
-                    Tables\Columns\TextColumn::make('descricao')
+                    TextColumn::make('descricao')
                         ->label('Descrição')
                         ->color('primary')
                         ->url(fn($record) => $record->url_arquivo, shouldOpenInNewTab: true)
@@ -50,7 +51,7 @@ class AnexosRelationManager extends RelationManager
             ->headerActions([
                 // 
             ])
-            ->actions([
+            ->recordActions([
                 // 
             ]);
     }

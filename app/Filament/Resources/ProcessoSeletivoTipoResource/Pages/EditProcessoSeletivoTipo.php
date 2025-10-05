@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProcessoSeletivoTipoResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\ProcessoSeletivoTipoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -13,7 +14,7 @@ class EditProcessoSeletivoTipo extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

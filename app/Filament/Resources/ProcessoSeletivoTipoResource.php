@@ -2,11 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use App\Filament\Resources\ProcessoSeletivoTipoResource\Pages\ListProcessoSeletivoTipos;
+use App\Filament\Resources\ProcessoSeletivoTipoResource\Pages\CreateProcessoSeletivoTipo;
+use App\Filament\Resources\ProcessoSeletivoTipoResource\Pages\EditProcessoSeletivoTipo;
 use App\Filament\Resources\ProcessoSeletivoTipoResource\Pages;
 use App\Models\ProcessoSeletivoTipo;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,14 +25,14 @@ class ProcessoSeletivoTipoResource extends Resource
     protected static ?string $modelLabel = 'Modalidade PS';
     protected static ?string $pluralModelLabel = 'Modalidades PS';
     protected static ?string $slug = 'modalidades';
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $navigationGroup = 'Gerenciar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tag';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 4;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
                 TextInput::make('descricao'),
                 TextInput::make('chave'),
@@ -40,20 +46,20 @@ class ProcessoSeletivoTipoResource extends Resource
             ->description('Categoria na qual determinado processo se enquadra.')
             ->columns([
                 //
-                Tables\Columns\TextColumn::make('idprocesso_seletivo_tipo')->label('ID'),
-                Tables\Columns\TextColumn::make('descricao')
+                TextColumn::make('idprocesso_seletivo_tipo')->label('ID'),
+                TextColumn::make('descricao')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('chave')
+                TextColumn::make('chave')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -69,9 +75,9 @@ class ProcessoSeletivoTipoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProcessoSeletivoTipos::route('/'),
-            'create' => Pages\CreateProcessoSeletivoTipo::route('/create'),
-            'edit' => Pages\EditProcessoSeletivoTipo::route('/{record}/edit'),
+            'index' => ListProcessoSeletivoTipos::route('/'),
+            'create' => CreateProcessoSeletivoTipo::route('/create'),
+            'edit' => EditProcessoSeletivoTipo::route('/{record}/edit'),
         ];
     }
 }

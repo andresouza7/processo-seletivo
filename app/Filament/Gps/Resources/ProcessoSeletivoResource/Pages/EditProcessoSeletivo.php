@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -14,7 +15,7 @@ class EditProcessoSeletivo extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

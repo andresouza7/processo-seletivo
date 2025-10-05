@@ -2,11 +2,18 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use App\Filament\Resources\ArquivoResource\Pages\ListArquivos;
+use App\Filament\Resources\ArquivoResource\Pages\CreateArquivo;
+use App\Filament\Resources\ArquivoResource\Pages\EditArquivo;
 use App\Filament\Resources\ArquivoResource\Pages;
 use App\Filament\Resources\ArquivoResource\RelationManagers;
 use App\Models\Arquivo;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,33 +24,33 @@ class ArquivoResource extends Resource
 {
     protected static ?string $model = Arquivo::class;
     protected static ?string $modelLabel = 'Arquivos Legados';
-    protected static ?string $navigationIcon = 'heroicon-o-circle-stack';
-    protected static ?string $navigationGroup = 'Administrador';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-circle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Administrador';
     protected static ?int $navigationSort = 3;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('size')
+        return $schema
+            ->components([
+                TextInput::make('size')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('width')
+                TextInput::make('width')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('height')
+                TextInput::make('height')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('mimetype')
+                TextInput::make('mimetype')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('descricao')
+                TextInput::make('descricao')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('codname')
+                TextInput::make('codname')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -55,37 +62,37 @@ class ArquivoResource extends Resource
             ->heading('Detalhes de arquivos')
             ->description('Para consulta de metadados dos arquivos armazenados no sistema.')
             ->columns([
-                Tables\Columns\TextColumn::make('size')
+                TextColumn::make('size')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('width')
+                TextColumn::make('width')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('height')
+                TextColumn::make('height')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('mimetype')
+                TextColumn::make('mimetype')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('descricao')
+                TextColumn::make('descricao')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('codname')
+                TextColumn::make('codname')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 // Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('download')
+                Action::make('download')
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->url(fn($record) => optional($record->processo_seletivo_anexo)->url_arquivo)
                     ->openUrlInNewTab(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -101,9 +108,9 @@ class ArquivoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListArquivos::route('/'),
-            'create' => Pages\CreateArquivo::route('/create'),
-            'edit' => Pages\EditArquivo::route('/{record}/edit'),
+            'index' => ListArquivos::route('/'),
+            'create' => CreateArquivo::route('/create'),
+            'edit' => EditArquivo::route('/{record}/edit'),
         ];
     }
 }

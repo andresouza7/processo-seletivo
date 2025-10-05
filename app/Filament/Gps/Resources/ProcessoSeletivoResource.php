@@ -2,6 +2,17 @@
 
 namespace App\Filament\Gps\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\ListProcessoSeletivos;
+use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\CreateProcessoSeletivo;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\EditProcessoSeletivo;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages\ManageAnexos;
@@ -20,16 +31,12 @@ use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
@@ -49,8 +56,8 @@ class ProcessoSeletivoResource extends Resource
     protected static ?string $modelLabel = 'Processo Seletivo';
     protected static ?string $pluralModelLabel = 'Processos Seletivos';
     protected static ?string $slug = 'processos';
-    protected static ?string $navigationIcon = 'heroicon-o-folder';
-    protected static ?string $navigationGroup = 'Gerenciar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-folder';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'titulo';
     protected static int $globalSearchResultsLimit = 20;
@@ -71,10 +78,10 @@ class ProcessoSeletivoResource extends Resource
         return parent::getGlobalSearchEloquentQuery()->orderBy('data_publicacao_inicio', 'desc');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make([
                     Group::make([
                         TextInput::make('titulo')
@@ -159,28 +166,28 @@ class ProcessoSeletivoResource extends Resource
             ->defaultSort('idprocesso_seletivo', 'desc')
             ->columns([
                 //
-                Tables\Columns\TextColumn::make('idprocesso_seletivo')
+                TextColumn::make('idprocesso_seletivo')
                     ->label('ID'),
-                Tables\Columns\TextColumn::make('tipo.descricao'),
-                Tables\Columns\TextColumn::make('titulo')
+                TextColumn::make('tipo.descricao'),
+                TextColumn::make('titulo')
                     ->searchable()
                     ->limit(50),
-                Tables\Columns\TextColumn::make('numero')->searchable(),
-                Tables\Columns\TextColumn::make('publicado')
+                TextColumn::make('numero')->searchable(),
+                TextColumn::make('publicado')
                     ->badge()
                     ->color(fn($state) => $state === 'S' ? 'success' : 'danger'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('tipo')
+                SelectFilter::make('tipo')
                     ->label('Tipo')
                     ->relationship('tipo', 'descricao'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -211,15 +218,15 @@ class ProcessoSeletivoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProcessoSeletivos::route('/'),
-            'create' => Pages\CreateProcessoSeletivo::route('/create'),
-            'edit' => Pages\EditProcessoSeletivo::route('/{record}/edit'),
-            'anexos' => Pages\ManageAnexos::route('/{record}/anexos'),
-            'inscritos' => Pages\ManageInscritos::route('/{record}/inscritos'),
-            'avaliadores' => Pages\ManageAvaliadores::route('/{record}/avaliadores'),
-            'vagas' => Pages\ManageVagas::route('/{record}/vagas'),
+            'index' => ListProcessoSeletivos::route('/'),
+            'create' => CreateProcessoSeletivo::route('/create'),
+            'edit' => EditProcessoSeletivo::route('/{record}/edit'),
+            'anexos' => ManageAnexos::route('/{record}/anexos'),
+            'inscritos' => ManageInscritos::route('/{record}/inscritos'),
+            'avaliadores' => ManageAvaliadores::route('/{record}/avaliadores'),
+            'vagas' => ManageVagas::route('/{record}/vagas'),
             // 'recursos' => Pages\ManageRecursos::route('/{record}/recursos'),
-            'etapas_recurso' => Pages\ManageEtapaRecurso::route('/{record}/etapas_recurso'),
+            'etapas_recurso' => ManageEtapaRecurso::route('/{record}/etapas_recurso'),
         ];
     }
 }

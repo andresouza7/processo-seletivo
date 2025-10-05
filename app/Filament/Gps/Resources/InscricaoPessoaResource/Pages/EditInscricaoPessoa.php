@@ -23,7 +23,7 @@ class EditInscricaoPessoa extends EditRecord
                 ->label('Redefinir Email')
                 ->modalDescription('O email será alterado e uma senha temporária será enviada para o endereço fornecido.')
                 ->modalSubmitActionLabel('Confirmar')
-                ->form([
+                ->schema([
                     TextInput::make('email')->email()->required()->unique('inscricao_pessoa', 'email', ignoreRecord: true)
                 ])
                 ->action(function (InscricaoPessoa $record, array $data) {

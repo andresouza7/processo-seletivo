@@ -2,18 +2,20 @@
 
 namespace App\Filament\Candidato\Resources\InscricaoResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\Action;
+use Exception;
+use Filament\Schemas\Components\Flex;
+use Filament\Actions\BulkActionGroup;
 use Error;
 use Filament\Forms;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Split;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -23,17 +25,17 @@ class RecursosRelationManager extends RelationManager
 {
     protected static string $relationship = 'recursos';
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist->schema([
+        return $schema->components([
             TextEntry::make('descricao')
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
             ]);
     }
@@ -44,8 +46,8 @@ class RecursosRelationManager extends RelationManager
             ->recordTitleAttribute('descricao')
             ->emptyStateDescription('')
             ->columns([
-                Tables\Columns\TextColumn::make('descricao')->limit(),
-                Tables\Columns\TextColumn::make('data_hora')->date('m/d/Y H:m'),
+                TextColumn::make('descricao')->limit(),
+                TextColumn::make('data_hora')->date('m/d/Y H:m'),
             ])
             ->filters([
                 //
@@ -54,7 +56,7 @@ class RecursosRelationManager extends RelationManager
                 Action::make('solicitarRecurso')
                     ->visible(fn() => $this->getOwnerRecord()->processo_seletivo->aceita_recurso)
                     ->button()
-                    ->form([
+                    ->schema([
                         Textarea::make('descricao')
                             ->label('Justificativa')
                             ->rows(15)
@@ -98,7 +100,7 @@ class RecursosRelationManager extends RelationManager
 
                             // Ensure the method returns the record, even if it already existed
                             return $record;
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             // Send failure notification
                             Notification::make()
                                 ->title('Erro ao cadastrar recurso!')
@@ -110,7 +112,7 @@ class RecursosRelationManager extends RelationManager
                         }
                     })
             ])
-            ->actions([
+            ->recordActions([
                 // Tables\Actions\EditAction::make(),
                 // Tables\Actions\DeleteAction::make(),
                 Action::make('viewRecord')
@@ -122,9 +124,9 @@ class RecursosRelationManager extends RelationManager
                     ->icon('heroicon-o-eye')
                     ->modalHeading('Recurso')
                     // ->modalWidth('xl')
-                    ->infolist(function (Model $record) {
+                    ->schema(function (Model $record) {
                         return [
-                            Split::make([
+                            Flex::make([
 
                                 // Display the inscricao code as the top entry
                                 TextEntry::make('inscricao.cod_inscricao')
@@ -164,8 +166,8 @@ class RecursosRelationManager extends RelationManager
                         ];
                     })
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     // 
                 ]),
             ]);

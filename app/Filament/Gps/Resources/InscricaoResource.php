@@ -2,13 +2,22 @@
 
 namespace App\Filament\Gps\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Schemas\Components\Section;
+use App\Filament\Gps\Resources\InscricaoResource\Pages\ListInscricaos;
+use App\Filament\Gps\Resources\InscricaoResource\Pages\CreateInscricao;
+use App\Filament\Gps\Resources\InscricaoResource\Pages\ViewInscricao;
+use App\Filament\Gps\Resources\InscricaoResource\Pages\EditInscricao;
 use App\Filament\Gps\Resources\InscricaoResource\Pages;
 use App\Models\Inscricao;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -20,23 +29,23 @@ class InscricaoResource extends Resource
     protected static ?string $modelLabel = 'Inscrição';
     protected static ?string $pluralModelLabel = 'Inscrições';
     protected static ?string $slug = 'inscricoes';
-    protected static ?string $navigationIcon = 'heroicon-o-table-cells';
-    protected static ?string $navigationGroup = 'Gerenciar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-table-cells';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 3;
 
     protected static bool $shouldRegisterNavigation = false;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('cod_inscricao')
+        return $schema
+            ->components([
+                TextInput::make('cod_inscricao')
                     ->disabled(),
-                Forms\Components\Textarea::make('local_prova')
+                Textarea::make('local_prova')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('ano_enem')
+                TextInput::make('ano_enem')
                     ->maxLength(4),
-                Forms\Components\TextInput::make('bonificacao')
+                TextInput::make('bonificacao')
                     ->maxLength(1),
             ]);
     }
@@ -48,39 +57,39 @@ class InscricaoResource extends Resource
             ->description('Informações sobre as inscrições realizadas nos processos seletivos da UEAP. Consulte ou edite um registro de inscrição.')
             ->defaultSort('data_hora', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('cod_inscricao')
+                TextColumn::make('cod_inscricao')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('inscricao_pessoa.nome')
+                TextColumn::make('inscricao_pessoa.nome')
                     ->label('Nome Candidato')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('processo_seletivo.titulo')
+                TextColumn::make('processo_seletivo.titulo')
                     ->limit(30)
                     ->description(fn($record) => substr($record->inscricao_vaga->descricao, 0, 28))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tipo_vaga.descricao')
+                TextColumn::make('tipo_vaga.descricao')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('data_hora')
+                TextColumn::make('data_hora')
                     ->date()
                     ->sortable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Detalhes da Inscrição')
                     ->columns(2)
                     ->schema([
@@ -125,10 +134,10 @@ class InscricaoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInscricaos::route('/'),
-            'create' => Pages\CreateInscricao::route('/create'),
-            'view' => Pages\ViewInscricao::route('/{record}'),
-            'edit' => Pages\EditInscricao::route('/{record}/edit'),
+            'index' => ListInscricaos::route('/'),
+            'create' => CreateInscricao::route('/create'),
+            'view' => ViewInscricao::route('/{record}'),
+            'edit' => EditInscricao::route('/{record}/edit'),
         ];
     }
 }

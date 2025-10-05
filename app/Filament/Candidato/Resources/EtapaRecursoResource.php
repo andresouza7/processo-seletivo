@@ -2,11 +2,16 @@
 
 namespace App\Filament\Candidato\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Placeholder;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use App\Filament\Candidato\Resources\EtapaRecursoResource\Pages\ListEtapaRecursos;
+use App\Filament\Candidato\Resources\EtapaRecursoResource\Pages\EditEtapaRecurso;
 use App\Filament\Candidato\Resources\EtapaRecursoResource\Pages;
 use App\Filament\Candidato\Resources\EtapaRecursoResource\RelationManagers\RecursosRelationManager;
 use App\Models\EtapaRecurso;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
@@ -22,9 +27,9 @@ class EtapaRecursoResource extends Resource
 
     protected static ?string $modelLabel = 'Recursos';
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
-    protected static ?string $navigationGroup = 'Área do Candidato';
+    protected static string | \UnitEnum | null $navigationGroup = 'Área do Candidato';
 
     protected static ?int $navigationSort = 2;
 
@@ -54,16 +59,16 @@ class EtapaRecursoResource extends Resource
         return $query->whereIn('idprocesso_seletivo', $validProcessoIds)->orderBy('idetapa_recurso', 'desc')->limit(1);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Placeholder::make('processo_seletivo')
+        return $schema
+            ->components([
+                Placeholder::make('processo_seletivo')
                     ->helperText(fn($record) => $record->processo_seletivo->titulo)
                     ->label('Processo Seletivo')
                     ->inlineLabel()
                     ->columnSpanFull(),
-                Forms\Components\Placeholder::make('descricao')
+                Placeholder::make('descricao')
                     ->helperText(fn($record) => $record->descricao)
                     ->label('Etapa')
                     ->inlineLabel()
@@ -76,15 +81,15 @@ class EtapaRecursoResource extends Resource
         return $table
             ->description('Consulte nesta seção os Processos Seletivos com período de recurso em andamento.')
             ->columns([
-                Tables\Columns\TextColumn::make('processo_seletivo.titulo'),
-                Tables\Columns\TextColumn::make('descricao')->label('Etapa'),
+                TextColumn::make('processo_seletivo.titulo'),
+                TextColumn::make('descricao')->label('Etapa'),
             ])
             ->paginated(false)
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
             ]);
     }
@@ -99,10 +104,10 @@ class EtapaRecursoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEtapaRecursos::route('/'),
+            'index' => ListEtapaRecursos::route('/'),
             // 'create' => Pages\CreateEtapaRecurso::route('/create'),
             // 'view' => Pages\ViewEtapaRecurso::route('/{record}'),
-            'edit' => Pages\EditEtapaRecurso::route('/{record}/edit'),
+            'edit' => EditEtapaRecurso::route('/{record}/edit'),
         ];
     }
 }

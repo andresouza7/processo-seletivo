@@ -2,10 +2,14 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
 use Filament\Actions;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,22 +22,22 @@ class ManageVagas extends ManageRelatedRecords
     protected static ?string $title = 'Gerenciar Vagas';
     protected static string $relationship = 'inscricao_vaga';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationLabel(): string
     {
         return 'Vagas';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('codigo')
+        return $schema
+            ->components([
+                TextInput::make('codigo')
                     ->label('Código')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('descricao')
+                TextInput::make('descricao')
                     ->label('Descrição')
                     ->required()
                     ->maxLength(255),
@@ -47,10 +51,10 @@ class ManageVagas extends ManageRelatedRecords
             ->heading('Vagas')
             ->paginated(false)
             ->columns([
-                Tables\Columns\TextColumn::make('codigo')
+                TextColumn::make('codigo')
                     ->label('Código')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('descricao')
+                TextColumn::make('descricao')
                     ->label('Descrição')
                     ->searchable(),
             ])
@@ -58,9 +62,9 @@ class ManageVagas extends ManageRelatedRecords
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->label('Cadastrar vaga')
-                    ->mutateFormDataUsing(function (array $data): array {
+                    ->mutateDataUsing(function (array $data): array {
                         $parentRecord = $this->getOwnerRecord();
 
                         // Set the ID of the parent resource on the form data
@@ -69,12 +73,12 @@ class ManageVagas extends ManageRelatedRecords
                         return $data;
                     }),
             ])
-            ->actions([
+            ->recordActions([
                 // Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
                 // Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DissociateBulkAction::make(),
                 //     Tables\Actions\DeleteBulkAction::make(),

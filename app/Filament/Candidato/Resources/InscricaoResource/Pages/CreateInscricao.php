@@ -45,7 +45,7 @@ class CreateInscricao extends CreateRecord
                 ->body('Você precisa completar seus dados antes de realizar a inscrição.')
                 ->persistent()
                 ->actions([
-                    \Filament\Notifications\Actions\Action::make('editarPerfil')
+                    Action::make('editarPerfil')
                         ->button()
                         ->url(route('filament.candidato.pages.meus-dados'), shouldOpenInNewTab: false),
                 ])

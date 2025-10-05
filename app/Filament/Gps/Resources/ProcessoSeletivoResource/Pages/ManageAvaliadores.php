@@ -2,14 +2,17 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\DetachAction;
 use App\Filament\Exports\InscricaoExporter;
 use App\Filament\Gps\Resources\ProcessoSeletivoResource;
 use Filament\Actions;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
@@ -22,17 +25,17 @@ class ManageAvaliadores extends ManageRelatedRecords
     protected static string $resource = ProcessoSeletivoResource::class;
     protected static ?string $title = 'Gerenciar Avaliadores';
     protected static string $relationship = 'avaliadores';
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
     public static function getNavigationLabel(): string
     {
         return 'Avaliadores';
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Candidato')
                     ->schema([
                         TextEntry::make('inscricao_pessoa.nome')->label('Nome'),
@@ -47,10 +50,10 @@ class ManageAvaliadores extends ManageRelatedRecords
             ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([]);
+        return $schema
+            ->components([]);
     }
 
     public function table(Table $table): Table
@@ -60,10 +63,10 @@ class ManageAvaliadores extends ManageRelatedRecords
             ->inverseRelationship('processos_seletivos')
             ->heading('Avaliadores')
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nome')
                     ->searchable(),
             ])
@@ -71,14 +74,14 @@ class ManageAvaliadores extends ManageRelatedRecords
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()->label('Cadastrar Avaliador')->preloadRecordSelect()
+                AttachAction::make()->label('Cadastrar Avaliador')->preloadRecordSelect()
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
-                Tables\Actions\DetachAction::make()->label('Remover Avaliador')->requiresConfirmation(),
+                DetachAction::make()->label('Remover Avaliador')->requiresConfirmation(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DissociateBulkAction::make(),
                 //     Tables\Actions\DeleteBulkAction::make(),

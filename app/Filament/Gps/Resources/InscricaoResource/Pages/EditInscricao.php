@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\InscricaoResource\Pages;
 
+use Filament\Actions\ViewAction;
 use App\Filament\Gps\Resources\InscricaoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -13,7 +14,7 @@ class EditInscricao extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
+            ViewAction::make(),
             // Actions\DeleteAction::make(),
         ];
     }
