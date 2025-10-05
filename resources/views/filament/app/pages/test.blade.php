@@ -1,4 +1,4 @@
 <x-filament-panels::page>
     {{-- Page content --}}
-    {{$this->form}}
+    {{$this->content}}
 </x-filament-panels::page>

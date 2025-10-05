@@ -37,7 +37,7 @@ class CandidatoPanelProvider extends PanelProvider
         return $panel
             ->id('candidato')
             ->path('candidato')
-            ->viteTheme('resources/css/filament/candidato/theme.css')
+            ->viteTheme('resources/css/filament/app/theme.css')
             ->discoverResources(in: app_path('Filament/Candidato/Resources'), for: 'App\\Filament\\Candidato\\Resources')
             ->discoverPages(in: app_path('Filament/Candidato/Pages'), for: 'App\\Filament\\Candidato\\Pages')
             ->discoverWidgets(in: app_path('Filament/Candidato/Widgets'), for: 'App\\Filament\\Candidato\\Widgets')

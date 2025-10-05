@@ -1,5 +1,24 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
-@source '../../../../app/Filament/App/**/*.php';
-@source '../../../../resources/views/filament/app/**/*.blade.php';
-@source '../../../../vendor/filament/**/*.blade.php';
+@source '../../../../app/Filament/App/**/*';
+@source '../../../../resources/views/filament/app/**/*';
+
+@layer utilities {
+    .fi-sidebar-header,
+    .fi-topbar {
+        background: #017840;
+    }
+
+    .fi-topbar-open-sidebar-btn .fi-icon {
+        stroke: white;
+        stroke-width: 2;
+    }
+
+    .fi-logo {
+        color: white !important;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+}
