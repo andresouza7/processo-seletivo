@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\LogViewerRedirect;
+
 return [
 
     /*
@@ -35,7 +37,7 @@ return [
     |
     */
 
-    'route_path' => 'log-viewer',
+    'route_path' => 'admin/log',
 
     /*
     |--------------------------------------------------------------------------
@@ -74,7 +76,8 @@ return [
 
     'middleware' => [
         'web',
-        'auth',
+        // 'auth',
+        LogViewerRedirect::class,
         \Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
     ],
 

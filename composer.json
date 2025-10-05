@@ -12,7 +12,6 @@
         "canducci/cep": "^3.1",
         "filament/filament": "~4.0",
         "filament/spatie-laravel-media-library-plugin": "~4.0",
-        "laravel/fortify": "^1.24",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "laravellegends/pt-br-validator": "^12.0",

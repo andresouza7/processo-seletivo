@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use Canducci\Cep\Facades\Cep;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Placeholder;
+use Filament\Infolists\Components\TextEntry;
 
 class Cadastro extends Register
 {
@@ -56,8 +56,8 @@ class Cadastro extends Register
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            Placeholder::make('')
-                ->content(new HtmlString('<p>ℹ Complete todas as etapas para finalizar o seu cadastro.</p>')),
+            TextEntry::make('status')
+                ->formatStateUsing(fn(string $state): string => new HtmlString('<p>ℹ Complete todas as etapas para finalizar o seu cadastro.</p>')),
 
             Section::make('Identificação')
                 ->columns(2)
@@ -126,8 +126,8 @@ class Cadastro extends Register
                 ->columnSpanFull(),
 
             //////////////// AVISO DINÂMICO GENERO
-            Placeholder::make('')
-                ->content(fn(Get $get) => match ($get('identidade_genero')) {
+            TextEntry::make('status')
+                ->formatStateUsing(fn(Get $get) => match ($get('identidade_genero')) {
                     'C' => new HtmlString(
                         '<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'
                     ),
@@ -176,8 +176,8 @@ class Cadastro extends Register
                 ->required(),
 
             //////// AVISO DINAMICO ORIENTACAO
-            Placeholder::make('')
-                ->content(fn(Get $get) => match ($get('orientacao_sexual')) {
+            TextEntry::make('status')
+                ->formatStateUsing(fn(Get $get) => match ($get('orientacao_sexual')) {
                     'HT' => new HtmlString(
                         '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
                     ),

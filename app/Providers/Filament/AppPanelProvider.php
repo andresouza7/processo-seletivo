@@ -38,7 +38,8 @@ class AppPanelProvider extends PanelProvider
 
         return $panel
             ->id('app')
-            ->path('app')
+            ->path('')
+            ->login()
             ->viteTheme('resources/css/filament/app/theme.css')
             ->navigationItems([
                 NavigationItem::make('Login')

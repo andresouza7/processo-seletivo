@@ -294,7 +294,7 @@
                                     d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="px-4 py-3 border-t">
+                        <div x-show="open" x-collapse class="px-4 py-3 border-t border-gray-200">
                             <p class="text-sm text-gray-600">
                                 {!! $faq['resposta'] !!}
                             </p>
