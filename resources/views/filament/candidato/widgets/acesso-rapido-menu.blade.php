@@ -33,11 +33,7 @@
         @endphp
 
         {{-- Welcome --}}
-        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-4 relative overflow-hidden">
-            {{-- <div class="absolute top-0 bottom-0 left-0">
-                <div class="bg-gray-400 w-1 h-full rounded-l-md"></div>
-            </div> --}}
-
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 relative overflow-hidden">
             <div class="text-sm text-gray-600 dark:text-gray-300 mb-1">
                 Bem-vindo(a),
             </div>
@@ -56,19 +52,17 @@
             </div>
 
             {{-- Navigation Menu --}}
-            <div class="bg-white dark:bg-gray-900 shadow-sm border rounded-xl relative overflow-hidden">
+            <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl relative overflow-hidden">
                 <div class="absolute top-0 left-0 right-0">
+                    {{-- v4 style would be the same here --}}
                     <div class="bg-green-600 h-1 w-full rounded-t-md"></div>
                 </div>
-                {{-- <div class="absolute top-0 bottom-0 left-0">
-                    <div class="bg-green-600 w-1 h-full rounded-l-md"></div>
-                </div> --}}
 
                 <div class="px-4 py-8 sm:py-4">
                     <div class="grid grid-cols-4 sm:flex sm:flex-wrap sm:justify-start gap-4 justify-items-center">
                         @foreach ($menus as $menu)
                             <a href="{{ $menu['url'] }}"
-                                class="flex flex-col items-center w-full sm:w-16 text-center transition hover:scale-105">
+                               class="flex flex-col items-center w-full sm:w-16 text-center transition hover:scale-105">
                                 <div
                                     class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center shadow-sm border border-gray-200 dark:border-gray-700">
                                     <x-dynamic-component :component="$menu['icon']"
@@ -81,6 +75,7 @@
                             </a>
                         @endforeach
 
+                        {{-- Logout --}}
                         <form method="POST" action="{{ route('filament.candidato.auth.logout') }}">
                             @csrf
                             <button type="submit"
@@ -98,7 +93,6 @@
                         </form>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

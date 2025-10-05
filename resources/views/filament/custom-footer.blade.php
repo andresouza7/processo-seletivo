@@ -1,4 +1,4 @@
-<footer class="z-20 w-full text-white border-t border-gray-200 shadow flex flex-col items-center justify-between py-12 px-4"
+<footer class="z-20 w-full text-white border-t border-gray-200 shadow flex flex-col items-center justify-between pt-10"
     style="background: #017840; position: relative">
     <!-- Main contact text -->
     <p class="text-center text-base font-semibold text-white mb-1">
@@ -12,13 +12,10 @@
     </p>
 
     <!-- Footer copyright -->
-    <div class="w-full bg-black bg-opacity-50 pt-4 text-center">
-        <span class="text-xs text-gray-300 text-narrow">
+    <div class="w-full bg-black/20 py-4 text-center">
+        <span class="text-xs text-gray-200 tracking-tight">
             © {{ now()->format('Y') }}
             <a href="#" class="text-white hover:underline">Site desenvolvido pela DINFO/UEAP</a>
         </span>
     </div>
 </footer>
-
-
-{{-- fixed bottom-0 left-0 --}}
