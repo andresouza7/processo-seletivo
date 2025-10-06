@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Filament\Candidato\Resources\EtapaRecursoResource;
+use App\Filament\Candidato\Resources\EtapaRecursos\EtapaRecursoResource;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

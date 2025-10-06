@@ -2,13 +2,12 @@
 
 namespace App\Filament\Candidato\Pages\Auth;
 
-use Filament\Forms\Form;
-use Filament\Pages\Auth\EditProfile as BaseEditProfile;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
-class EditProfile extends BaseEditProfile
+class EditProfile extends \Filament\Auth\Pages\EditProfile
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
@@ -18,10 +17,10 @@ class EditProfile extends BaseEditProfile
         return $record;
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 $this->getEmailFormComponent()->disabled(),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent()->visible(),

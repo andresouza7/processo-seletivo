@@ -2,15 +2,14 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Auth\Http\Responses\Contracts\PasswordResetResponse;
 use App\Models\InscricaoPessoa;
 use App\Models\User;
 use Filament\Forms\Form;
-use Filament\Pages\Auth\PasswordReset\ResetPassword as PasswordResetResetPassword;
 use Filament\Pages\Page;
 
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\Contracts\PasswordResetResponse;
 use Filament\Notifications\Notification;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -21,7 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
-class ResetPassword extends PasswordResetResetPassword
+class ResetPassword extends \Filament\Auth\Pages\PasswordReset\ResetPassword
 {
     public function resetPassword(): ?PasswordResetResponse
     {

@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Pages\Dashboard;
+use Filament\Widgets\AccountWidget;
 use App\Filament\Candidato\Pages\Auth\RequestPasswordReset;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,6 +28,7 @@ class GpsPanelProvider extends PanelProvider
         return $panel
             ->id('gps')
             ->path('gps')
+            ->domain('gps')
             ->login()
             ->brandName('GPS - UEAP')
             ->profile()
@@ -37,11 +40,11 @@ class GpsPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Gps/Resources'), for: 'App\\Filament\\Gps\\Resources')
             ->discoverPages(in: app_path('Filament/Gps/Pages'), for: 'App\\Filament\\Gps\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Gps/Widgets'), for: 'App\\Filament\\Gps\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([

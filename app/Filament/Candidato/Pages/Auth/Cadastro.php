@@ -2,6 +2,15 @@
 
 namespace App\Filament\Candidato\Pages\Auth;
 
+use Filament\Auth\Pages\Register;
+use Filament\Support\Enums\Width;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Component;
+use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
+use Filament\Auth\Events\Registered;
 use App\Models\InscricaoPessoa;
 use App\Models\Pessoa;
 use Filament\Forms;
@@ -9,8 +18,6 @@ use Filament\Pages\Page;
 use App\Models\User;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Exception;
-use Filament\Events\Auth\Registered;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
@@ -18,11 +25,8 @@ use Filament\Forms\Components\Split;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Wizard\Step;
-use Filament\Forms\Form;
-use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use Filament\Pages\Auth\Register;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,31 +36,28 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use Canducci\Cep\Facades\Cep;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Get;
+use Filament\Infolists\Components\TextEntry;
 
 class Cadastro extends Register
 {
-    protected ?string $maxWidth = '4xl';
+    protected Width|string|null $maxWidth = '4xl';
 
     protected function getFormActions(): array
     {
         return [
             $this->getRegisterFormAction(),
-            \Filament\Actions\Action::make('voltar')
+            Action::make('voltar')
                 ->url('/')
                 ->label('Voltar para o site')
                 ->color('gray')
         ];
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Placeholder::make('')
-                ->content(new HtmlString('<p>ℹ Complete todas as etapas para finalizar o seu cadastro.</p>')),
+        return $schema->components([
+            TextEntry::make('status')
+                ->formatStateUsing(fn(string $state): string => new HtmlString('<p>ℹ Complete todas as etapas para finalizar o seu cadastro.</p>')),
 
             Section::make('Identificação')
                 ->columns(2)
@@ -125,8 +126,8 @@ class Cadastro extends Register
                 ->columnSpanFull(),
 
             //////////////// AVISO DINÂMICO GENERO
-            Placeholder::make('')
-                ->content(fn(Get $get) => match ($get('identidade_genero')) {
+            TextEntry::make('status')
+                ->formatStateUsing(fn(Get $get) => match ($get('identidade_genero')) {
                     'C' => new HtmlString(
                         '<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'
                     ),
@@ -175,8 +176,8 @@ class Cadastro extends Register
                 ->required(),
 
             //////// AVISO DINAMICO ORIENTACAO
-            Placeholder::make('')
-                ->content(fn(Get $get) => match ($get('orientacao_sexual')) {
+            TextEntry::make('status')
+                ->formatStateUsing(fn(Get $get) => match ($get('orientacao_sexual')) {
                     'HT' => new HtmlString(
                         '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
                     ),
@@ -287,7 +288,7 @@ class Cadastro extends Register
                                     $set('bairro', $cep->bairro);
                                     $set('cidade', $cep->localidade);
                                 }
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 // Handle error silently
                             }
                         }),

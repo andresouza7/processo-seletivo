@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use Throwable;
 use App\Models\InscricaoPessoa;
 use App\Notifications\ResetEmailNotification;
 use Closure;
@@ -40,7 +41,7 @@ class ResetCandidatoEmailAction
             $user->notify(new ResetEmailNotification($senha));
 
             $callback();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             //throw $th;
             Notification::make()
                 ->title('Erro.')

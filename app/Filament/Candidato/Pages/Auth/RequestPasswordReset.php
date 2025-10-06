@@ -2,6 +2,7 @@
 
 namespace App\Filament\Candidato\Pages\Auth;
 
+use Filament\Schemas\Schema;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
@@ -12,14 +13,12 @@ use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Placeholder;
-use Filament\Pages\Auth\PasswordReset\RequestPasswordReset as BaseRequestPasswordReset;
-use Filament\Forms\Form;
 
-class RequestPasswordReset extends BaseRequestPasswordReset
+class RequestPasswordReset extends \Filament\Auth\Pages\PasswordReset\RequestPasswordReset
 {
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->components([
             Placeholder::make('title')->label('Um link de redefinição será enviado para seu email'),
             $this->getEmailFormComponent()
         ]);
