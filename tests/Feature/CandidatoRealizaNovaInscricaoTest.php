@@ -28,7 +28,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
         parent::setUp();
 
         // Cria dados comuns para os testes
-        $this->user = InscricaoPessoa::factory()->create();
+        $this->user = InscricaoPessoa::factory()->createOne();
         $this->actingAs($this->user, 'candidato');
 
         $this->processo = ProcessoSeletivo::factory()->create();
@@ -173,7 +173,8 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         Storage::fake('media');
 
-        $user = InscricaoPessoa::factory()->create();
+        /** @var \App\Models\InscricaoPessoa|\Illuminate\Contracts\Auth\Authenticatable $user */
+        $user = InscricaoPessoa::factory()->createOne();
         $this->actingAs($user, 'candidato');
 
         $processo = ProcessoSeletivo::factory()->create();

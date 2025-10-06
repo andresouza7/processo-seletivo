@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\assertTrue;
 
-class GestorPSFazLoginTest extends TestCase
+class GestorRealizaLoginTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -24,6 +24,7 @@ class GestorPSFazLoginTest extends TestCase
         ]);
 
         $successfulLogin = Auth::guard('web')->attempt(['email' => 'gestorps@admin.com.br', 'password' => 'pwd']);
+        assertTrue($successfulLogin);
 
         // LOGA PELO GUARD CORRETO
         $this->actingAs($user, 'web'); //EXPLÍCITO, mas é o comportamento padrão.
@@ -36,8 +37,5 @@ class GestorPSFazLoginTest extends TestCase
         $response->assertSee('tester gps');
         //CHECA PARA VER SE ENTROU EM PAINEL DE CONTROLE
         $response->assertSee('Painel de Controle');
-
-        assertTrue($successfulLogin);
-        
     }
 }
