@@ -55,17 +55,17 @@ class AppPanelProvider extends PanelProvider
                     ->sort(2)
                     ->hidden(fn() => Auth::guard('candidato')->check()),
                 NavigationItem::make('Inscrições Abertas')
-                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['tableFilters[status][value]' => 'inscricoes_abertas']))
+                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['status' => 'inscricoes_abertas']))
                     ->icon('heroicon-o-pencil-square')
                     ->group('Acompanhamento')
                     ->sort(1),
                 NavigationItem::make('Em Andamento')
-                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['tableFilters[status][value]' => 'em_andamento']))
+                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['status' => 'em_andamento']))
                     ->icon('heroicon-o-folder-open')
                     ->group('Acompanhamento')
                     ->sort(2),
                 NavigationItem::make('Finalizados')
-                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['tableFilters[status][value]' => 'finalizados']))
+                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['status' => 'finalizados']))
                     ->icon('heroicon-o-check')
                     ->group('Acompanhamento')
                     ->sort(3),

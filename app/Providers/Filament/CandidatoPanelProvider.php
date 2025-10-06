@@ -3,11 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Candidato\Pages\Auth\Cadastro;
-use App\Filament\Candidato\Pages\Auth\EditProfile;
 use App\Filament\Candidato\Pages\Auth\Login;
-use App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
-use App\Filament\Candidato\Pages\Auth\ConfirmEmail;
-use App\Helpers\FilamentSettings;
+use App\Filament\Candidato\Pages\Auth\EditPassword;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -27,6 +24,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Candidato\Pages\Auth\RequestPasswordReset;
 use App\Filament\Pages\ResetPassword;
 use App\Http\Middleware\MustChangePassword;
+use Filament\Actions\Action;
 
 class CandidatoPanelProvider extends PanelProvider
 {
@@ -45,6 +43,9 @@ class CandidatoPanelProvider extends PanelProvider
                 // Widgets\AccountWidget::class,
             ])
             ->collapsibleNavigationGroups(false)
+             ->userMenuItems([
+                'profile' => fn (Action $action) => $action->label('Perfil')->url(route('filament.candidato.pages.meus-dados')),
+            ])
             ->navigationItems([
                 NavigationItem::make('Nova Inscrição')
                     ->url('/candidato/inscricoes/create')
@@ -77,12 +78,12 @@ class CandidatoPanelProvider extends PanelProvider
             ->authGuard('candidato')
             ->login(Login::class)
             ->registration(Cadastro::class)
-            ->profile(EditProfile::class)
+            ->profile(EditPassword::class)
             ->authPasswordBroker('inscricao_pessoa')
-            ->passwordReset(RequestPasswordReset::class, ResetPassword::class)
+            ->passwordReset(RequestPasswordReset::class, ResetPassword::class) // use to edit password only
             // ->emailVerification(ConfirmEmail::class)
             ->authMiddleware([
-                // Authenticate::class,
+                Authenticate::class,
             ]);
     }
 }

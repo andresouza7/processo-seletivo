@@ -98,23 +98,9 @@ class Login extends \Filament\Auth\Pages\Login
     protected function throwFailureValidationException(): never
     {
         throw ValidationException::withMessages([
+            
             'data.cpf' => __('filament-panels::pages/auth/login.messages.failed'),
         ]);
-    }
-
-    private function useMd5AuthenticationMethod(array $data)
-    {
-        // Attempt to find the user by cpf
-        $user = InscricaoPessoa::where('cpf', $data['cpf'])->first();
-
-        if (!$user || $user->senha !== md5($data['senha'])) {
-            $this->throwFailureValidationException();
-        }
-
-        // Log the user in manually
-        Auth::guard('candidato')->login($user, $data['remember'] ?? false);
-
-        return $user;
     }
 
     private function useBcryptAuthenticationMethod(array $data)

@@ -5,7 +5,7 @@ namespace App\Filament\Candidato\Pages\Auth;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
-class EditProfile extends \Filament\Auth\Pages\EditProfile
+class EditPassword extends \Filament\Auth\Pages\EditProfile
 {
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
@@ -36,9 +36,4 @@ class EditProfile extends \Filament\Auth\Pages\EditProfile
     {
         return route("filament.candidato.pages.dashboard");
     }
-
-    // public static function getLabel(): string
-    // {
-    //     return 'Senha';
-    // }
 }
