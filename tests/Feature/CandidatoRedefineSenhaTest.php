@@ -13,7 +13,7 @@ use App\Notifications\ResetPasswordNotification;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
 
-class CandidatoPodeRedefinirSenhaTest extends TestCase
+class CandidatoRedefineSenhaTest extends TestCase
 {
     use RefreshDatabase;
 

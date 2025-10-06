@@ -10,7 +10,7 @@ use App\Models\InscricaoPessoa;
 use Livewire\Livewire;
 
 
-class CandidatoNaoPodeEditarCamposTest extends TestCase
+class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class areacandidato_realiza_nova_inscricao_Test extends TestCase
+class CandidatoRealizaNovaInscricaoTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -32,7 +32,10 @@ class areacandidato_realiza_nova_inscricao_Test extends TestCase
         $this->actingAs($this->user, 'candidato');
 
         $this->processo = ProcessoSeletivo::factory()->create();
-        $this->vaga = InscricaoVaga::factory()->create();
+        $this->vaga = InscricaoVaga::factory()->create([
+            'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+        ]);
+
         TipoVaga::factory()->create(['id_tipo_vaga' => 1]);
         TipoVaga::factory()->create(['id_tipo_vaga' => 3]);
 
@@ -57,7 +60,7 @@ class areacandidato_realiza_nova_inscricao_Test extends TestCase
 
     public function test_user_can_submit_form_when_accepting_terms(): void
     {
-        
+
         Livewire::test(CreateInscricao::class)
             ->fillForm([
                 'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
@@ -137,34 +140,34 @@ class areacandidato_realiza_nova_inscricao_Test extends TestCase
     ////////////////////////////
 
     //public function test_user_can_upload_valid_pdf(): void
-   // {
-       // Storage::fake('media');
+    // {
+    // Storage::fake('media');
 
-     //   $file = UploadedFile::fake()->createWithContent('documento.docx', '%PDF-1.4 fake content here')->size(1024);
+    //   $file = UploadedFile::fake()->createWithContent('documento.docx', '%PDF-1.4 fake content here')->size(1024);
 
-     //   Livewire::test(CreateInscricao::class)
+    //   Livewire::test(CreateInscricao::class)
     //        ->fillForm([
-             //   'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
-              //  'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
-            //    'necessita_atendimento' => 'N',
-           //     'pcd'                 => true,
-           //     'aceita_termos'       => true,
-           //     'laudo_medico'        => $file,
-        //    ])
-         //   ->call('create')
-         //   ->assertHasNoFormErrors();
+    //   'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+    //  'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
+    //    'necessita_atendimento' => 'N',
+    //     'pcd'                 => true,
+    //     'aceita_termos'       => true,
+    //     'laudo_medico'        => $file,
+    //    ])
+    //   ->call('create')
+    //   ->assertHasNoFormErrors();
 
-     //   $inscricao = Inscricao::latest()->first();
-     //   $mediaItem = $inscricao->getFirstMedia('laudo_medico');
+    //   $inscricao = Inscricao::latest()->first();
+    //   $mediaItem = $inscricao->getFirstMedia('laudo_medico');
 
-      //  $this->assertNotNull($mediaItem);
+    //  $this->assertNotNull($mediaItem);
 
-     //  $customPath = (new \App\Services\MediaLibrary\CustomPathGenerator())->getPath($mediaItem) . $mediaItem->file_name;
-      //  Storage::disk($mediaItem->disk)->assertExists($customPath);
+    //  $customPath = (new \App\Services\MediaLibrary\CustomPathGenerator())->getPath($mediaItem) . $mediaItem->file_name;
+    //  Storage::disk($mediaItem->disk)->assertExists($customPath);
 
-      //  $this->assertEquals('application/pdf', $mediaItem->mime_type);
-       // $this->assertLessThanOrEqual(2 * 1024 * 1024, $mediaItem->size);
-   // }
+    //  $this->assertEquals('application/pdf', $mediaItem->mime_type);
+    // $this->assertLessThanOrEqual(2 * 1024 * 1024, $mediaItem->size);
+    // }
 
     public function test_user_cannot_upload_invalid_file(): void
     {

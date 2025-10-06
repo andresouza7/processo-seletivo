@@ -10,11 +10,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class areacandidato_filtro_inscricoes_passadas_Test extends TestCase
+class CandidatoConsultaInscricoesRealizadasTest extends TestCase
 {
     use RefreshDatabase;
     
-    public function test_candidato_filtra_inscricoes_realizadas(): void
+    public function test_candidato_consulta_inscricoes_realizadas(): void
     {
         $user = InscricaoPessoa::factory()->create();
         $this->actingAs($user, 'candidato');
@@ -23,12 +23,6 @@ class areacandidato_filtro_inscricoes_passadas_Test extends TestCase
         $response->assertStatus(200);
 
         $processo = ProcessoSeletivo::factory()->withInscricoes()->create();
-
-        $inscricao = $processo->inscricoes()->first();
-
-        // Permite filtrar pelo código da inscrição
-        Livewire::test(ListInscricaos::class)
-            ->searchTable($inscricao->cod_inscricao)
-            ->assertCanSeeTableRecords($processo->inscricoes->where('cod_inscricao', $inscricao->cod_inscricao));
+        Livewire::test(ListInscricaos::class)->assertCanSeeTableRecords($processo->inscricoes);
     }
 }

@@ -13,7 +13,7 @@ use Livewire\Livewire;
 
 use function PHPUnit\Framework\assertTrue;
 
-class CandidatoFazCadastroTest extends TestCase
+class CandidatoRealizaCadastroTest extends TestCase
 {
     use RefreshDatabase;
 

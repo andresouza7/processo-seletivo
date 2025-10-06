@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\assertTrue;
 
-class CandidatoFazLoginTest extends TestCase
+class CandidatoRealizaLoginTest extends TestCase
 {
     use RefreshDatabase;
 
