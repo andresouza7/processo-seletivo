@@ -11,16 +11,14 @@ use Carbon\Carbon;
 use App\Models\User;
 
 
-class UsuarioPSConsultaProcessosSeletivosTest extends TestCase
+class PortalConsultaProcessosSeletivosTest extends TestCase
 {
     use RefreshDatabase;
 
     public function test_usuario_consegue_ver_processos_seletivos(): void
     {
-        // Arrange
-        $user = User::factory()->create();
-
-        $processo = ProcessoSeletivo::factory()->create([
+       
+        ProcessoSeletivo::factory()->create([
             'publicado' => 'S',
             'titulo' => 'Processo Seletivo Teste',
             'numero' => '001/2025',
@@ -29,7 +27,6 @@ class UsuarioPSConsultaProcessosSeletivosTest extends TestCase
 
         // Act
         $response = $this
-            ->actingAs($user)
             ->get(route('filament.app.resources.processo-seletivos.index'));
 
         // Assert
@@ -40,9 +37,6 @@ class UsuarioPSConsultaProcessosSeletivosTest extends TestCase
 
     public function test_candidato_filtra_inscricoes_realizadas(): void
     {
-        // Arrange
-        $user = \App\Models\User::factory()->create();
-
         // 🔹 Cria 5 processos seletivos com inscrições abertas
         $abertos = \App\Models\ProcessoSeletivo::factory()
             ->count(5)
@@ -66,7 +60,6 @@ class UsuarioPSConsultaProcessosSeletivosTest extends TestCase
         // Act
         // 🔹 Faz requisição com o parâmetro de filtro
         $response = $this
-            ->actingAs($user)
             ->get(route('filament.app.resources.processo-seletivos.index', [
                 'status' => 'inscricoes_abertas',
             ]));
