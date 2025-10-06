@@ -2,27 +2,32 @@
 
 namespace App\Filament\Candidato\Pages;
 
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Checkbox;
+use Exception;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
 use App\Models\InscricaoPessoa;
 use Canducci\Cep\Facades\Cep;
 use Filament\Forms;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 
-class MeusDados extends Page implements Forms\Contracts\HasForms
+class MeusDados extends Page implements HasForms
 {
-    use Forms\Concerns\InteractsWithForms;
+    use InteractsWithForms;
 
-    protected static ?string $navigationIcon  = 'heroicon-o-user-circle';
-    protected static ?string $navigationGroup = 'Área do Candidato';
-    protected static ?int $navigationSort     = 3;
-
-    protected static string $view = 'filament.candidato.pages.meus-dados';
-
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
+    protected static string | \UnitEnum | null $navigationGroup = 'Área do Candidato';
+    protected static ?int $navigationSort = 3;
+    protected string $view = 'filament.candidato.pages.meus-dados';
     public InscricaoPessoa $record;
     public ?array $data = [];
 
@@ -33,51 +38,51 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
 
         $this->form->fill([
             ...$record->toArray(),
-            'usar_nome_social' => !blank($record->nome_social),
+            'usar_nome_social' => filled($record->nome_social),
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->statePath('data')
-            ->schema([
+            ->components([
                 Section::make('Dados Pessoais')
                     ->description('Entre em contato com a DIPS para alterar estes dados')
                     ->columns(3)
                     ->schema([
-                        Forms\Components\TextInput::make('nome')
+                        TextInput::make('nome')
                             ->label('Nome')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->nome))
                             ->required(),
 
-                        Forms\Components\TextInput::make('mae')
+                        TextInput::make('mae')
                             ->label('Nome da Mãe')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->mae))
                             ->required(),
 
-                        Forms\Components\TextInput::make('cpf')
+                        TextInput::make('cpf')
                             ->label('CPF')
                             ->disabled()
                             ->required(),
 
-                        Forms\Components\TextInput::make('ci')
+                        TextInput::make('ci')
                             ->label('RG')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->ci))
                             ->required(),
 
-                        Forms\Components\DatePicker::make('data_nascimento')
+                        DatePicker::make('data_nascimento')
                             ->label('Data de Nascimento')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->data_nascimento))
                             ->required(),
 
-                        Forms\Components\TextInput::make('email')
+                        TextInput::make('email')
                             ->label('Email')
-                            ->disabled()
+                            ->disabled(fn () => filled($this->record->email))
                             ->email()
                             ->required(),
 
-                        Forms\Components\Select::make('sexo')
+                        Select::make('sexo')
                             ->label('Sexo')
                             ->disabled()
                             ->options([
@@ -87,7 +92,7 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
                             ->required()
                             ->columnSpanFull(), // Ocupa linha inteira
 
-                        Forms\Components\Select::make('identidade_genero')
+                        TextInput::make('identidade_genero')
                             ->label('Identidade de Gênero')
                             ->options([
                                 'C'  => 'Cisgênero',
@@ -99,12 +104,12 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
                             ->required()
                             ->columnSpanFull(),
 
-                        Forms\Components\Checkbox::make('usar_nome_social')
+                        Checkbox::make('usar_nome_social')
                             ->label('Usar nome social')
                             ->reactive()
                             ->columnSpanFull(),
 
-                        Forms\Components\TextInput::make('nome_social')
+                        TextInput::make('nome_social')
                             ->label('Nome Social')
                             ->visible(fn ($get) => $get('usar_nome_social'))
                             ->required()
@@ -114,7 +119,8 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
                 Section::make('Endereço e contato')
                     ->columns(2)
                     ->schema([
-                        Forms\Components\TextInput::make('cep')
+
+                        TextInput::make('cep')
                             ->label('CEP')
                             ->required()
                             ->rules(['formato_cep'])
@@ -125,39 +131,33 @@ class MeusDados extends Page implements Forms\Contracts\HasForms
 
                                 try {
                                     $cepData = Cep::find($state);
-                                    $cep     = $cepData->getCepModel();
+                                    $cep = $cepData->getCepModel();
 
                                     if ($cep) {
                                         $set('endereco', $cep->logradouro);
                                         $set('bairro', $cep->bairro);
                                         $set('cidade', $cep->localidade);
                                     }
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     // Handle error silently
                                 }
                             }),
-
-                        Forms\Components\TextInput::make('endereco')
+                        TextInput::make('endereco')
                             ->label('Endereço')
                             ->required(),
-
-                        Forms\Components\TextInput::make('numero')
+                        TextInput::make('numero')
                             ->label('Número')
                             ->numeric()
                             ->required(),
-
-                        Forms\Components\TextInput::make('complemento')
+                        TextInput::make('complemento')
                             ->label('Complemento'),
-
-                        Forms\Components\TextInput::make('bairro')
+                        TextInput::make('bairro')
                             ->label('Bairro')
                             ->required(),
-
-                        Forms\Components\TextInput::make('cidade')
+                        TextInput::make('cidade')
                             ->label('Cidade')
                             ->required(),
-
-                        Forms\Components\TextInput::make('telefone')
+                        TextInput::make('telefone')
                             ->label('Telefone')
                             ->required(),
                     ]),

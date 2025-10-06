@@ -12,8 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-// add must verify email directive later
-class InscricaoPessoa extends Authenticatable implements HasName, FilamentUser
+class InscricaoPessoa extends Authenticatable implements HasName
 {
     use HasFactory, Notifiable, CanResetPassword;
 
@@ -96,5 +95,25 @@ class InscricaoPessoa extends Authenticatable implements HasName, FilamentUser
     public function inscricoes()
     {
         return $this->hasMany(Inscricao::class, 'idinscricao_pessoa', 'idpessoa');
+    }
+
+    protected const CAMPOS_OBRIGATORIOS = [
+        'mae',
+        'data_nascimento',
+        'sexo',
+        'ci',
+        'email',
+        'cep',
+        'endereco',
+        'numero',
+        'bairro',
+        'cidade',
+        'telefone'
+    ];
+
+    public function possuiDadosPendentes(): bool
+    {
+        return collect(self::CAMPOS_OBRIGATORIOS)
+            ->contains(fn($campo) => is_null($this->{$campo}));
     }
 }

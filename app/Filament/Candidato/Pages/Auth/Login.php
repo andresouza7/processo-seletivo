@@ -2,6 +2,9 @@
 
 namespace App\Filament\Candidato\Pages\Auth;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use App\Models\InscricaoPessoa;
 use App\Models\Pessoa;
 use Filament\Forms;
@@ -11,24 +14,20 @@ use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Split;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use Filament\Pages\Auth\Login as BaseLogin;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 
-class Login extends BaseLogin
+class Login extends \Filament\Auth\Pages\Login
 {
 
     protected function getFormActions(): array
@@ -42,10 +41,10 @@ class Login extends BaseLogin
         ];
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 $this->getCpfFormComponent(),
                 $this->getPasswordFormComponent(),
                 $this->getRememberFormComponent()
@@ -85,7 +84,7 @@ class Login extends BaseLogin
         $user = $this->useBcryptAuthenticationMethod($data);
 
         // Ensure the user can access the current Filament panel
-        if ($user instanceof FilamentUser && ! $user->canAccessPanel(Filament::getCurrentPanel())) {
+        if ($user instanceof FilamentUser && ! $user->canAccessPanel(Filament::getCurrentOrDefaultPanel())) {
             Auth::guard('candidato')->logout();
             $this->throwFailureValidationException();
         }

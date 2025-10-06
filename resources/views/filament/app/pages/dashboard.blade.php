@@ -5,7 +5,7 @@
             class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" />
 
         <div
-            class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 flex flex-col justify-center px-8 py-6">
+            class="absolute inset-0 bg-linear-to-b from-black/60 via-black/40 to-black/60 flex flex-col justify-center px-8 py-6">
             <h1 class="text-3xl dashboard-banner-title font-bold text-white leading-tight drop-shadow-md">
                 Universidade do Estado do Amapá
             </h1>
@@ -36,7 +36,7 @@
         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden relative">
             <!-- Top green border with narrower edges -->
             <div class="absolute top-0 left-0 right-0 flex justify-center">
-                <div class="bg-green-600 h-1 w-[100%] rounded-t-md"></div>
+                <div class="bg-green-600 h-1 w-full rounded-t-md"></div>
             </div>
             @php
                 $menus = [
@@ -46,21 +46,21 @@
                         'label' => 'Área do Candidato',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
                             'status' => 'inscricoes_abertas',
                         ]),
                         'img' => '/img/menu/inscricoes-abertas.jpg',
                         'label' => 'Inscrições Abertas',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
                             'status' => 'em_andamento',
                         ]),
                         'img' => '/img/menu/editais-andamento.jpg',
                         'label' => 'Editais em Andamento',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
                             'status' => 'finalizados',
                         ]),
                         'img' => '/img/menu/editais-finalizados.jpg',
@@ -82,14 +82,14 @@
                     {{-- Itera sobre os menus e cria os links --}}
                     @foreach ($menus as $menu)
                         <a href="{{ $menu['url'] }}"
-                            class="w-[72px] h-[72px] md:w-[90px] md:h-[90px] relative group flex-shrink-0 overflow-hidden img-overlay"
+                            class="w-[72px] h-[72px] md:w-[90px] md:h-[90px] relative group shrink-0 overflow-hidden img-overlay"
                             @if (isset($menu['target'])) target="{{ $menu['target'] }}" @endif>
 
                             {{-- Imagem redonda --}}
                             <div
                                 class="w-[72px] h-[72px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border border-gray-300 dark:border-gray-700 shadow-sm">
                                 <img src="{{ $menu['img'] }}" alt="{{ $menu['label'] }}"
-                                    class="object-cover w-[100%] h-[100%] transition-transform duration-300 group-hover:scale-110" />
+                                    class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110" />
                             </div>
 
                             {{-- Texto sobre a imagem --}}
@@ -123,7 +123,7 @@
         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden relative p-4">
             <!-- Top green border with narrower edges -->
             <div class="absolute top-0 left-0 right-0 flex justify-center">
-                <div class="bg-yellow-400 h-1 w-[100%] rounded-t-md"></div>
+                <div class="bg-yellow-400 h-1 w-full rounded-t-md"></div>
             </div>
             {{-- Custom tab wrapper to remove border --}}
             <div class="border-b border-transparent mb-4">
@@ -275,7 +275,7 @@
         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden relative p-4">
             <!-- Top green border with narrower edges -->
             <div class="absolute top-0 left-0 right-0 flex justify-center">
-                <div class="bg-yellow-400 h-1 w-[100%] rounded-t-md"></div>
+                <div class="bg-yellow-400 h-1 w-full rounded-t-md"></div>
             </div>
 
             <div class="space-y-3">
@@ -294,7 +294,7 @@
                                     d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="px-4 py-3 border-t">
+                        <div x-show="open" x-collapse class="px-4 py-3 border-t border-gray-200">
                             <p class="text-sm text-gray-600">
                                 {!! $faq['resposta'] !!}
                             </p>

@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use Throwable;
 use App\Models\InscricaoPessoa;
 use Closure;
 use Filament\Notifications\Notification;
@@ -23,7 +24,7 @@ class ResetCandidatoPasswordAction
                     ->body($senha)
                     ->success()
                     ->send();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             //throw $th;
             Notification::make()
                 ->title('Erro.')

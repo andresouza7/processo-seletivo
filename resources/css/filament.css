@@ -1,16 +1,18 @@
-.fi-sidebar-header,
-.fi-topbar nav {
-    background: #017840 !important;
-}
 
-.fi-icon-btn-icon {
-    stroke: white;
-    stroke-width: 2;
-}
-.fi-logo {
-    color: white !important;
-}
+    .fi-sidebar-header,
+    .fi-topbar {
+        background: #017840;
+    }
 
-html {
-    scroll-behavior: smooth;
-}
+    .fi-topbar-open-sidebar-btn .fi-icon {
+        stroke: white;
+        stroke-width: 2;
+    }
+
+    .fi-logo {
+        color: white !important;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
