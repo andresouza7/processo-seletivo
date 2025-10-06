@@ -50,9 +50,29 @@ class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
        // $response->assertStatus(200);
     }
 
-
-
-
+    public function candidato_tem_que_preencher_campos_requeridos()
+    {
+        Livewire::test(MeusDados::class)
+            ->set('data.nome', '')
+            ->set('data.mae', '')
+            ->set('data.cpf', '')
+            ->set('data.ci', '')
+            ->set('data.data_nascimento', '')
+            ->set('data.email', '')
+            ->set('data.sexo', '')
+            ->set('data.identidade_genero', '')
+            ->call('save') // chama o método correto
+            ->assertHasErrors([
+                'data.nome' => 'required',
+                'data.mae' => 'required',
+                'data.cpf' => 'required',
+                'data.ci' => 'required',
+                'data.data_nascimento' => 'required',
+                'data.email' => 'required',
+                'data.sexo' => 'required',
+                'data.identidade_genero' => 'required',
+            ]);
+    }
 
     public function test_candidato_nao_pode_editar_campos_de_identificacao(): void
     {
