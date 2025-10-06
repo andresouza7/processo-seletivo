@@ -14,18 +14,23 @@ use Exception;
 use Filament\Schemas\Components\Actions;
 use Filament\Actions\Action;
 use App\Models\InscricaoPessoa;
+use BackedEnum;
 use Canducci\Cep\Facades\Cep;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
-class MeusDados extends Page implements HasForms
+class MeusDados extends Page implements HasSchemas
 {
-    use InteractsWithForms;
+    use InteractsWithSchemas;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
-    protected static string | \UnitEnum | null $navigationGroup = 'Área do Candidato';
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedUserCircle;
+    protected static string | UnitEnum | null $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 3;
     protected string $view = 'filament.candidato.pages.meus-dados';
     public InscricaoPessoa $record;
@@ -53,12 +58,12 @@ class MeusDados extends Page implements HasForms
                     ->schema([
                         TextInput::make('nome')
                             ->label('Nome')
-                            ->disabled(fn () => filled($this->record->nome))
+                            ->disabled(fn() => filled($this->record->nome))
                             ->required(),
 
                         TextInput::make('mae')
                             ->label('Nome da Mãe')
-                            ->disabled(fn () => filled($this->record->mae))
+                            ->disabled(fn() => filled($this->record->mae))
                             ->required(),
 
                         TextInput::make('cpf')
@@ -68,17 +73,17 @@ class MeusDados extends Page implements HasForms
 
                         TextInput::make('ci')
                             ->label('RG')
-                            ->disabled(fn () => filled($this->record->ci))
+                            ->disabled(fn() => filled($this->record->ci))
                             ->required(),
 
                         DatePicker::make('data_nascimento')
                             ->label('Data de Nascimento')
-                            ->disabled(fn () => filled($this->record->data_nascimento))
+                            ->disabled(fn() => filled($this->record->data_nascimento))
                             ->required(),
 
                         TextInput::make('email')
                             ->label('Email')
-                            ->disabled(fn () => filled($this->record->email))
+                            ->disabled(fn() => filled($this->record->email))
                             ->email()
                             ->required(),
 
@@ -92,7 +97,7 @@ class MeusDados extends Page implements HasForms
                             ->required()
                             ->columnSpanFull(), // Ocupa linha inteira
 
-                        TextInput::make('identidade_genero')
+                        Select::make('identidade_genero')
                             ->label('Identidade de Gênero')
                             ->options([
                                 'C'  => 'Cisgênero',
@@ -111,7 +116,7 @@ class MeusDados extends Page implements HasForms
 
                         TextInput::make('nome_social')
                             ->label('Nome Social')
-                            ->visible(fn ($get) => $get('usar_nome_social'))
+                            ->visible(fn($get) => $get('usar_nome_social'))
                             ->required()
                             ->columnSpanFull(),
                     ]),

@@ -28,7 +28,6 @@ class GpsPanelProvider extends PanelProvider
         return $panel
             ->id('gps')
             ->path('gps')
-            ->domain('gps')
             ->login()
             ->brandName('GPS - UEAP')
             ->profile()

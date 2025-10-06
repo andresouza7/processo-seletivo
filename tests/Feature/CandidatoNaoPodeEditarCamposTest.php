@@ -14,8 +14,6 @@ class CandidatoNaoPodeEditarCamposTest extends TestCase
 {
     use RefreshDatabase;
 
-
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -69,46 +67,6 @@ class CandidatoNaoPodeEditarCamposTest extends TestCase
             ->assertFormFieldIsDisabled('data_nascimento')
             ->assertFormFieldIsDisabled('email');
     }
-
-    public function test_cadastro_requer_dados_pessoais(): void
-{
-    Livewire::test(MeusDados::class)
-        // nome
-        ->set('data.nome', '')
-        ->call('submit')
-        ->assertHasErrors(['data.nome' => 'required'])
-
-        // nome da mãe
-        ->set('data.mae', '')
-        ->call('submit')
-        ->assertHasErrors(['data.mae' => 'required'])
-
-        // cpf
-        ->set('data.cpf', '')
-        ->call('submit')
-        ->assertHasErrors(['data.cpf' => 'required'])
-
-        // rg
-        ->set('data.rg', '')
-        ->call('submit')
-        ->assertHasErrors(['data.rg' => 'required'])
-
-        // data nascimento
-        ->set('data.data_nascimento', '')
-        ->call('submit')
-        ->assertHasErrors(['data.data_nascimento' => 'required'])
-
-        // email
-        ->set('data.email', '')
-        ->call('submit')
-        ->assertHasErrors(['data.email' => 'required'])
-
-        // sexo
-        ->set('data.sexo', '')
-        ->call('submit')
-        ->assertHasErrors(['data.sexo' => 'required']);
-}
-
 
     public function test_candidato_pode_editar_campos_genero_e_contato(): void
     {

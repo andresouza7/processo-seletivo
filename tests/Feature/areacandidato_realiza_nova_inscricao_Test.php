@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Candidato\Resources\InscricaoResource\Pages\CreateInscricao;
+use App\Filament\Candidato\Resources\Inscricaos\Pages\CreateInscricao;
 use App\Models\Inscricao;
 use App\Models\InscricaoPessoa;
 use App\Models\InscricaoVaga;
@@ -57,6 +57,7 @@ class areacandidato_realiza_nova_inscricao_Test extends TestCase
 
     public function test_user_can_submit_form_when_accepting_terms(): void
     {
+        
         Livewire::test(CreateInscricao::class)
             ->fillForm([
                 'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,

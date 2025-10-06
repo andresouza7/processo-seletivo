@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Candidato\Resources\InscricaoResource\Pages\ListInscricaos;
+use App\Filament\Candidato\Resources\Inscricaos\Pages\ListInscricaos;
 use App\Models\InscricaoPessoa;
 use App\Models\ProcessoSeletivo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
