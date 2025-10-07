@@ -113,6 +113,9 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'data_criacao' => $this->date,
             'publicado' => 'N',
             'possui_isencao' => false,
+            'anexos' => [
+                ['item' => 'identidade']
+            ],
         ]);
 
         // 2️⃣ Define os novos dados que o gestor vai alterar

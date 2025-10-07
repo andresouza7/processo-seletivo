@@ -141,38 +141,36 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->assertHasFormErrors(['laudo_medico' => 'required']);
     }
 
-    ///////////// aguardando FIX
-    ////////////////////////////
 
-    //public function test_user_can_upload_valid_pdf(): void
-    // {
-    // Storage::fake('media');
+    public function test_user_can_upload_valid_pdf(): void
+    {
+        Storage::fake('media');
 
-    //   $file = UploadedFile::fake()->createWithContent('documento.docx', '%PDF-1.4 fake content here')->size(1024);
+        $file = UploadedFile::fake()->createWithContent('documento.pdf', '%PDF-1.4 fake content here')->size(1024);
+        
+        Livewire::test(CreateInscricao::class)
+            ->fillForm([
+                'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+                'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
+                'necessita_atendimento' => 'N',
+                'pcd'                 => true,
+                'aceita_termos'       => true,
+                'laudo_medico'        => $file,
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+            
+        $inscricao = Inscricao::latest()->first();
+        $mediaItem = $inscricao->getFirstMedia('laudo_medico');
 
-    //   Livewire::test(CreateInscricao::class)
-    //        ->fillForm([
-    //   'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
-    //  'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
-    //    'necessita_atendimento' => 'N',
-    //     'pcd'                 => true,
-    //     'aceita_termos'       => true,
-    //     'laudo_medico'        => $file,
-    //    ])
-    //   ->call('create')
-    //   ->assertHasNoFormErrors();
+        $this->assertNotNull($mediaItem);
 
-    //   $inscricao = Inscricao::latest()->first();
-    //   $mediaItem = $inscricao->getFirstMedia('laudo_medico');
+        $customPath = (new \App\Services\MediaLibrary\CustomPathGenerator())->getPath($mediaItem) . $mediaItem->file_name;
+        $this->assertTrue(Storage::disk($mediaItem->disk)->exists($customPath));
 
-    //  $this->assertNotNull($mediaItem);
-
-    //  $customPath = (new \App\Services\MediaLibrary\CustomPathGenerator())->getPath($mediaItem) . $mediaItem->file_name;
-    //  Storage::disk($mediaItem->disk)->assertExists($customPath);
-
-    //  $this->assertEquals('application/pdf', $mediaItem->mime_type);
-    // $this->assertLessThanOrEqual(2 * 1024 * 1024, $mediaItem->size);
-    // }
+        $this->assertEquals('application/pdf', $mediaItem->mime_type);
+        $this->assertLessThanOrEqual(2 * 1024 * 1024, $mediaItem->size);
+    }
 
     public function test_user_cannot_upload_invalid_file(): void
     {

@@ -80,7 +80,7 @@ class ProcessoSeletivoForm
                         ->schema([
                             TextInput::make('item')
                                 ->label('Nome do Documento')
-                                ->required()
+                                ->required() //causou problemas com testes (factory), mas deixa como está
                         ])
                         ->cloneable()
                         ->collapsed()

@@ -23,16 +23,17 @@ class PortalConsultaProcessosSeletivosTest extends TestCase
             'titulo' => 'Processo Seletivo Teste',
             'numero' => '001/2025',
             'data_publicacao_inicio' => now(),
+            'data_inscricao_fim' => now()->addDays(2),
         ]);
 
         // Act
         $response = $this
-            ->get(route('filament.app.resources.processo-seletivos.index'));
+            ->get(route('filament.app.resources.processo-seletivos.index', ['status' => 'em_andamento']));
 
         // Assert
         $response->assertStatus(200);
         $response->assertSeeText('Consultar Processos Seletivos');
-        // $response->assertSeeText('Processo Seletivo Teste');
+        $response->assertSeeText('Processo Seletivo Teste');
     }
     
     public function test_usuario_filtra_inscricoes_realizadas(): void

@@ -37,19 +37,27 @@ class CandidatoRealizaCadastroTest extends TestCase
         // Usa a rota FILAMENT diretamente via URL ou route
         $response = $this->get(route('filament.candidato.auth.register'));
 
+        // ASSERT DE SUCESSO
+        $response->assertStatus(200);
+        $response->assertSee('Inscrever-se'); 
+
     }
 
     public function test_candidato_entra_na_tela_de_cadastro(): void
     {
+          
+        // Usa a rota FILAMENT diretamente via URL ou route
+        $response = $this->get(route('filament.candidato.auth.register'));
         // ASSERT DE SUCESSO
         $response->assertStatus(200);
-        $response->assertSee('Inscrever-se');       
+        $response->assertSee('Inscrever-se'); 
+
     }
 
     public function test_candidato_tem_acesso_aos_campos(): void
     {
         Livewire::test(Cadastro::class)
-            // identificação
+            //identificação
             ->assertFormFieldIsEnabled('nome')
             ->assertFormFieldIsEnabled('mae')
             ->assertFormFieldIsEnabled('cpf')
