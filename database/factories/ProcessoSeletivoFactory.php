@@ -29,7 +29,7 @@ class ProcessoSeletivoFactory extends Factory
             'idprocesso_seletivo_tipo' => $tipo->idprocesso_seletivo_tipo,
             'titulo' => $this->faker->sentence(4),
             'descricao' => $this->faker->paragraph(),
-            'numero' => $this->faker->bothify('##/####'),
+            'numero' => fake()->bothify('##/####'),
             'data_criacao' => $today,
             // 'situacao' => $this->faker->randomElement(['A', 'I']),
             'situacao' => 'A',

@@ -23,9 +23,6 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
     {
         parent::setUp();
 
-        // Cria papel gestor
-        Role::create(['name' => 'gestor']);
-
         // Cria usuário gestor e autentica
         $this->user = User::factory()->create([
             'name' => 'tester gps',

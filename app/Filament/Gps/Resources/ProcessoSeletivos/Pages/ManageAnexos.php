@@ -42,6 +42,7 @@ class ManageAnexos extends ManageRelatedRecords
                     ->maxLength(255),
                 SpatieMediaLibraryFileUpload::make('arquivo')
                     ->label('Arquivo')
+                    ->required()
                     ->acceptedFileTypes(['application/pdf'])
                     ->helperText('* É necessário salvar as alterações após a inclusão do arquivo.')
             ]);

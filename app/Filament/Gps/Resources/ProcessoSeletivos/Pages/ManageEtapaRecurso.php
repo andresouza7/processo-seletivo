@@ -39,14 +39,19 @@ class ManageEtapaRecurso extends ManageRelatedRecords
         return $schema
             ->components([
                 TextInput::make('descricao')
+                    ->required()
                     ->placeholder('Ex: Resultado preliminar')
                     ->columnSpanFull(),
                 DatePicker::make('data_inicio_recebimento')
+                    ->required()
                     ->helperText('Período para recebimento dos recursos'),
-                DatePicker::make('data_fim_recebimento'),
+                DatePicker::make('data_fim_recebimento')
+                    ->required(),
                 DatePicker::make('data_inicio_resultado')
+                    ->required()
                     ->helperText('Período para consulta dos resultados'),
-                DatePicker::make('data_fim_resultado'),
+                DatePicker::make('data_fim_resultado')
+                    ->required(),
                 Checkbox::make('requer_anexos')
                     ->label('Requer envio de anexos?')
                     ->helperText('Será disponibilizado campo de upload de pdf ao usuário')
@@ -74,7 +79,7 @@ class ManageEtapaRecurso extends ManageRelatedRecords
                     ->createAnother(false)
                     ->before(function (CreateAction $action) {
                         $processo = $this->getRecord();
-                        
+
                         $exists = $processo->etapa_recurso()
                             ->whereDate('data_fim_recebimento', '>=', now())->exists();
 
