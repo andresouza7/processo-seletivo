@@ -59,18 +59,6 @@ class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
             ]);
     }
 
-    public function test_candidato_nao_pode_editar_campos_de_identificacao(): void
-    {
-        // VERIFICA SE OS CAMPOS ABAIXO ESTÃO DESABILITADOS
-        Livewire::test(MeusDados::class)
-            ->assertFormFieldIsDisabled('nome')
-            ->assertFormFieldIsDisabled('mae')
-            ->assertFormFieldIsDisabled('cpf')
-            ->assertFormFieldIsDisabled('ci')
-            ->assertFormFieldIsDisabled('data_nascimento')
-            ->assertFormFieldIsDisabled('email');
-    }
-
     public function test_candidato_pode_editar_campos_genero_e_contato(): void
     {
         // VERIFICA SE OS CAMPOS ESTÃO HABILITADOS
@@ -86,4 +74,18 @@ class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
             ->assertFormFieldIsEnabled('bairro')
             ->assertFormFieldIsEnabled('telefone');
     }
+
+    public function test_candidato_nao_pode_editar_campos_de_identificacao(): void
+    {
+        // VERIFICA SE OS CAMPOS ABAIXO ESTÃO DESABILITADOS
+        Livewire::test(MeusDados::class)
+            ->assertFormFieldIsDisabled('nome')
+            ->assertFormFieldIsDisabled('mae')
+            ->assertFormFieldIsDisabled('cpf')
+            ->assertFormFieldIsDisabled('ci')
+            ->assertFormFieldIsDisabled('data_nascimento')
+            ->assertFormFieldIsDisabled('email');
+    }
+
+   
 }

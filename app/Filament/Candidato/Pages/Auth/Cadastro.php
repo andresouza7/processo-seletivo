@@ -88,6 +88,8 @@ class Cadastro extends Register
                 ->label('Data de Nascimento')
                 ->date()
                 ->minDate('1950-01-01')
+                ->maxDate(now())
+                ->rules(['before_or_equal:today', 'after_or_equal:1950-01-01'])
                 ->required(),
 
             Select::make('sexo')
