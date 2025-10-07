@@ -61,7 +61,7 @@ class PortalConsultaProcessosSeletivosTest extends TestCase
         // 🔹 Faz requisição com o parâmetro de filtro
         $response = $this
             ->get(route('filament.app.resources.processo-seletivos.index', [
-                'status' => 'inscricoes_abertas',
+                'filters' => ['status' => ['value' => 'inscricoes_abertas']]
             ]));
 
         // Assert
