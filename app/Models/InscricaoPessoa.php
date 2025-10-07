@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class InscricaoPessoa extends Authenticatable implements HasName
+class InscricaoPessoa extends Authenticatable implements HasName, FilamentUser
 {
     use HasFactory, Notifiable, CanResetPassword;
 

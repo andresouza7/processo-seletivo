@@ -49,15 +49,8 @@ class InscricaoPolicy
      */
     public function create($user): bool
     {
-        if ($user instanceof User) {
-            return false; // Admin cannot create any Inscricao
-        }
-
-        if ($user instanceof InscricaoPessoa) {
-            return true; // Applicants can create their own inscrição (or adjust accordingly)
-        }
-
-        return false;
+        // Applicants can create their own inscrição (or adjust accordingly)
+        return $user instanceof InscricaoPessoa;
     }
 
     /**
@@ -65,11 +58,7 @@ class InscricaoPolicy
      */
     public function update($user, Inscricao $inscricao): bool
     {
-        if ($user instanceof User) {
-            return true; // Admin can update Inscricao
-        }
-
-        return false;
+        return $user instanceof User;
     }
 
     /**
@@ -78,7 +67,6 @@ class InscricaoPolicy
     public function delete($user, Inscricao $inscricao): bool
     {
         return false;
-      
     }
 
     /**

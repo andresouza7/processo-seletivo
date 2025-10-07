@@ -8,6 +8,7 @@ use App\Models\InscricaoPessoa;
 use App\Models\InscricaoVaga;
 use App\Models\ProcessoSeletivo;
 use App\Models\TipoVaga;
+use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -27,9 +28,13 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         parent::setUp();
 
+        Filament::setCurrentPanel('candidato');
+
         // Cria dados comuns para os testes
-        $this->user = InscricaoPessoa::factory()->createOne();
+        $this->user = InscricaoPessoa::factory()->create();
         $this->actingAs($this->user, 'candidato');
+        Livewire::actingAs($this->user, 'candidato');
+
 
         $this->processo = ProcessoSeletivo::factory()->create();
         $this->vaga = InscricaoVaga::factory()->create([
@@ -40,7 +45,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
         TipoVaga::factory()->create(['id_tipo_vaga' => 3]);
 
         // Carrega a página primeiro para inicializar o painel do Filament
-        $response = $this->get(route('filament.candidato.resources.inscricoes.create'));
+        $response = $this->actingAs($this->user, 'candidato')->get(route('filament.candidato.resources.inscricoes.create'));
         $response->assertStatus(200);
     }
 
