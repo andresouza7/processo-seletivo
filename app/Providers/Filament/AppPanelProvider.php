@@ -54,21 +54,19 @@ class AppPanelProvider extends PanelProvider
                     ->group('Acesso')
                     ->sort(2)
                     ->hidden(fn() => Auth::guard('candidato')->check()),
-                NavigationItem::make('Inscrições Abertas')
-                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['status' => 'inscricoes_abertas']))
-                    ->icon('heroicon-o-pencil-square')
-                    ->group('Acompanhamento')
-                    ->sort(1),
-                NavigationItem::make('Em Andamento')
-                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['status' => 'em_andamento']))
-                    ->icon('heroicon-o-folder-open')
-                    ->group('Acompanhamento')
-                    ->sort(2),
-                NavigationItem::make('Finalizados')
-                    ->url(fn() => ProcessoSeletivoResource::getUrl('index', ['status' => 'finalizados']))
-                    ->icon('heroicon-o-check')
-                    ->group('Acompanhamento')
-                    ->sort(3),
+                ...collect([
+                    'inscricoes_abertas' => ['label' => 'Inscrições Abertas', 'icon' => 'heroicon-o-pencil-square', 'sort' => 1],
+                    'em_andamento'       => ['label' => 'Em Andamento', 'icon' => 'heroicon-o-folder-open',   'sort' => 2],
+                    'finalizados'        => ['label' => 'Finalizados',    'icon' => 'heroicon-o-check',         'sort' => 3],
+                ])->map(
+                    fn($data, $key) => NavigationItem::make($data['label'])
+                        ->url(fn() => ProcessoSeletivoResource::getUrl('index', [
+                            'filters' => ['status' => ['value' => $key]]
+                        ]))
+                        ->icon($data['icon'])
+                        ->group('Acompanhamento')
+                        ->sort($data['sort'])
+                )->toArray()
             ])
             ->navigationGroups([
                 'Acompanhamento',

@@ -2,6 +2,7 @@
 
 namespace App\Filament\App\Resources\ProcessoSeletivos\Tables;
 
+use App\Models\ProcessoSeletivo;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Tables\Columns\Layout\Split;
@@ -40,7 +41,22 @@ class ProcessoSeletivoTable
 
             ])
             ->filters([
-                // 
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'inscricoes_abertas' => 'Inscrições Abertas',
+                        'em_andamento' => 'Em Andamento',
+                        'finalizados' => 'Finalizados',
+                    ])
+                    ->selectablePlaceholder(false)
+                    ->query(function (Builder $query, array $data): Builder {
+                        return match ($data['value'] ?? null) {
+                            'inscricoes_abertas' => $query->inscricoesAbertas(),
+                            'em_andamento' => $query->emAndamento(),
+                            'finalizados' => $query->finalizados(),
+                            default => $query->whereRaw('1 = 0'),
+                        };
+                    }),
             ])
             ->recordActions([
                 // Tables\Actions\ViewAction::make(),
