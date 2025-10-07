@@ -17,8 +17,10 @@ class CandidatoRealizaCadastroTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_candidato_entra_na_tela_de_cadastro(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         // CRIA O USUÁRIO CORRETAMENTE
         $user = InscricaoPessoa::factory()->create([
             'nome' => 'tester',
@@ -29,48 +31,25 @@ class CandidatoRealizaCadastroTest extends TestCase
             'password' => Hash::make('pwd'),
         ]);
 
-        //OBS.: neste testCase nao é necessário login de nenhum tipo.
-
         // LOGA PELO GUARD CORRETO
-        $this->actingAs($user, 'web');
+        $this->actingAs($user, 'web'); //OBS.: neste testCase nao é necessário login de nenhum tipo.
 
         // Usa a rota FILAMENT diretamente via URL ou route
         $response = $this->get(route('filament.candidato.auth.register'));
 
-        // ASSERT DE SUCESSO
-        $response->assertStatus(200);
-        $response->assertSee('Inscrever-se');
-        
     }
 
-    //////////////////
-    ////////////////// outro teste
+    public function test_candidato_entra_na_tela_de_cadastro(): void
+    {
+        // ASSERT DE SUCESSO
+        $response->assertStatus(200);
+        $response->assertSee('Inscrever-se');       
+    }
 
     public function test_candidato_tem_acesso_aos_campos(): void
     {
-        // CRIA O USUÁRIO CORRETAMENTE
-        $user = InscricaoPessoa::factory()->create([
-            'nome' => 'tester',
-            'mae' => 'mae do tester',
-            'ci' => '12344321-AP',
-            'data_nascimento' => '1990-12-25',
-            'cpf' => '12345678901',
-            'password' => Hash::make('pwd'),
-        ]);
-
-
-        // LOGA PELO GUARD CORRETO
-        $this->actingAs($user, 'web');
-
-        // Usa a rota FILAMENT diretamente via URL ou route
-        $response = $this->get(route('filament.candidato.auth.register'));
-
-        // ASSERT DE SUCESSO
-        $response->assertStatus(200);
-        $response->assertSee('Inscrever-se');
-
         Livewire::test(Cadastro::class)
-            //identificação
+            // identificação
             ->assertFormFieldIsEnabled('nome')
             ->assertFormFieldIsEnabled('mae')
             ->assertFormFieldIsEnabled('cpf')
@@ -79,12 +58,12 @@ class CandidatoRealizaCadastroTest extends TestCase
             ->assertFormFieldIsEnabled('email')
             ->assertFormFieldIsEnabled('sexo')
 
-            //informações sociais
+            // informações sociais
             ->assertFormFieldIsEnabled('identidade_genero')
             ->assertFormFieldIsEnabled('orientacao_sexual')
             ->assertFormFieldIsEnabled('nome_social')
 
-            //
+            // endereço
             ->assertFormFieldIsEnabled('cep')
             ->assertFormFieldIsEnabled('endereco')
             ->assertFormFieldIsEnabled('numero')

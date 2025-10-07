@@ -101,4 +101,41 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             $processo->anexos
         );
     }
+
+    public function test_gestor_pode_alterar_processo_seletivo(): void
+    {
+        // 1️⃣ Cria um processo seletivo existente
+        $processo = ProcessoSeletivo::factory()->create([
+            'titulo' => 'Processo Original',
+            'descricao' => '<p>Texto original</p>',
+            'idprocesso_seletivo_tipo' => $this->tipo->idprocesso_seletivo_tipo,
+            'numero' => '02/2025',
+            'data_criacao' => $this->date,
+            'publicado' => 'N',
+            'possui_isencao' => false,
+        ]);
+
+        // 2️⃣ Define os novos dados que o gestor vai alterar
+        $novosDados = [
+            'titulo' => 'Processo Atualizado',
+            'descricao' => 'Descrição atualizada pelo gestor',
+            'publicado' => 'S',
+        ];
+
+        // 3️⃣ Simula o componente de edição (Filament Edit Page)
+        Livewire::test(\App\Filament\Gps\Resources\ProcessoSeletivos\Pages\EditProcessoSeletivo::class, [
+            'record' => $processo->getKey(),
+        ])
+            ->fillForm($novosDados)
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        // 4️⃣ Valida se as alterações foram persistidas no banco
+        $this->assertDatabaseHas('processo_seletivo', [
+            'idprocesso_seletivo' => $processo->idprocesso_seletivo,
+            'titulo' => $novosDados['titulo'],
+            'descricao' => '<p>' . $novosDados['descricao'] . '</p>',
+            'publicado' => 'S',
+        ]);
+    }
 }

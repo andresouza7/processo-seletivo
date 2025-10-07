@@ -34,8 +34,8 @@ class PortalConsultaProcessosSeletivosTest extends TestCase
         $response->assertSeeText('Consultar Processos Seletivos');
         $response->assertSeeText('Processo Seletivo Teste');
     }
-
-    public function test_candidato_filtra_inscricoes_realizadas(): void
+    
+    public function test_usuario_filtra_inscricoes_realizadas(): void
     {
         // 🔹 Cria 5 processos seletivos com inscrições abertas
         $abertos = \App\Models\ProcessoSeletivo::factory()
