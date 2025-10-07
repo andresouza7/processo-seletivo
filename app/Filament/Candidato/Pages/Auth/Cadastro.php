@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use Canducci\Cep\Facades\Cep;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Placeholder;
 use Filament\Infolists\Components\TextEntry;
 
 class Cadastro extends Register
@@ -128,20 +129,14 @@ class Cadastro extends Register
                 ->columnSpanFull(),
 
             //////////////// AVISO DINÂMICO GENERO
-            TextEntry::make('status')
-                ->formatStateUsing(fn(Get $get) => match ($get('identidade_genero')) {
-                    'C' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'
-                    ),
-                    'T' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'
-                    ),
-                    'NB' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'
-                    ),
+            Placeholder::make('o que significa esta identidade de gênero')
+                ->content(fn (Get $get) => match ($get('identidade_genero')) {
+                    'C' => new HtmlString('<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'),
+                    'T' => new HtmlString('<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'),
+                    'NB' => new HtmlString('<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'),
                     default => null,
                 })
-                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['C', 'T', 'NB']))
+                ->visible(fn (Get $get) => in_array($get('identidade_genero'), ['C', 'T', 'NB']))
                 ->columnSpanFull(),
 
             //////////// INPUT ESPECIFICANDO GENERO: OUTROS    
@@ -179,8 +174,8 @@ class Cadastro extends Register
                 ->required(),
 
             //////// AVISO DINAMICO ORIENTACAO
-            TextEntry::make('status')
-                ->formatStateUsing(fn(Get $get) => match ($get('orientacao_sexual')) {
+            Placeholder::make('o que significa esta orientaçao sexual')
+                ->content(fn (Get $get) => match ($get('orientacao_sexual')) {
                     'HT' => new HtmlString(
                         '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
                     ),
@@ -188,17 +183,17 @@ class Cadastro extends Register
                         '<span style="color:grey;"><em>* pessoa que se atrai ao mesmo gênero</em></span>'
                     ),
                     'B' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que se atrai a ambos gêneros</em></span>'
+                        '<span style="color:grey;"><em>* pessoa que se atrai a ambos os gêneros</em></span>'
                     ),
                     'P' => new HtmlString(
                         '<span style="color:grey;"><em>* pessoa que se atrai a todos os gêneros</em></span>'
                     ),
                     'A' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que se não se atrai a nenhum gênero</em></span>'
+                        '<span style="color:grey;"><em>* pessoa que não se atrai a nenhum gênero</em></span>'
                     ),
                     default => null,
                 })
-                ->visible(fn(Get $get) => in_array($get('orientacao_sexual'), ['A', 'B', 'C', 'D', 'E']))
+                ->visible(fn (Get $get) => in_array($get('orientacao_sexual'), ['HT', 'HM', 'B', 'P', 'A']))
                 ->columnSpanFull(),
 
             ///////// CHECKBOX PARA DEFICIENCIA (default: não usar)
