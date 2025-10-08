@@ -6,11 +6,13 @@ use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageInscritos;
 use App\Models\Inscricao;
 use App\Models\ProcessoSeletivo;
 use App\Models\User;
+use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class GestorConsultaInscritosTest extends TestCase
 {
@@ -52,4 +54,13 @@ class GestorConsultaInscritosTest extends TestCase
             ->searchTable('123456')
             ->assertCanSeeTableRecords([$inscricao]);
     }
+
+    // gestor visualiza inscricao
+    public function test_gestor_visualiza_inscricao()
+    
+    {}
+
+    // consegue abrir o link doas anexos da inscricao
+
+    // consegue exportar inscricoes para planilha em excel
 }

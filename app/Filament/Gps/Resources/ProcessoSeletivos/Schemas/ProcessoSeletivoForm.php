@@ -82,10 +82,12 @@ class ProcessoSeletivoForm
                                 ->label('Nome do Documento')
                                 ->required() //causou problemas com testes (factory), mas deixa como está
                         ])
+                        ->itemLabel(fn (array $state): ?string => $state['item'] ?? null)
                         ->cloneable()
+                        ->compact()
                         ->collapsed()
                         ->columnSpanFull()
-                        ->minItems(1)
+                        // ->minItems(1)
                         ->addActionLabel('Adicionar Documento')
                         ->defaultItems(function ($record) {
                             return $record->anexos ?? [];
