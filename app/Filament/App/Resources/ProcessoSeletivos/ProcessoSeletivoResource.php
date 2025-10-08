@@ -47,22 +47,6 @@ class ProcessoSeletivoResource extends Resource
         return parent::getGlobalSearchEloquentQuery()->orderBy('data_publicacao_inicio', 'desc');
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        $query = parent::getEloquentQuery()
-            ->withoutGlobalScopes([SoftDeletingScope::class])
-            ->where('publicado', 'S');
-
-        $status = request('status');
-
-        return match ($status) {
-            'inscricoes_abertas' => $query->inscricoesAbertas(),
-            'em_andamento'       => $query->emAndamento(),
-            'finalizados'        => $query->finalizados(),
-            default              => $query->whereRaw('1 = 0'), // No results
-        };
-    }
-
     public static function form(Schema $schema): Schema
     {
         return ProcessoSeletivoForm::configure($schema);

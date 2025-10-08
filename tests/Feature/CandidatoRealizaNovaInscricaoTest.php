@@ -147,7 +147,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
         Storage::fake('media');
 
         $file = UploadedFile::fake()->createWithContent('documento.pdf', '%PDF-1.4 fake content here')->size(1024);
-        
+
         Livewire::test(CreateInscricao::class)
             ->fillForm([
                 'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
@@ -159,14 +159,14 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ])
             ->call('create')
             ->assertHasNoFormErrors();
-            
+
         $inscricao = Inscricao::latest()->first();
         $mediaItem = $inscricao->getFirstMedia('laudo_medico');
 
         $this->assertNotNull($mediaItem);
 
         $customPath = (new \App\Services\MediaLibrary\CustomPathGenerator())->getPath($mediaItem) . $mediaItem->file_name;
-        $this->assertTrue(Storage::disk($mediaItem->disk)->exists($customPath));
+        Storage::disk($mediaItem->disk)->assertExists($customPath);
 
         $this->assertEquals('application/pdf', $mediaItem->mime_type);
         $this->assertLessThanOrEqual(2 * 1024 * 1024, $mediaItem->size);
