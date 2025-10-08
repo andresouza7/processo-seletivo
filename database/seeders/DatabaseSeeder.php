@@ -2,70 +2,123 @@
 
 namespace Database\Seeders;
 
-use App\Models\Inscricao;
-use App\Models\Modalidade;
-use App\Models\ProcessoSeletivo;
-use App\Models\User;
-use App\Models\Vaga;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+
+// Models
+use App\Models\User;
+use App\Models\TipoVaga;
+use App\Models\ProcessoSeletivoTipo;
+use App\Models\ProcessoSeletivo;
+use App\Models\ProcessoSeletivoAnexo;
+use App\Models\InscricaoPessoa;
+use App\Models\InscricaoVaga;
+use App\Models\Inscricao;
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // ------------------------
+        // 1️⃣ Usuários
+        // ------------------------
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Administrador',
+                'password' => Hash::make('admin123'),
+                'email_verified_at' => now(),
+            ]
+        );
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory()->count(10)->create();
 
-        $this->call(ProcessoSeletivoSeeder::class);
+        // ------------------------
+        // 2️⃣ Tipos de Vagas
+        // ------------------------
+        $tiposFixos = [
+            ['descricao' => 'Ampla Concorrência'],
+            ['descricao' => 'Cota Racial'],
+            ['descricao' => 'Pessoa com Deficiência'],
+            ['descricao' => 'Escola Pública'],
+            ['descricao' => 'Interiorização'],
+        ];
 
-        $admin = User::factory()->create([
-            'email' => 'admin@localhost',
-            'password' => Hash::make('admin'),
-            'role' => 'admin'
-        ]);
-        $user = User::factory()->create([
-            'email' => 'candidato@localhost',
-            'password' => Hash::make('candidato'),
-        ]);
+        foreach ($tiposFixos as $tipo) {
+            TipoVaga::firstOrCreate(['descricao' => $tipo['descricao']], $tipo);
+        }
 
-        $modalidade = Modalidade::create(['nome' => 'Editais de concurso']);
+        TipoVaga::factory()->count(5)->create();
 
-        $processo_seletivo = ProcessoSeletivo::create([
-            'modalidade_id' => $modalidade->id,
-            'nome' => 'Prefeitura Tartarugalzinho',
-            'numero' => 1,
-            'ano' => 2024,
-            'status' => 'em_andamento'
-        ]);
+        // ------------------------
+        // 3️⃣ Tipos de Processo Seletivo
+        // ------------------------
+        $psTiposFixos = [
+            ['descricao' => 'Processo Seletivo Simplificado', 'chave' => 'PSS'],
+            ['descricao' => 'Concurso Público', 'chave' => 'CON'],
+            ['descricao' => 'Edital Interno', 'chave' => 'EDI'],
+            ['descricao' => 'Transferência', 'chave' => 'TRA'],
+        ];
 
-        Vaga::factory()->create([
-            'nome' => 'Professor',
-            'psel_id' => $processo_seletivo->id
-        ]);
-        Vaga::factory()->create([
-            'nome' => 'Médico',
-            'psel_id' => $processo_seletivo->id
-        ]);
-        Vaga::factory()->create([
-            'nome' => 'Enfermeiro',
-            'psel_id' => $processo_seletivo->id
-        ]);
+        foreach ($psTiposFixos as $tipo) {
+            ProcessoSeletivoTipo::firstOrCreate(['chave' => $tipo['chave']], $tipo);
+        }
 
-        // Create 50 Inscricao instances
-        for ($i = 0; $i < 50; $i++) {
-            $user = User::factory()->create();
-            $vaga = Vaga::inRandomOrder()->first();
+        ProcessoSeletivoTipo::factory()->count(3)->create();
 
-            Inscricao::factory()->forProcesso($processo_seletivo)->forPessoa($user->pessoa)->forVaga($vaga)->create();
+        // ------------------------
+        // 4️⃣ Pessoas inscritas
+        // ------------------------
+        InscricaoPessoa::factory()->count(50)->create();
+
+        // ------------------------
+        // 5️⃣ Processos Seletivos
+        // ------------------------
+        $processos = ProcessoSeletivo::factory()
+            ->count(5)
+            ->withInscricoes(
+                qtdVagas: 3,     // 3 vagas por processo
+                qtdInscricoes: 10, // 10 inscrições por processo
+                qtdFiles: 2       // 2 arquivos por inscrição
+            )
+            ->create();
+
+        
+        // ------------------------
+        // 7️⃣ Anexos de Processos Seletivos
+        // ------------------------
+        foreach ($processos as $processo) {
+            ProcessoSeletivoAnexo::factory()
+                ->count(rand(1, 3))
+                ->create([
+                    'idprocesso_seletivo' => $processo->idprocesso_seletivo
+                ]);
+        }
+
+        // ------------------------
+        // 8️⃣ Inscrição Vaga
+        // ------------------------
+        foreach ($processos as $processo) {
+            $vagas = InscricaoVaga::factory()->count(3)->create([
+                'idprocesso_seletivo' => $processo->idprocesso_seletivo,
+            ]);
+
+            $pessoas = InscricaoPessoa::all();
+
+            // Cria inscrições
+            Inscricao::factory()
+                ->count(10)
+                ->withFiles(2)
+                ->sequence(fn($sequence) => [
+                    'idprocesso_seletivo' => $processo->idprocesso_seletivo,
+                    'idinscricao_vaga' => $vagas->random()->idinscricao_vaga,
+                    'idinscricao_pessoa' => $pessoas->random()->idpessoa,
+                ])
+                ->create();
         }
     }
 }

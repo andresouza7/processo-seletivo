@@ -12,7 +12,7 @@ class InscricaoPessoasTable
     {
         return $table
             ->heading('Contas de candidatos')
-            ->description('Gerência dos dados cadastrais dos dandidatos e redefinição de senha.')
+            ->description('Gerência dos dados cadastrais dos candidatos e redefinição de senha.')
             ->defaultSort('nome')
             ->columns([
                 TextColumn::make('nome')
