@@ -32,7 +32,8 @@ class UserResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('name'),
+                TextInput::make('name')
+                    ->label('Nome'),
                 TextInput::make('email'),
                 Select::make('roles')
                     ->label('Perfil')
@@ -47,7 +48,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('name')->label('Nome'),
                 TextColumn::make('email'),
             ])
             ->filters([

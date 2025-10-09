@@ -18,7 +18,7 @@ class InscricaosTable
         return $table
             ->query(function (): Builder {
                 $guardId = Auth::guard('candidato')->id();
-                $query = Application::query()->orderBy('idinscricao', 'desc');
+                $query = Application::query()->orderBy('id', 'desc');
 
                 // If there's no logged candidate, return an empty result set (don't throw)
                 if (! $guardId) {
@@ -26,7 +26,7 @@ class InscricaosTable
                     return $query->whereRaw('0 = 1');
                 }
 
-                return $query->where('idinscricao_pessoa', $guardId);
+                return $query->where('candidate_id', $guardId);
             })
             ->heading('Inscrições realizadas')
             ->description('Use a caixa de busca para filtrar uma informação.')
@@ -38,23 +38,18 @@ class InscricaosTable
                         ->weight('bold')
                         ->size('sm'),
 
-                    TextColumn::make('process.titulo')
+                    TextColumn::make('process.title')
                         ->label('Processo Seletivo')
                         ->searchable()
                         ->size('sm')
                         ->color('gray'),
 
-                    TextColumn::make('position.codigo')
+                    TextColumn::make('position.description')
                         ->label('Cód. Vaga')
                         ->size('sm')
                         ->color('gray'),
 
-                    TextColumn::make('position.descricao')
-                        ->label('Descrição')
-                        ->size('sm')
-                        ->color('gray'),
-
-                    TextColumn::make('quota.descricao')
+                    TextColumn::make('quota.description')
                         ->label('Tipo')
                         ->size('sm')
                         ->color('gray'),

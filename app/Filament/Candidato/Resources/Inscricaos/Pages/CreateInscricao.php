@@ -22,13 +22,11 @@ class CreateInscricao extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['code'] = Application::generateUniqueCode();
-        $data['idinscricao_pessoa'] = Auth::guard('candidato')->id();
+        $data['candidate_id'] = Auth::guard('candidato')->id();
         $data['submitted_at'] = now();
-        $data['assistance_details'] = $data['assistance_details'] ?? '';
-        $data['observacao'] = $data['observacao'] ?? '';
 
         // tipos de vaga cadastrados na tabela de vagas
-        $data['idtipo_vaga'] = $data['pcd'] ? 3 : 1;
+        $data['quota_id'] = $data['pcd'] ? 3 : 1;
 
         return $data;
     }
@@ -36,9 +34,9 @@ class CreateInscricao extends CreateRecord
     protected function beforeCreate(): void
     {
         // 1. Verificar dados pendentes do usuário
-        $pessoa = Auth::guard('candidato')->user();
+        $candidate = Auth::guard('candidato')->user();
 
-        if ($pessoa && $pessoa->possuiDadosPendentes()) {
+        if ($candidate && $candidate->hasMissingData()) {
             Notification::make()
                 ->danger()
                 ->title('Dados incompletos!')

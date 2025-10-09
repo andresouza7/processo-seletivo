@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('district');
             $table->string('address');
             $table->string('address_number');
-            $table->string('address_complement');
+            $table->string('address_complement')->nullable();
             $table->string('city');
             $table->string('phone');
             $table->string('email')->unique();

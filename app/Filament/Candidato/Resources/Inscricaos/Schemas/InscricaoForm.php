@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
+use function PHPUnit\Framework\isEmpty;
+
 class InscricaoForm
 {
     public static function configure(Schema $schema): Schema
@@ -45,7 +47,7 @@ class InscricaoForm
     private static function getProcessoSeletivoSection(): array
     {
         return [
-            Select::make('id')
+            Select::make('process_id')
                 ->label('Processo Seletivo')
                 ->options(fn() => Cache::remember('processos_inscricoes_abertas_options', 60, function () {
                     return Process::inscricoesAbertas()
@@ -74,12 +76,13 @@ class InscricaoForm
     {
         return [
             Group::make()
-                ->visible(fn(Get $get) => (bool) $get('id'))
+                ->visible(fn(Get $get) => (bool) $get('process_id'))
                 ->schema(function (Get $get) {
                     $attachments = (array) $get('attachment_fields');
 
                     return [
                         Fieldset::make('Documentos Requeridos')
+                            ->hidden(fn() => isEmpty($attachments))
                             ->schema(
                                 collect($attachments)->map(function ($item, $index) {
                                     $label = $item['item'] ?? "documento_{$index}";
@@ -109,18 +112,19 @@ class InscricaoForm
     private static function getVagaSection(): array
     {
         return [
-            Select::make('idinscricao_vaga')
+            Select::make('position_id')
                 ->label('Vaga')
                 ->required()
-                ->disabled(fn(Get $get): bool => !filled($get('id')))
+                ->disabled(fn(Get $get): bool => blank($get('process_id')))
                 ->columnSpanFull()
                 ->options(function (Get $get) {
-                    $id = $get('id');
-                    if (! $id) return [];
+                    $processId = $get('process_id');
 
-                    return Position::where('id', $id)
+                    if (!$processId) return [];
+
+                    return Position::where('process_id', $processId)
                         ->get()
-                        ->mapWithKeys(fn($v) => [$v->idinscricao_vaga => "{$v->code} - {$v->description}"])
+                        ->mapWithKeys(fn($p) => [$p->id => "{$p->code} - {$p->description}"])
                         ->toArray();
                 }),
         ];
@@ -132,18 +136,17 @@ class InscricaoForm
     private static function getAtendimentoSection(): array
     {
         return [
-            Select::make('requires_assistance')
-                ->label('Precisa de Atendimento Especial?')
-                ->helperText('Ex: apoio para leitura ou escrita, mobiliário adaptado, etc')
-                ->required()
+            Checkbox::make('requires_assistance')
+                ->label('Solicitar atendimento especial')
                 ->columnSpanFull()
-                ->default('N')
-                ->options(['N' => 'Não', 'S' => 'Sim'])
+                ->live()
+                ->default(false)
                 ->live(),
 
             Textarea::make('assistance_details')
-                ->visible(fn(Get $get): bool => $get('requires_assistance') === 'S')
-                ->required(fn(Get $get) => $get('requires_assistance') === 'S')
+                ->label('Qual Atendimento')
+                ->visible(fn(Get $get): bool => $get('requires_assistance'))
+                ->required(fn(Get $get) => $get('requires_assistance'))
                 ->columnSpanFull(),
         ];
     }

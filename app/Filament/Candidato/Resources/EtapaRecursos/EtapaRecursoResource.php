@@ -45,7 +45,7 @@ class EtapaRecursoResource extends Resource
         $user = Auth::guard('candidato')->user();
 
         // filtra os PSs com periodo de recurso aberto e para os quais o usuario se candidatou
-        $validProcessoIds = $user->applications()
+        $validProcessIds = $user->applications()
             ->whereHas('process', function ($query) {
                 $query->whereHas('appeal_stage', function ($subquery) {
                     $today = now()->toDateString();
@@ -56,7 +56,7 @@ class EtapaRecursoResource extends Resource
             ->pluck('id');
 
         // Filter the query
-        return $query->whereIn('id', $validProcessoIds)->orderBy('idetapa_recurso', 'desc')->limit(1);
+        return $query->whereIn('id', $validProcessIds)->orderBy('id', 'desc')->limit(1);
     }
 
     public static function form(Schema $schema): Schema
@@ -81,7 +81,7 @@ class EtapaRecursoResource extends Resource
         return $table
             ->description('Consulte nesta seção os Processos Seletivos com período de recurso em andamento.')
             ->columns([
-                TextColumn::make('process.titulo'),
+                TextColumn::make('process.title'),
                 TextColumn::make('description')->label('Etapa'),
             ])
             ->paginated(false)

@@ -20,7 +20,7 @@ class InscricaoResource extends Resource
     protected static ?string $model = Application::class;
     protected static ?string $modelLabel = 'Inscrição';
     protected static ?string $pluralModelLabel = 'Minhas Inscrições';
-    protected static ?string $slug = 'applications';
+    protected static ?string $slug = 'inscricoes';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-list-bullet';
     protected static string | \UnitEnum | null $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 1;

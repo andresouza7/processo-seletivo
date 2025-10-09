@@ -33,6 +33,7 @@ class TipoVagaResource extends Resource
         return $schema
             ->components([
                 TextInput::make('description')
+                    ->label('Descrição')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -46,6 +47,7 @@ class TipoVagaResource extends Resource
             ->columns([
                 TextColumn::make('id')->label('ID'),
                 TextColumn::make('description')
+                    ->label('Descrição')
                     ->searchable(),
             ])
             ->filters([

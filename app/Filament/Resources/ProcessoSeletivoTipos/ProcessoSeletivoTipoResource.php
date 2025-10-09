@@ -34,7 +34,7 @@ class ProcessoSeletivoTipoResource extends Resource
         return $schema
             ->components([
                 //
-                TextInput::make('description'),
+                TextInput::make('description')->label('Descrição'),
                 TextInput::make('slug'),
             ]);
     }
@@ -46,7 +46,7 @@ class ProcessoSeletivoTipoResource extends Resource
             ->description('Categoria na qual determinado processo se enquadra.')
             ->columns([
                 //
-                TextColumn::make('process_type_id')->label('ID'),
+                TextColumn::make('id')->label('ID'),
                 TextColumn::make('description')
                     ->searchable(),
                 TextColumn::make('slug')

@@ -130,13 +130,13 @@ class Cadastro extends Register
 
             //////////////// AVISO DINÂMICO GENERO
             Placeholder::make('o que significa esta identidade de gênero')
-                ->content(fn (Get $get) => match ($get('gender_identity')) {
+                ->content(fn(Get $get) => match ($get('gender_identity')) {
                     'C' => new HtmlString('<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'),
                     'T' => new HtmlString('<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'),
                     'NB' => new HtmlString('<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'),
                     default => null,
                 })
-                ->visible(fn (Get $get) => in_array($get('gender_identity'), ['C', 'T', 'NB']))
+                ->visible(fn(Get $get) => in_array($get('gender_identity'), ['C', 'T', 'NB']))
                 ->columnSpanFull(),
 
             //////////// INPUT ESPECIFICANDO GENERO: OUTROS    
@@ -175,7 +175,7 @@ class Cadastro extends Register
 
             //////// AVISO DINAMICO ORIENTACAO
             Placeholder::make('o que significa esta orientaçao sexual')
-                ->content(fn (Get $get) => match ($get('sexual_orientation')) {
+                ->content(fn(Get $get) => match ($get('sexual_orientation')) {
                     'HT' => new HtmlString(
                         '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
                     ),
@@ -193,7 +193,7 @@ class Cadastro extends Register
                     ),
                     default => null,
                 })
-                ->visible(fn (Get $get) => in_array($get('sexual_orientation'), ['HT', 'HM', 'B', 'P', 'A']))
+                ->visible(fn(Get $get) => in_array($get('sexual_orientation'), ['HT', 'HM', 'B', 'P', 'A']))
                 ->columnSpanFull(),
 
             ///////// CHECKBOX PARA DEFICIENCIA (default: não usar)
@@ -208,8 +208,8 @@ class Cadastro extends Register
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('has_disability')),
 
-                    
-                
+
+
 
             ///////// TEXTBOX DA DEFICIENCIA
             TextInput::make('disability_description')
@@ -326,7 +326,7 @@ class Cadastro extends Register
     {
         return TextInput::make('cpf')
             ->label('CPF')
-            ->unique('candidate', 'cpf')
+            ->unique('candidates', 'cpf')
             ->required()
             ->rules(['cpf'])
             ->maxLength(11);
@@ -335,17 +335,7 @@ class Cadastro extends Register
     protected function handleRegistration(array $data): Model
     {
         try {
-            return DB::transaction(function () use ($data) {
-                $lastId = Candidate::max('id') ?? 0; // If no rows, start at 0
-                $data['id'] = $lastId + 1;
-                $data['perfil'] = '';
-                $data['situacao'] = 'S';
-                $data['link_lattes'] = '';
-                $data['resumo'] = '';
-                $data['senha'] = '';
-
-                return Candidate::create($data);
-            });
+            return Candidate::create($data);
         } catch (Exception $e) {
             // Log the error for debugging purposes
             Log::error('Failed to create record', ['error' => $e->getMessage()]);

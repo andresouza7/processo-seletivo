@@ -36,6 +36,7 @@ class RecursoResource extends Resource
 
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
     protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
+    protected static ?string $modelLabel = 'Recurso';
     protected static ?int $navigationSort = 3;
 
     // Acesso restrito a evaluators, que julgam recursos anonimamente apenas nos processos aos quais estão vinculados

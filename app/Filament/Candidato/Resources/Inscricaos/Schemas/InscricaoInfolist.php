@@ -15,35 +15,35 @@ class InscricaoInfolist
                 Section::make('DADOS PESSOAIS')
                     ->columns(3)
                     ->schema([
-                        TextEntry::make('candidate.nome')->label('Nome'),
+                        TextEntry::make('candidate.name')->label('Nome'),
                         TextEntry::make('candidate.cpf')->label('CPF'),
-                        TextEntry::make('candidate.ci')->label('RG'),
+                        TextEntry::make('candidate.rg')->label('RG'),
                     ]),
 
                 Section::make('DADOS DA INSCRIÇÃO')
                     ->columns(3)
                     ->schema([
                         TextEntry::make('code')->label('Inscrição'),
-                        TextEntry::make('process.titulo')->label('Processo Seletivo'),
-                        TextEntry::make('position.descricao')->label('Vaga'),
-                        TextEntry::make('quota.descricao')->label('Tipo de Vaga'),
+                        TextEntry::make('process.title')->label('Processo Seletivo'),
+                        TextEntry::make('position.description')->label('Vaga'),
+                        TextEntry::make('quota.description')->label('Tipo de Vaga'),
                     ]),
 
                 Section::make('ATENDIMENTO ESPECIAL')
                     ->columns(3)
                     ->schema([
                         TextEntry::make('requires_assistance')
-                            ->label('')
+                            ->label('Atendimento Especial')
                             ->badge()
                             ->colors([
-                                'success' => 'S',
-                                'gray' => 'N',
+                                'success' => true,
+                                'gray' => false,
                             ])
-                            ->formatStateUsing(fn($state) => $state === 'S' ? 'solicitado' : 'não solicitado'),
+                            ->formatStateUsing(fn($state) => $state === true ? 'solicitado' : 'não solicitado'),
 
                         TextEntry::make('assistance_details')
                             ->label('Qual Atendimento')
-                            ->visible(fn($record) => $record->requires_assistance === 'S'),
+                            ->visible(fn($record) => $record->requires_assistance),
                     ]),
             ]);
     }

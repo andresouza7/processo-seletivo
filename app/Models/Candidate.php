@@ -88,7 +88,7 @@ class Candidate extends Authenticatable implements HasName, FilamentUser
         'phone'
     ];
 
-    public function possuiDadosPendentes(): bool
+    public function hasMissingData(): bool
     {
         return collect(self::CAMPOS_OBRIGATORIOS)
             ->contains(fn($campo) => is_null($this->{$campo}));

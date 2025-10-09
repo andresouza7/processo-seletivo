@@ -88,7 +88,7 @@ class ArquivoResource extends Resource
                 Action::make('download')
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->url(fn($record) => optional($record->processo_seletivo_anexo)->file_url)
+                    ->url(fn($record) => optional($record->process_attachment)->file_url)
                     ->openUrlInNewTab(),
             ])
             ->toolbarActions([
