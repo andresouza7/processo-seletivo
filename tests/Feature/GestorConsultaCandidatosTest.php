@@ -31,7 +31,18 @@ class GestorConsultaCandidatosTest extends TestCase
         $this->actingAs($this->user);
         Livewire::actingAs($this->user);
 
-        $this->inscricao_pessoa = InscricaoPessoa::factory()->create();
+        $this->inscricao_pessoa = InscricaoPessoa::factory()->create([
+            'nome' => 'Nome candidata teste',
+            'mae' => 'Mãe da candidata teste',
+            'cpf' => '23456781099',
+            'ci' => '9874221-PA',
+            'data_nascimento' => '1974-02-01',
+            'sexo' => 'masculino',
+            'nome_social' => 'nome social candidata',
+            'identidade_genero' => 'T',
+            'telefone' => '(41) 98533-9922',
+            'email' => 'candidata_teste@gmail.com.br'
+        ]);
     }
 
     public function test_gestor_acessa_pagina_candidatos()
@@ -39,6 +50,29 @@ class GestorConsultaCandidatosTest extends TestCase
         $response = $this->get(route('filament.gps.resources.candidatos.index', $this->inscricao_pessoa->id_inscricaopessoa));
         $response->assertStatus(200);
     }
+
+    //
+    public function test_gestor_acessa_pagina_detalhes_dos_candidatos()
+    {
+        $response = $this->get(route('filament.gps.resources.candidatos.view', [
+            'record' => $this->inscricao_pessoa->getKey(),
+        ]));
+
+        $response->assertStatus(200);
+        // 🔹 Verifica se todos os campos do candidato aparecem na página
+        $response->assertSeeText('Nome candidata teste');
+        $response->assertSeeText('Mãe da candidata teste');
+        $response->assertSeeText('23456781099');
+        $response->assertSeeText('9874221-PA');
+        $response->assertSeeText('1974-02-01');
+        $response->assertSeeText('masculino');
+        $response->assertSeeText('nome social candidata');
+        $response->assertSeeText('T');
+        $response->assertSeeText('(41) 98533-9922');
+        $response->assertSeeText('candidata_teste@gmail.com.br');
+    }
+
+    
 
     public function test_gestor_filtra_candidatos_por_status()
     {
