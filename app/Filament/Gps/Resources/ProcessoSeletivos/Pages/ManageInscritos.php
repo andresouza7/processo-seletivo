@@ -23,8 +23,9 @@ class ManageInscritos extends ManageRelatedRecords
 {
     protected static string $resource = ProcessoSeletivoResource::class;
     protected static ?string $title = 'Gerenciar Inscrições';
-    protected static string $relationship = 'inscricoes';
+    protected static string $relationship = 'applications';
     protected static ?string $navigationLabel = 'Inscrições';
+    protected static ?string $breadcrumb = 'Inscrições';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
     public function infolist(Schema $schema): Schema
@@ -34,13 +35,13 @@ class ManageInscritos extends ManageRelatedRecords
                 // Candidato Section
                 Section::make('Candidato')
                     ->schema([
-                        TextEntry::make('inscricao_pessoa.nome')->label('Nome'),
-                        TextEntry::make('inscricao_pessoa.ci')->label('Documento Identidade'),
-                        TextEntry::make('inscricao_pessoa.cpf')->label('CPF'),
-                        TextEntry::make('inscricao_pessoa.endereco')->label('Endereço'),
-                        TextEntry::make('inscricao_pessoa.bairro')->label('Bairro'),
-                        TextEntry::make('inscricao_pessoa.cidade')->label('Cidade'),
-                        TextEntry::make('inscricao_pessoa.email')->label('Email'),
+                        TextEntry::make('candidate.name')->label('Nome'),
+                        TextEntry::make('candidate.rg')->label('Documento Identidade'),
+                        TextEntry::make('candidate.cpf')->label('CPF'),
+                        TextEntry::make('candidate.address')->label('Endereço'),
+                        TextEntry::make('candidate.district')->label('Bairro'),
+                        TextEntry::make('candidate.city')->label('Cidade'),
+                        TextEntry::make('candidate.email')->label('Email'),
                     ])
                     ->columns(2),
 
@@ -48,8 +49,8 @@ class ManageInscritos extends ManageRelatedRecords
                 Section::make('Inscrição')
                     ->schema([
                         TextEntry::make('code')->label('Cód. Inscrição'),
-                        TextEntry::make('inscricao_vaga.descricao')->label('Vaga'),
-                        TextEntry::make('tipo_vaga.descricao')->label('Tipo de Vaga'),
+                        TextEntry::make('position.description')->label('Vaga'),
+                        TextEntry::make('quota.description')->label('Tipo de Vaga'),
                     ])
                     ->columns(2),
 
@@ -101,13 +102,13 @@ class ManageInscritos extends ManageRelatedRecords
     {
         return $table
             ->recordTitleAttribute('code')
-            ->defaultSort('idinscricao', 'desc')
+            ->defaultSort('id', 'desc')
             ->heading('Inscrições')
             ->columns([
                 TextColumn::make('code')
                     ->label('Cód. Inscrição')
                     ->searchable(),
-                TextColumn::make('inscricao_pessoa.nome')
+                TextColumn::make('candidate.name')
                     ->label('Candidato')
                     ->searchable(),
             ])

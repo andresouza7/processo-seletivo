@@ -35,15 +35,15 @@ class ProcessoSeletivoInfolist
                         ->extraAttributes(['class' => 'font-semibold text-gray-700']),
                     Actions::make([
                         Action::make('createInscricao')
-                            ->visible(fn($record) => $record->aceita_inscricao)
+                            ->visible(fn($record) => $record->can_apply)
                             ->label('Realizar Inscrição')
                             ->url(route('filament.candidato.resources.inscricoes.create'))
                             ->button()
                             ->color('primary'),
                         Action::make('createRecurso')
-                            ->visible(fn($record) => $record->aceita_recurso)
+                            ->visible(fn($record) => $record->can_appeal)
                             ->label('Recursos')
-                            ->url(fn($record) => $record->link_recurso)
+                            ->url(fn($record) => $record->appeal_link)
                             ->button()
                             ->color('primary')
                     ]),

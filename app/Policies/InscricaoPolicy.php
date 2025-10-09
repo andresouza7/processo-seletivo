@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\Inscricao;
+use App\Models\Application;
 use App\Models\User;
-use App\Models\InscricaoPessoa; // Add this import if you need to check InscricaoPessoa
+use App\Models\Candidate; // Add this import if you need to check Candidate
 use Illuminate\Auth\Access\Response;
 
 class InscricaoPolicy
@@ -20,7 +20,7 @@ class InscricaoPolicy
         }
 
         // If the user is an applicant (candidato guard)
-        if ($user instanceof InscricaoPessoa) {
+        if ($user instanceof Candidate) {
             return true; // Adjust based on the applicant's permissions
         }
 
@@ -30,15 +30,15 @@ class InscricaoPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view($user, Inscricao $inscricao): bool
+    public function view($user, Application $application): bool
     {
         if ($user instanceof User) {
-            return true; // Admin can view any inscricao
+            return true; // Admin can view any application
         }
 
-        if ($user instanceof InscricaoPessoa) {
-            // Only allow viewing if the applicant is related to the Inscricao
-            return $user->idpessoa === $inscricao->idinscricao_pessoa;
+        if ($user instanceof Candidate) {
+            // Only allow viewing if the applicant is related to the Application
+            return $user->id === $application->idinscricao_pessoa;
         }
 
         return false;
@@ -50,13 +50,13 @@ class InscricaoPolicy
     public function create($user): bool
     {
         // Applicants can create their own inscrição (or adjust accordingly)
-        return $user instanceof InscricaoPessoa;
+        return $user instanceof Candidate;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update($user, Inscricao $inscricao): bool
+    public function update($user, Application $application): bool
     {
         return $user instanceof User;
     }
@@ -64,7 +64,7 @@ class InscricaoPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete($user, Inscricao $inscricao): bool
+    public function delete($user, Application $application): bool
     {
         return false;
     }
@@ -72,10 +72,10 @@ class InscricaoPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore($user, Inscricao $inscricao): bool
+    public function restore($user, Application $application): bool
     {
         if ($user instanceof User) {
-            return true; // Admin can restore any Inscricao
+            return true; // Admin can restore any Application
         }
 
         return false;
@@ -84,10 +84,10 @@ class InscricaoPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete($user, Inscricao $inscricao): bool
+    public function forceDelete($user, Application $application): bool
     {
         if ($user instanceof User) {
-            return true; // Admin can permanently delete any Inscricao
+            return true; // Admin can permanently delete any Application
         }
 
         return false;

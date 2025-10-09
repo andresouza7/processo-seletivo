@@ -10,7 +10,7 @@ use App\Filament\Candidato\Resources\EtapaRecursos\Pages\ListEtapaRecursos;
 use App\Filament\Candidato\Resources\EtapaRecursos\Pages\EditEtapaRecurso;
 use App\Filament\Candidato\Resources\EtapaRecursoResource\Pages;
 use App\Filament\Candidato\Resources\EtapaRecursos\RelationManagers\RecursosRelationManager;
-use App\Models\EtapaRecurso;
+use App\Models\AppealStage;
 use Filament\Forms;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EtapaRecursoResource extends Resource
 {
-    protected static ?string $model = EtapaRecurso::class;
+    protected static ?string $model = AppealStage::class;
 
     protected static ?string $modelLabel = 'Recursos';
 
@@ -45,26 +45,26 @@ class EtapaRecursoResource extends Resource
         $user = Auth::guard('candidato')->user();
 
         // filtra os PSs com periodo de recurso aberto e para os quais o usuario se candidatou
-        $validProcessoIds = $user->inscricoes()
-            ->whereHas('processo_seletivo', function ($query) {
-                $query->whereHas('etapa_recurso', function ($subquery) {
+        $validProcessoIds = $user->applications()
+            ->whereHas('process', function ($query) {
+                $query->whereHas('appeal_stage', function ($subquery) {
                     $today = now()->toDateString();
                     $subquery->whereDate('submission_start_date', '<=', $today)
                         ->whereDate('submission_end_date', '>=', $today);
                 });
             })
-            ->pluck('idprocesso_seletivo');
+            ->pluck('id');
 
         // Filter the query
-        return $query->whereIn('idprocesso_seletivo', $validProcessoIds)->orderBy('idetapa_recurso', 'desc')->limit(1);
+        return $query->whereIn('id', $validProcessoIds)->orderBy('idetapa_recurso', 'desc')->limit(1);
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Placeholder::make('processo_seletivo')
-                    ->helperText(fn($record) => $record->processo_seletivo->title)
+                Placeholder::make('process')
+                    ->helperText(fn($record) => $record->process->title)
                     ->label('Processo Seletivo')
                     ->inlineLabel()
                     ->columnSpanFull(),
@@ -81,7 +81,7 @@ class EtapaRecursoResource extends Resource
         return $table
             ->description('Consulte nesta seção os Processos Seletivos com período de recurso em andamento.')
             ->columns([
-                TextColumn::make('processo_seletivo.titulo'),
+                TextColumn::make('process.titulo'),
                 TextColumn::make('description')->label('Etapa'),
             ])
             ->paginated(false)

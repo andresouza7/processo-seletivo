@@ -10,17 +10,17 @@ use App\Filament\Candidato\Resources\InscricaoResource\Pages;
 use App\Filament\Candidato\Resources\Inscricaos\Schemas\InscricaoForm;
 use App\Filament\Candidato\Resources\Inscricaos\Schemas\InscricaoInfolist;
 use App\Filament\Candidato\Resources\Inscricaos\Tables\InscricaosTable;
-use App\Models\Inscricao;
+use App\Models\Application;
 use Filament\Navigation\NavigationItem;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 
 class InscricaoResource extends Resource
 {
-    protected static ?string $model = Inscricao::class;
+    protected static ?string $model = Application::class;
     protected static ?string $modelLabel = 'Inscrição';
     protected static ?string $pluralModelLabel = 'Minhas Inscrições';
-    protected static ?string $slug = 'inscricoes';
+    protected static ?string $slug = 'applications';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-list-bullet';
     protected static string | \UnitEnum | null $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 1;
@@ -54,7 +54,7 @@ class InscricaoResource extends Resource
         ];
     }
 
-    // override: impede que os links nova inscricao e minhas inscricoes fiquem ativos ao mesmo tempo
+    // override: impede que os links nova application e minhas inscricoes fiquem ativos ao mesmo tempo
     public static function getNavigationItems(): array
     {
         return [

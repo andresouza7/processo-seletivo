@@ -3,7 +3,7 @@
 namespace App\Filament\Candidato\Resources\Inscricaos\Pages;
 
 use App\Filament\Candidato\Resources\Inscricaos\InscricaoResource;
-use App\Models\Inscricao;
+use App\Models\Application;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +21,7 @@ class CreateInscricao extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['code'] = Inscricao::gerarCodigoUnico();
+        $data['code'] = Application::generateUniqueCode();
         $data['idinscricao_pessoa'] = Auth::guard('candidato')->id();
         $data['submitted_at'] = now();
         $data['assistance_details'] = $data['assistance_details'] ?? '';
@@ -77,6 +77,6 @@ class CreateInscricao extends CreateRecord
     protected function afterCreate(): void
     {
         // Envia notificação ao usuário autenticado
-        $this->record->inscricao_pessoa->notify(new NovaInscricaoNotification($this->record));
+        $this->record->candidate->notify(new NovaInscricaoNotification($this->record));
     }
 }

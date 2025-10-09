@@ -155,7 +155,7 @@
                 <div x-show="tab === 'tab1'">
                     @php
 
-                        $processos = \App\Models\ProcessoSeletivo::emAndamento()
+                        $processos = \App\Models\Process::emAndamento()
                             ->latest('document_date')
                             ->limit(10)
                             ->get();
@@ -174,7 +174,7 @@
                                             Edital nº {{ $processo->number }}
                                         </div>
 
-                                        <a href="{{ route('filament.app.resources.processo-seletivos.view', ['record' => $processo->idprocesso_seletivo]) }}"
+                                        <a href="{{ route('filament.app.resources.processo-seletivos.view', ['record' => $processo->id]) }}"
                                             class="text-primary-600 text-sm font-medium hover:underline mt-1.5"
                                             title="{{ $processo->title }}">
                                             {{ \Illuminate\Support\Str::limit($processo->title, 100) }}
@@ -191,7 +191,7 @@
 
                 <div x-show="tab === 'tab2'">
                     @php
-                        $anexos = \App\Models\ProcessoSeletivoAnexo::latest('publication_date')->limit(10)->get();
+                        $anexos = \App\Models\ProcessAttachment::latest('publication_date')->limit(10)->get();
                     @endphp
 
                     <div class="divide-y divide-gray-200">
@@ -208,10 +208,10 @@
                                     {{-- Coluna do Conteúdo --}}
                                     <div class="flex-1 text-sm text-gray-700">
                                         <div class="text-xs font-medium text-gray-800">
-                                            {{ $anexo->processo_seletivo->title }} – Edital nº
-                                            {{ $anexo->processo_seletivo->number }}
+                                            {{ $anexo->process->title }} – Edital nº
+                                            {{ $anexo->process->number }}
                                         </div>
-                                        <a href="{{ $anexo->url_arquivo }}" target="_blank"
+                                        <a href="{{ $anexo->file_url }}" target="_blank"
                                             class="text-primary-600 text-sm font-medium hover:underline mt-1.5">
                                             {{ \Illuminate\Support\Str::limit($anexo->description, 100) }}
                                         </a>
@@ -221,7 +221,7 @@
                         @endforeach
                     </div>
 
-                    {{-- @livewire('public-dashboard-table-anexos') --}}
+                    {{-- @livewire('public-dashboard-table-attachments') --}}
                 </div>
             </div>
         </div>

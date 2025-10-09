@@ -6,7 +6,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Actions;
 use Filament\Actions\Action;
 use App\Actions\ResetCandidatoEmailAction;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use App\Notifications\ResetEmailNotification;
 use BackedEnum;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
@@ -94,7 +94,7 @@ class RequestEmailReset extends Page implements HasSchemas
             return null;
         }
 
-        $usuario = InscricaoPessoa::query()
+        $usuario = Candidate::query()
             ->where('name', $this->data['name'])
             ->where('cpf', $this->data['cpf'])
             ->whereRaw('REGEXP_REPLACE(ci, "[^0-9]", "") = ?', $this->data['rg'])

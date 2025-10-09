@@ -3,36 +3,27 @@
 namespace App\Filament\Exports;
 
 use Throwable;
-use App\Models\Inscricao;
+use App\Models\Application;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
 
 class InscricaoExporter extends Exporter
 {
-    protected static ?string $model = Inscricao::class;
+    protected static ?string $model = Application::class;
 
     public static function getColumns(): array
     {
         return [
             // Dados Inscrição
-            ExportColumn::make('code')->label('Cod Inscrição'),
-            ExportColumn::make('processo_seletivo.titulo')->label('Processo Seletivo'),
-            ExportColumn::make('inscricao_vaga.codigo')->label('Cod Vaga'),
-            ExportColumn::make('inscricao_vaga.descricao')->label('Descrição Vaga'),
-            ExportColumn::make('tipo_vaga.descricao'),
-            ExportColumn::make('requires_assistance'),
-            ExportColumn::make('assistance_details'),
-            ExportColumn::make('observacao'),
-            ExportColumn::make('local_prova'),
             ExportColumn::make('link_inscricao')
                 ->label('Link Inscrição')
-                ->state(function (Inscricao $record): ?string {
+                ->state(function (Application $record): ?string {
                     try {
                         $url = route(
                             'filament.gps.resources.processos.inscritos',
                             [
-                                $record->processo_seletivo->idprocesso_seletivo,
+                                $record->process->id,
                                 'tableSearch' => $record->code
                             ]
                         );
@@ -41,26 +32,35 @@ class InscricaoExporter extends Exporter
                             return null;
                         }
 
-                        return '=HYPERLINK("' . $url . '", "Visualizar Inscrição")';
+                        return '=HYPERLINK("' . $url . '", "Link")';
                     } catch (Throwable $th) {
                         throw $th;
                         return '';
                     }
                 }),
+            ExportColumn::make('code')->label('Cod Inscrição'),
+            ExportColumn::make('process.title')->label('Processo Seletivo'),
+            ExportColumn::make('position.code')->label('Cod Vaga'),
+            ExportColumn::make('position.description')->label('Descrição Vaga'),
+            ExportColumn::make('quota.description')->label('Cota'),
+            ExportColumn::make('requires_assistance')->label('Necessida Atendimento'),
+            ExportColumn::make('assistance_details')->label('Qual Atendimento'),
+
             // Dados Pessoa
-            ExportColumn::make('inscricao_pessoa.nome')->label('Nome Candidato'),
-            ExportColumn::make('inscricao_pessoa.nome_social')->label('Nome Social Candidato'),
-            ExportColumn::make('inscricao_pessoa.identidade_genero')->label('Identidade de Gênero'),
-            ExportColumn::make('inscricao_pessoa.sexo')->label('Sexo'),
-            ExportColumn::make('inscricao_pessoa.cpf')->label('CPF'),
-            ExportColumn::make('inscricao_pessoa.data_nascimento')->label('Data Nascimento'),
-            ExportColumn::make('inscricao_pessoa.endereco')->label('Logradouro'),
-            ExportColumn::make('inscricao_pessoa.bairro')->label('Bairro'),
-            ExportColumn::make('inscricao_pessoa.numero')->label('Número'),
-            ExportColumn::make('inscricao_pessoa.complemento')->label('Complemento'),
-            ExportColumn::make('inscricao_pessoa.cidade')->label('Cidade'),
-            ExportColumn::make('inscricao_pessoa.email')->label('Email'),
-            ExportColumn::make('inscricao_pessoa.telefone')->label('Telefone'),
+            ExportColumn::make('candidate.name')->label('Nome Candidato'),
+            ExportColumn::make('candidate.social_name')->label('Nome Social Candidato'),
+            ExportColumn::make('candidate.identity_gender')->label('Identidade de Gênero'),
+            ExportColumn::make('candidate.identity_gender_description')->label('Gênero Descrição'),
+            ExportColumn::make('candidate.sex')->label('Sexo'),
+            ExportColumn::make('candidate.cpf')->label('CPF'),
+            ExportColumn::make('candidate.birth_date')->label('Data Nascimento'),
+            ExportColumn::make('candidate.address')->label('Logradouro'),
+            ExportColumn::make('candidate.district')->label('Bairro'),
+            ExportColumn::make('candidate.address_number')->label('Número'),
+            ExportColumn::make('candidate.address_complement')->label('Complemento'),
+            ExportColumn::make('candidate.city')->label('Cidade'),
+            ExportColumn::make('candidate.email')->label('Email'),
+            ExportColumn::make('candidate.phone')->label('Telefone'),
         ];
     }
 

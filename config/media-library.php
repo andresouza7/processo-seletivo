@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\ProcessoSeletivoAnexo;
+use App\Models\ProcessAttachment;
 use App\Services\MediaLibrary\CustomPathGenerator;
 
 return [
@@ -87,7 +87,7 @@ return [
      * Here you can specify which path generator should be used for the given class.
      */
     'custom_path_generators' => [
-        // ProcessoSeletivoAnexo::class => CustomPathGenerator::class
+        // ProcessAttachment::class => CustomPathGenerator::class
         // or
         // 'model_morph_alias' => PathGenerator::class
     ],

@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageAnexos;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageVagas;
-use App\Models\InscricaoVaga;
-use App\Models\ProcessoSeletivo;
+use App\Models\Position;
+use App\Models\Process;
 use App\Models\User;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
@@ -19,7 +19,7 @@ class GestorConfiguraVagasTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-    protected ProcessoSeletivo $processo;
+    protected Process $processo;
 
     protected function setUp(): void
     {
@@ -31,19 +31,19 @@ class GestorConfiguraVagasTest extends TestCase
         $this->actingAs($this->user);
         Livewire::actingAs($this->user);
 
-        $this->processo = ProcessoSeletivo::factory()->create();
+        $this->processo = Process::factory()->create();
     }
 
     public function test_gestor_acessa_pagina_vagas()
     {
-        $response = $this->get(route('filament.gps.resources.processos.vagas', $this->processo->idprocesso_seletivo));
+        $response = $this->get(route('filament.gps.resources.processos.vagas', $this->processo->id));
         $response->assertStatus(200);
     }
 
     public function test_gestor_cadastra_vaga()
     {
         Livewire::test(ManageVagas::class, [
-            'record' => $this->processo->idprocesso_seletivo
+            'record' => $this->processo->id
         ])
             ->callAction(TestAction::make('create')->table(), [
                 'code' => 'E01',
@@ -54,16 +54,16 @@ class GestorConfiguraVagasTest extends TestCase
 
     public function test_gestor_consulta_vagas()
     {
-        $vagas = InscricaoVaga::factory(5)->create([
-            'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+        $vagas = Position::factory(5)->create([
+            'id' => $this->processo->id,
         ]);
-        $vaga = InscricaoVaga::factory()->create([
-            'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+        $vaga = Position::factory()->create([
+            'id' => $this->processo->id,
             'description' => 'bolsista'
         ]);
 
         Livewire::test(ManageVagas::class, [
-            'record' => $this->processo->idprocesso_seletivo
+            'record' => $this->processo->id
         ])
             ->assertCanSeeTableRecords($vagas)
             ->searchTable('bolsista')

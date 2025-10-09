@@ -10,8 +10,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
-use App\Models\Inscricao;
-use App\Models\Recurso;
+use App\Models\Application;
+use App\Models\Appeal;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Get;
@@ -26,21 +26,21 @@ use Illuminate\Support\Facades\Auth;
 
 class RecursosRelationManager extends RelationManager
 {
-    protected static string $relationship = 'recursos';
+    protected static string $relationship = 'appeals';
 
     public $bloquear_recurso = false;
 
     public function mount(): void
     {
-        $etapa_recurso = $this->getOwnerRecord();
+        $appeal_stage = $this->getOwnerRecord();
 
-        $periodo_recurso_encerrado = !$etapa_recurso->aceita_recurso;
+        $periodo_recurso_encerrado = !$appeal_stage->can_appeal;
 
         // verifica se o candidato ja criou um recurso para esta etapa
-        $recurso_existente = Recurso::where('idetapa_recurso', $etapa_recurso->idetapa_recurso)
+        $recurso_existente = Appeal::where('idetapa_recurso', $appeal_stage->idetapa_recurso)
             ->where('idinscricao_pessoa', auth()->guard('candidato')->id())->first();
 
-        $this->bloquear_recurso = ($recurso_existente && !$etapa_recurso->allow_many) || $periodo_recurso_encerrado;
+        $this->bloquear_recurso = ($recurso_existente && !$appeal_stage->allow_many) || $periodo_recurso_encerrado;
     }
 
     public function infolist(Schema $schema): Schema
@@ -71,16 +71,16 @@ class RecursosRelationManager extends RelationManager
                 //     ->required()
                 //     ->options(function () {
                 //         $ownerRecord = $this->getOwnerRecord();
-                //         $idProcessoSeletivo = $ownerRecord->idprocesso_seletivo;
+                //         $idProcessoSeletivo = $ownerRecord->id;
 
-                //         return \App\Models\Inscricao::query()
-                //             ->where('idprocesso_seletivo', $idProcessoSeletivo)
+                //         return \App\Models\Application::query()
+                //             ->where('id', $idProcessoSeletivo)
                 //             ->where('idinscricao_pessoa', Auth::guard('candidato')->id())
-                //             ->with(['inscricao_vaga', 'tipo_vaga']) // eager load the relation
+                //             ->with(['position', 'quota']) // eager load the relation
                 //             ->get()
-                //             ->mapWithKeys(function ($inscricao) {
-                //                 $label = "{$inscricao->idinscricao} => {$inscricao->inscricao_vaga->description} => {$inscricao->tipo_vaga->description}";
-                //                 return [$inscricao->idinscricao => $label];
+                //             ->mapWithKeys(function ($application) {
+                //                 $label = "{$application->idinscricao} => {$application->position->description} => {$application->quota->description}";
+                //                 return [$application->idinscricao => $label];
                 //             });
                 //     }),
                 Textarea::make('description')
@@ -102,7 +102,7 @@ class RecursosRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('idrecurso')
             ->heading('Recursos Enviados')
-            ->description('Para interpor um recurso, utilize o botão "Abrir Recurso". Atente-se ao prazo previsto no edital.')
+            ->description('Para interpor um recurso, utilize o botão "Abrir Appeal". Atente-se ao prazo previsto no edital.')
             ->paginated(false)
             ->columns([
                 TextColumn::make('description')->limit()->label('Descrição'),
@@ -113,18 +113,18 @@ class RecursosRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                    ->label('Abrir Recurso')
+                    ->label('Abrir Appeal')
                     ->modalSubmitActionLabel("Confirmar")
                     ->createAnother(false)
                     ->visible(fn() => !$this->bloquear_recurso)
                     ->mutateDataUsing(function (array $data, $record) {
-                        // $inscricao = Inscricao::where('idinscricao', $data['idinscricao'])->first();
+                        // $application = Application::where('idinscricao', $data['idinscricao'])->first();
 
-                        // $data['idprocesso_seletivo'] = $inscricao->idprocesso_seletivo;
-                        // $data['idinscricao_pessoa'] = $inscricao->idinscricao_pessoa;
-                        // $data['idinscricao'] = $inscricao->idinscricao;
+                        // $data['id'] = $application->id;
+                        // $data['idinscricao_pessoa'] = $application->idinscricao_pessoa;
+                        // $data['idinscricao'] = $application->idinscricao;
 
-                        $data['idprocesso_seletivo'] = $this->getOwnerRecord()->processo_seletivo->idprocesso_seletivo;
+                        $data['id'] = $this->getOwnerRecord()->process->id;
                         $data['idinscricao_pessoa'] = auth()->guard('candidato')->id();
 
                         return $data;
@@ -134,7 +134,7 @@ class RecursosRelationManager extends RelationManager
                     })
                     ->successNotification(function ($record) {
                         Notification::make()
-                            ->title('Recurso aberto com sucesso!')
+                            ->title('Appeal aberto com sucesso!')
                             ->body("Seu recurso foi registrado pelo sistema")
                             ->success()
                             ->duration(5000)
@@ -143,7 +143,7 @@ class RecursosRelationManager extends RelationManager
             ])
             ->recordActions([
                 ViewAction::make()
-                    ->visible(fn() => $this->getOwnerRecord()->resultado_disponivel)
+                    ->visible(fn() => $this->getOwnerRecord()->has_result)
                     ->label('Consultar Resultado'),
             ])
             ->toolbarActions([

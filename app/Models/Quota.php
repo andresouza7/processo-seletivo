@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class TipoVaga extends Model
+class Quota extends Model
 {
     use HasFactory, LogsActivity;
 
@@ -17,22 +17,13 @@ class TipoVaga extends Model
             ->logFillable()
             ->dontSubmitEmptyLogs();
     }
-
-    protected $table = 'tipo_vaga';
-
-    protected $primaryKey = 'id_tipo_vaga';
-
+    
     protected $fillable = [
-        'description'n',
+        'description',
     ];
 
-    // public function processo_seletivo()
-    // {
-    //     return $this->belongsTo(ProcessoSeletivo::class, 'psel_id');
-    // }
-
-    // public function inscricoes()
-    // {
-    //     return $this->hasMany(Inscricao::class, 'vaga_id');
-    // }
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
 }

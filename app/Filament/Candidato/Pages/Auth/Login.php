@@ -5,7 +5,7 @@ namespace App\Filament\Candidato\Pages\Auth;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Component;
 use Filament\Auth\Http\Responses\Contracts\LoginResponse;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use App\Models\Pessoa;
 use Filament\Forms;
 use Filament\Pages\Page;

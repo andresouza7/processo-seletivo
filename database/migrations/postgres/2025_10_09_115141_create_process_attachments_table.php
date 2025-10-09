@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('process_attachments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('process_id')->constrained();
-            $table->integer('file_id')->nullable()->comment('referência a arquivos do sistema legado');
+            $table->integer('idarquivo')->nullable()->comment('referência a arquivos do sistema legado');
             $table->string('description');
             $table->date('publication_date');
-            $table->bigInteger('views')->default(0);
+            $table->unsignedBigInteger('views')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

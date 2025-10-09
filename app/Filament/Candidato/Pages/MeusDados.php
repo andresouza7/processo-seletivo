@@ -11,7 +11,7 @@ use Filament\Forms\Components\Checkbox;
 use Exception;
 use Filament\Schemas\Components\Actions;
 use Filament\Actions\Action;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use BackedEnum;
 use Canducci\Cep\Facades\Cep;
 use Filament\Forms;
@@ -31,12 +31,12 @@ class MeusDados extends Page implements HasSchemas
     protected static string | UnitEnum | null $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 3;
     protected string $view = 'filament.candidato.pages.meus-dados';
-    public InscricaoPessoa $record;
+    public Candidate $record;
     public ?array $data = [];
 
     public function mount(): void
     {
-        $record       = InscricaoPessoa::where('idpessoa', Auth::guard('candidato')->id())->firstOrFail();
+        $record       = Candidate::where('id', Auth::guard('candidato')->id())->firstOrFail();
         $this->record = $record;
 
         $this->form->fill([

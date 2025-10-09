@@ -7,13 +7,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class ProcessoSeletivo extends Model
+class Process extends Model
 {
-    use HasFactory, LogsActivity;
+    use SoftDeletes, HasFactory, LogsActivity;
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -22,18 +23,13 @@ class ProcessoSeletivo extends Model
             ->dontSubmitEmptyLogs();
     }
 
-    protected $table = 'processo_seletivo';
-
-    protected $primaryKey = 'idprocesso_seletivo';
-
     protected $fillable = [
-        'idprocesso_seletivo',
-        'idprocesso_seletivo_tipo',
+        'process_type_id',
         'title',
         'description',
         'number',
         'document_date',
-        'situacao',
+        'status',
         'views',
         'is_published',
         'directory',
@@ -41,17 +37,14 @@ class ProcessoSeletivo extends Model
         'publication_end_date',
         'application_start_date',
         'application_end_date',
-        'data_recurso_inicio',
-        'data_recurso_fim',
-        'psu',
         'has_fee_exemption',
         'attachment_fields'
     ];
 
     protected $appends = [
-        'aceita_inscricao',
-        'aceita_recurso',
-        'link_recurso'
+        'can_apply',
+        'can_appeal',
+        'appeal_link'
     ];
 
     protected $casts = [
@@ -61,8 +54,8 @@ class ProcessoSeletivo extends Model
     protected static function booted()
     {
         static::deleting(function ($processo) {
-            $processo->inscricoes()->each(function ($inscricao) {
-                $inscricao->clearMediaCollection('documentos_requeridos');
+            $processo->applications()->each(function ($application) {
+                $application->clearMediaCollection('documentos_requeridos');
             });
         });
     }
@@ -75,8 +68,8 @@ class ProcessoSeletivo extends Model
 
         // Check if `data_publicacao` is older than the reference date
         if (Carbon::parse($this->publication_date)->lt($systemMigrationReferenceDate)) {
-            $oldFilePath = $this->processo_seletivo->tipo->slug . '/' .
-                $this->processo_seletivo->directory . '/' .
+            $oldFilePath = $this->process->tipo->slug . '/' .
+                $this->process->directory . '/' .
                 optional($this->arquivo)->codname . '.pdf';
 
             return Storage::url($oldFilePath);
@@ -86,69 +79,63 @@ class ProcessoSeletivo extends Model
         return $this->getFirstMediaUrl();
     }
 
-    public function getAceitaInscricaoAttribute()
+    public function getCanApplyAttribute()
     {
         $today = now()->toDateString(); // Get current date in 'Y-m-d' format
 
         return $this->application_start_date <= $today && $this->application_end_date >= $today;
     }
 
-    public function getAceitaRecursoAttribute()
+    public function getCanAppealAttribute()
     {
         $today = now()->toDateString(); // 'Y-m-d'
 
-        return $this->etapa_recurso()
+        return $this->appeal_stage()
             ->whereDate('submission_start_date', '<=', $today)
             ->whereDate('submission_end_date', '>=', $today)
             ->exists();
     }
 
-    public function getLinkRecursoAttribute()
+    public function getAppealLinkAttribute()
     {
-        $etapa = EtapaRecurso::where('idprocesso_seletivo', $this->idprocesso_seletivo)->orderBy('idetapa_recurso', 'desc')->first();
+        $stage = AppealStage::where('id', $this->id)->orderBy('id', 'desc')->first();
 
-        return $etapa ? route('filament.candidato.resources.etapa-recursos.edit', $etapa->idetapa_recurso) : null;
+        return $stage ? route('filament.candidato.resources.etapa-recursos.edit', $stage->id) : null;
     }
 
-    public function tipo()
+    public function type()
     {
-        return $this->belongsTo(ProcessoSeletivoTipo::class, 'idprocesso_seletivo_tipo', 'idprocesso_seletivo_tipo');
+        return $this->belongsTo(ProcessType::class);
     }
 
-    public function anexos()
+    public function attachments()
     {
-        return $this->hasMany(ProcessoSeletivoAnexo::class, 'idprocesso_seletivo', 'idprocesso_seletivo');
+        return $this->hasMany(ProcessAttachment::class);
     }
 
-    public function inscricoes()
+    public function applications()
     {
-        return $this->hasMany(Inscricao::class, 'idprocesso_seletivo', 'idprocesso_seletivo');
+        return $this->hasMany(Application::class);
     }
 
-    public function inscricao_vaga()
+    public function position()
     {
-        return $this->hasMany(InscricaoVaga::class, 'idprocesso_seletivo', 'idprocesso_seletivo');
+        return $this->hasMany(Position::class);
     }
 
-    public function recursos()
+    public function appeals()
     {
-        return $this->hasMany(Recurso::class, 'idprocesso_seletivo', 'idprocesso_seletivo');
+        return $this->hasMany(Appeal::class);
     }
 
-    public function etapa_recurso()
+    public function appeal_stage()
     {
-        return $this->hasMany(EtapaRecurso::class, 'idprocesso_seletivo', 'idprocesso_seletivo');
+        return $this->hasMany(AppealStage::class);
     }
 
-    public function avaliadores()
+    public function evaluators()
     {
-        return $this->belongsToMany(
-            User::class,
-            'avaliador_processo_seletivo',
-            'idprocesso_seletivo',
-            'user_id',
-            'idprocesso_seletivo'
-        );
+        return $this->belongsToMany(User::class);
         // ->whereHas('roles', function ($query) {
         //     $query->where('name', 'avaliador');
         // });
@@ -156,21 +143,21 @@ class ProcessoSeletivo extends Model
 
     public function scopeInscricoesAbertas(Builder $query): void
     {
-        $query->where('is_published', 'S')
+        $query->where('is_published', true)
             ->whereDate('application_start_date', '<=', now())
             ->whereDate('application_end_date', '>=', now());
     }
 
     public function scopeEmAndamento(Builder $query): void
     {
-        $query->where('is_published', 'S')
+        $query->where('is_published', true)
             ->whereDate('publication_start_date', '<=', now())
             ->whereDate('publication_end_date', '>=', now());
     }
 
     public function scopeFinalizados(Builder $query): void
     {
-        $query->where('is_published', 'S')
+        $query->where('is_published', true)
             ->whereDate('publication_end_date', '<=', now());
     }
 }

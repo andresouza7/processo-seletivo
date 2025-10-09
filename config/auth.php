@@ -43,7 +43,7 @@ return [
 
         'candidato' => [
             'driver' => 'session',
-            'provider' => 'inscricao_pessoa',
+            'provider' => 'candidate',
         ],
     ],
 
@@ -71,9 +71,9 @@ return [
             'table' => 'usuario', // table name different than the default users table
         ],
 
-        'inscricao_pessoa' => [
+        'candidate' => [
             'driver' => 'eloquent',
-            'model' => App\Models\InscricaoPessoa::class,
+            'model' => App\Models\Candidate::class,
         ],
 
         // 'users' => [
@@ -109,8 +109,8 @@ return [
             'throttle' => 60,
         ],
 
-        'inscricao_pessoa' => [
-            'provider' => 'inscricao_pessoa',
+        'candidate' => [
+            'provider' => 'candidate',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

@@ -24,7 +24,7 @@ class ManageAvaliadores extends ManageRelatedRecords
 {
     protected static string $resource = ProcessoSeletivoResource::class;
     protected static ?string $title = 'Gerenciar Avaliadores';
-    protected static string $relationship = 'avaliadores';
+    protected static string $relationship = 'evaluators';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
     public static function getNavigationLabel(): string
@@ -36,15 +36,10 @@ class ManageAvaliadores extends ManageRelatedRecords
     {
         return $schema
             ->components([
-                Section::make('Candidato')
+                Section::make('Dados')
                     ->schema([
-                        TextEntry::make('inscricao_pessoa.nome')->label('Nome'),
-                        TextEntry::make('inscricao_pessoa.ci')->label('Documento Identidade'),
-                        TextEntry::make('inscricao_pessoa.cpf')->label('CPF'),
-                        TextEntry::make('inscricao_pessoa.endereco')->label('Endereço'),
-                        TextEntry::make('inscricao_pessoa.bairro')->label('Bairro'),
-                        TextEntry::make('inscricao_pessoa.cidade')->label('Cidade'),
-                        TextEntry::make('inscricao_pessoa.email')->label('Email'),
+                        TextEntry::make('name')->label('Nome'),
+                        TextEntry::make('email')->label('Email'),
                     ])
                     ->columns(2),
             ]);
@@ -60,7 +55,7 @@ class ManageAvaliadores extends ManageRelatedRecords
     {
         return $table
             ->recordTitleAttribute('name')
-            ->inverseRelationship('processos_seletivos')
+            // ->inverseRelationship('processes')
             ->heading('Avaliadores')
             ->columns([
                 TextColumn::make('id')

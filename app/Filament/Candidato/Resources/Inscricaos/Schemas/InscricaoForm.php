@@ -2,8 +2,8 @@
 
 namespace App\Filament\Candidato\Resources\Inscricaos\Schemas;
 
-use App\Models\InscricaoVaga;
-use App\Models\ProcessoSeletivo;
+use App\Models\Position;
+use App\Models\Process;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -45,12 +45,12 @@ class InscricaoForm
     private static function getProcessoSeletivoSection(): array
     {
         return [
-            Select::make('idprocesso_seletivo')
+            Select::make('id')
                 ->label('Processo Seletivo')
                 ->options(fn() => Cache::remember('processos_inscricoes_abertas_options', 60, function () {
-                    return ProcessoSeletivo::inscricoesAbertas()
+                    return Process::inscricoesAbertas()
                         ->get()
-                        ->mapWithKeys(fn($p) => [$p->idprocesso_seletivo => "{$p->number} - {$p->title}"])
+                        ->mapWithKeys(fn($p) => [$p->id => "{$p->number} - {$p->title}"])
                         ->toArray();
                 }))
                 ->placeholder('Selecione um processo seletivo')
@@ -60,7 +60,7 @@ class InscricaoForm
                 ->columnSpanFull()
                 ->live()
                 ->afterStateUpdated(function (callable $set, $state) {
-                    $processo = ProcessoSeletivo::find($state);
+                    $processo = Process::find($state);
                     $set('has_fee_exemption', $processo?->has_fee_exemption);
                     $set('attachment_fields', (array) ($processo?->attachment_fields ?? []));
                 }),
@@ -74,14 +74,14 @@ class InscricaoForm
     {
         return [
             Group::make()
-                ->visible(fn(Get $get) => (bool) $get('idprocesso_seletivo'))
+                ->visible(fn(Get $get) => (bool) $get('id'))
                 ->schema(function (Get $get) {
-                    $anexos = (array) $get('attachment_fields');
+                    $attachments = (array) $get('attachment_fields');
 
                     return [
                         Fieldset::make('Documentos Requeridos')
                             ->schema(
-                                collect($anexos)->map(function ($item, $index) {
+                                collect($attachments)->map(function ($item, $index) {
                                     $label = $item['item'] ?? "documento_{$index}";
                                     $fieldKey = 'documentos_requeridos_' . Str::slug("{$index}_{$label}");
 
@@ -112,13 +112,13 @@ class InscricaoForm
             Select::make('idinscricao_vaga')
                 ->label('Vaga')
                 ->required()
-                ->disabled(fn(Get $get): bool => !filled($get('idprocesso_seletivo')))
+                ->disabled(fn(Get $get): bool => !filled($get('id')))
                 ->columnSpanFull()
                 ->options(function (Get $get) {
-                    $id = $get('idprocesso_seletivo');
+                    $id = $get('id');
                     if (! $id) return [];
 
-                    return InscricaoVaga::where('idprocesso_seletivo', $id)
+                    return Position::where('id', $id)
                         ->get()
                         ->mapWithKeys(fn($v) => [$v->idinscricao_vaga => "{$v->code} - {$v->description}"])
                         ->toArray();

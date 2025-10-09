@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AnexosRelationManager extends RelationManager
 {
-    protected static string $relationship = 'anexos';
+    protected static string $relationship = 'attachments';
 
     public function form(Schema $schema): Schema
     {
@@ -29,7 +29,7 @@ class AnexosRelationManager extends RelationManager
             ->recordTitleAttribute('description')
             ->heading('Publicações')
             ->description('Utilize o campo de pesquisa para filtrar uma informação')
-            ->defaultSort('idprocesso_seletivo_anexo', 'desc')
+            ->defaultSort('id', 'desc')
             ->columns([
                 Stack::make([
                     TextColumn::make('publication_date')
@@ -41,7 +41,7 @@ class AnexosRelationManager extends RelationManager
                     TextColumn::make('description')
                         ->label('Descrição')
                         ->color('primary')
-                        ->url(fn($record) => $record->url_arquivo, shouldOpenInNewTab: true)
+                        ->url(fn($record) => $record->file_url, shouldOpenInNewTab: true)
                         ->searchable(),
                 ])
             ])

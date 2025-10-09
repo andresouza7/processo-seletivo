@@ -2,7 +2,7 @@
 
 namespace App\Filament\App\Resources\ProcessoSeletivos\Tables;
 
-use App\Models\ProcessoSeletivo;
+use App\Models\Process;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Tables\Columns\Layout\Split;

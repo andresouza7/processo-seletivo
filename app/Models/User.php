@@ -23,11 +23,9 @@ class User extends Authenticatable implements FilamentUser
      * @var array<int, string>
      */
     protected $fillable = [
-        'pessoa_id',
         'name',
         'email',
         'password',
-        'role'
     ];
 
     /**
@@ -69,15 +67,8 @@ class User extends Authenticatable implements FilamentUser
         return true;
     }
 
-    public function processos_seletivos()
+    public function processes()
     {
-        return $this->belongsToMany(
-            ProcessoSeletivo::class,
-            'avaliador_processo_seletivo',
-            'user_id',
-            'idprocesso_seletivo',
-            'id',
-            'idprocesso_seletivo'
-        );
+        return $this->belongsToMany(Process::class);
     }
 }

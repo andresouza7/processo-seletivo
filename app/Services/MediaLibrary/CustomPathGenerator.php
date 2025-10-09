@@ -2,9 +2,9 @@
 
 namespace App\Services\MediaLibrary;
 
-use App\Models\Inscricao;
-use App\Models\ProcessoSeletivoAnexo;
-use App\Models\Recurso;
+use App\Models\Application;
+use App\Models\ProcessAttachment;
+use App\Models\Appeal;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -15,14 +15,14 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * Regras de armazenamento:
  * 
  * 1. Se o modelo for uma instância de:
- *    - ProcessoSeletivoAnexo: os arquivos são armazenados em:
- *        {tipo}/{diretorio}/{idprocesso_seletivo_anexo}/
+ *    - ProcessAttachment: os arquivos são armazenados em:
+ *        {type}/{diretorio}/{id}/
  * 
- *    - Inscricao: os arquivos são armazenados em:
- *        {tipo}/{diretorio}/inscricoes/
+ *    - Application: os arquivos são armazenados em:
+ *        {type}/{diretorio}/applications/
  * 
- *    - Recurso: os arquivos são armazenados em:
- *        {tipo}/{diretorio}/recursos/
+ *    - Appeal: os arquivos são armazenados em:
+ *        {type}/{diretorio}/appeals/
  *
  * 2. Se o modelo não for um dos acima, um caminho padrão é gerado com um hash MD5:
  *        md5(media_id + app_key)
@@ -32,12 +32,12 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  *    - responsive-images/
  *
  * Observação:
- * - Arquivos vinculados ao modelo ProcessoSeletivoAnexo são de acesso público na web.
+ * - Arquivos vinculados ao modelo ProcessAttachment são de acesso público na web.
  * - Arquivos vinculados a outros modelos são armazenados localmente e acessados
  *   somente através de uma rota protegida personalizada.
  *
  * Exemplo de caminho gerado:
- *    "seletivo2025/documentos/inscricoes/conversions/"
+ *    "seletivo2025/documentos/applications/conversions/"
  */
 
 class CustomPathGenerator implements PathGenerator
@@ -68,11 +68,11 @@ class CustomPathGenerator implements PathGenerator
             return $this->defaultPath($media) . '/';
         }
 
-        $processoSeletivo = optional($model->getAttribute('processo_seletivo'));
-        $tipo = optional($processoSeletivo->tipo)->slug;
+        $processoSeletivo = optional($model->getAttribute('process'));
+        $type = optional($processoSeletivo->type)->slug;
         $diretorio = $processoSeletivo->directory;
 
-        return rtrim("{$tipo}/{$diretorio}/{$subfolder}", '/') . '/';
+        return rtrim("{$type}/{$diretorio}/{$subfolder}", '/') . '/';
     }
 
     /**
@@ -82,9 +82,9 @@ class CustomPathGenerator implements PathGenerator
     private function resolveSubfolder($model): ?string
     {
         return match (true) {
-            $model instanceof ProcessoSeletivoAnexo => '',           // no subfolder
-            $model instanceof Inscricao             => 'inscricoes',
-            $model instanceof Recurso               => 'recursos',
+            $model instanceof ProcessAttachment => '',           // no subfolder
+            $model instanceof Application             => 'applications',
+            $model instanceof Appeal               => 'appeals',
             // 🔮 easy to extend here later:
             // $model instanceof LaudoMedico           => 'laudos',
             default                                 => null,         // fallback to default path

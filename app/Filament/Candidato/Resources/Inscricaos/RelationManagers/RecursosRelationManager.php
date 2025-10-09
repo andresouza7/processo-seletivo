@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RecursosRelationManager extends RelationManager
 {
-    protected static string $relationship = 'recursos';
+    protected static string $relationship = 'appeals';
 
     public function infolist(Schema $schema): Schema
     {
@@ -54,7 +54,7 @@ class RecursosRelationManager extends RelationManager
             ])
             ->headerActions([
                 Action::make('solicitarRecurso')
-                    ->visible(fn() => $this->getOwnerRecord()->processo_seletivo->aceita_recurso)
+                    ->visible(fn() => $this->getOwnerRecord()->process->can_appeal)
                     ->button()
                     ->schema([
                         Textarea::make('description')
@@ -63,18 +63,18 @@ class RecursosRelationManager extends RelationManager
                     ])
                     ->action(function (array $data, string $model): ?Model {
                         try {
-                            $inscricao = $this->getOwnerRecord();
+                            $application = $this->getOwnerRecord();
 
-                            if (!$inscricao->processo_seletivo->aceita_recurso) {
+                            if (!$application->process->can_appeal) {
                                 throw new Error("Fora do período de recursos");
                             }
 
                             // Attempt to find or create the record
                             $record = $model::firstOrCreate(
                                 [
-                                    'idprocesso_seletivo' => $inscricao->idprocesso_seletivo,
-                                    'idinscricao_pessoa' => $inscricao->idinscricao_pessoa,
-                                    'idinscricao' => $inscricao->idinscricao,
+                                    'id' => $application->id,
+                                    'idinscricao_pessoa' => $application->idinscricao_pessoa,
+                                    'idinscricao' => $application->idinscricao,
                                 ],
                                 [
                                     'description' => $data['description'],
@@ -86,13 +86,13 @@ class RecursosRelationManager extends RelationManager
                             if ($record->wasRecentlyCreated) {
                                 // Send success notification for new record
                                 Notification::make()
-                                    ->title('Recurso cadastrado!')
+                                    ->title('Appeal cadastrado!')
                                     ->success()
                                     ->send();
                             } else {
                                 // Send notification for existing record
                                 Notification::make()
-                                    ->title('Recurso já registrado!')
+                                    ->title('Appeal já registrado!')
                                     ->warning()
                                     ->body('Este recurso já foi solicitado anteriormente.')
                                     ->send();
@@ -122,14 +122,14 @@ class RecursosRelationManager extends RelationManager
                     ->modalCancelActionLabel('Fechar')
                     ->label('Visualizar')
                     ->icon('heroicon-o-eye')
-                    ->modalHeading('Recurso')
+                    ->modalHeading('Appeal')
                     // ->modalWidth('xl')
                     ->schema(function (Model $record) {
                         return [
                             Flex::make([
 
-                                // Display the inscricao code as the top entry
-                                TextEntry::make('inscricao.cod_inscricao')
+                                // Display the application code as the top entry
+                                TextEntry::make('application.cod_inscricao')
                                     ->label('Código da Inscrição')
                                     ->columnSpanFull(), // Spans the entire width for better visibility
 

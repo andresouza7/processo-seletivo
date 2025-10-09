@@ -16,11 +16,11 @@ class ProcessoSeletivoTable
         return $table
             ->heading('Consultar Processos Seletivos')
             ->description('Informações sobre todos os processos seletivos cadastrados. Consulte, atualize ou crie um novo registro.')
-            ->defaultSort('idprocesso_seletivo', 'desc')
+            ->defaultSort('id', 'desc')
             ->columns([
-                TextColumn::make('idprocesso_seletivo')
+                TextColumn::make('id')
                     ->label('ID'),
-                TextColumn::make('tipo.descricao'),
+                TextColumn::make('type.descricao'),
                 TextColumn::make('title')
                     ->searchable()
                     ->limit(50),
@@ -30,9 +30,9 @@ class ProcessoSeletivoTable
                     ->color(fn($state) => $state === 'S' ? 'success' : 'danger'),
             ])
             ->filters([
-                SelectFilter::make('tipo')
+                SelectFilter::make('type')
                     ->label('Tipo')
-                    ->relationship('tipo', 'description'n'),
+                    ->relationship('type', 'description'),
             ])
             ->recordActions([
                 EditAction::make()

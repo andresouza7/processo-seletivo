@@ -2,19 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\Models\Application;
+use App\Models\Candidate;
+use App\Models\Position;
+use App\Models\Process;
+use App\Models\ProcessAttachment;
+use App\Models\ProcessType;
+use App\Models\Quota;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 // Models
 use App\Models\User;
-use App\Models\TipoVaga;
-use App\Models\ProcessoSeletivoTipo;
-use App\Models\ProcessoSeletivo;
-use App\Models\ProcessoSeletivoAnexo;
-use App\Models\InscricaoPessoa;
-use App\Models\InscricaoVaga;
-use App\Models\Inscricao;
 
 class DatabaseSeeder extends Seeder
 {
@@ -38,64 +38,59 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(10)->create();
 
         // ------------------------
-        // 2️⃣ Tipos de Vagas
+        // 2️⃣ Tipos de Cotas
         // ------------------------
         $tiposFixos = [
-            ['descricao' => 'Ampla Concorrência'],
-            ['descricao' => 'Cota Racial'],
-            ['descricao' => 'Pessoa com Deficiência'],
-            ['descricao' => 'Escola Pública'],
-            ['descricao' => 'Interiorização'],
+            // ['description' => 'Ampla Concorrência'],
+            ['description' => 'Cota Racial'],
+            ['description' => 'Pessoa com Deficiência'],
+            ['description' => 'Escola Pública'],
+            ['description' => 'Interiorização'],
         ];
 
         foreach ($tiposFixos as $tipo) {
-            TipoVaga::firstOrCreate(['descricao' => $tipo['descricao']], $tipo);
+            Quota::firstOrCreate(['description' => $tipo['description']], $tipo);
         }
 
-        TipoVaga::factory()->count(5)->create();
+        // Quota::factory()->count(5)->create();
 
         // ------------------------
         // 3️⃣ Tipos de Processo Seletivo
         // ------------------------
         $psTiposFixos = [
-            ['descricao' => 'Processo Seletivo Simplificado', 'chave' => 'PSS'],
-            ['descricao' => 'Concurso Público', 'chave' => 'CON'],
-            ['descricao' => 'Edital Interno', 'chave' => 'EDI'],
-            ['descricao' => 'Transferência', 'chave' => 'TRA'],
+            ['description' => 'Processo Seletivo Simplificado', 'slug' => 'PSS'],
+            ['description' => 'Concurso Público', 'slug' => 'CON'],
+            ['description' => 'Edital Interno', 'slug' => 'EDI'],
+            ['description' => 'Transferência', 'slug' => 'TRA'],
         ];
 
         foreach ($psTiposFixos as $tipo) {
-            ProcessoSeletivoTipo::firstOrCreate(['chave' => $tipo['chave']], $tipo);
+            ProcessType::firstOrCreate(['slug' => $tipo['slug']], $tipo);
         }
 
-        ProcessoSeletivoTipo::factory()->count(3)->create();
+        // Process::factory()->count(3)->create();
 
         // ------------------------
         // 4️⃣ Pessoas inscritas
         // ------------------------
-        InscricaoPessoa::factory()->count(50)->create();
+        Candidate::factory()->count(50)->create();
 
         // ------------------------
         // 5️⃣ Processos Seletivos
         // ------------------------
-        $processos = ProcessoSeletivo::factory()
+        $processos = Process::factory()
             ->count(5)
-            ->withInscricoes(
-                qtdVagas: 3,     // 3 vagas por processo
-                qtdInscricoes: 10, // 10 inscrições por processo
-                qtdFiles: 2       // 2 arquivos por inscrição
-            )
+            ->withApplications(3,10,2)
             ->create();
 
-        
         // ------------------------
         // 7️⃣ Anexos de Processos Seletivos
         // ------------------------
         foreach ($processos as $processo) {
-            ProcessoSeletivoAnexo::factory()
+            ProcessAttachment::factory()
                 ->count(rand(1, 3))
                 ->create([
-                    'idprocesso_seletivo' => $processo->idprocesso_seletivo
+                    'process_id' => $processo->id
                 ]);
         }
 
@@ -103,20 +98,20 @@ class DatabaseSeeder extends Seeder
         // 8️⃣ Inscrição Vaga
         // ------------------------
         foreach ($processos as $processo) {
-            $vagas = InscricaoVaga::factory()->count(3)->create([
-                'idprocesso_seletivo' => $processo->idprocesso_seletivo,
+            $vagas = Position::factory()->count(3)->create([
+                'process_id' => $processo->id,
             ]);
 
-            $pessoas = InscricaoPessoa::all();
+            $pessoas = Candidate::all();
 
             // Cria inscrições
-            Inscricao::factory()
+            Application::factory()
                 ->count(10)
                 ->withFiles(2)
                 ->sequence(fn($sequence) => [
-                    'idprocesso_seletivo' => $processo->idprocesso_seletivo,
-                    'idinscricao_vaga' => $vagas->random()->idinscricao_vaga,
-                    'idinscricao_pessoa' => $pessoas->random()->idpessoa,
+                    'process_id' => $processo->id,
+                    'position_id' => $vagas->random()->id,
+                    'candidate_id' => $pessoas->random()->id,
                 ])
                 ->create();
         }

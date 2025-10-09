@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageInscritos;
-use App\Models\Inscricao;
-use App\Models\ProcessoSeletivo;
+use App\Models\Application;
+use App\Models\Process;
 use App\Models\User;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
@@ -19,7 +19,7 @@ class GestorConsultaInscritosTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-    protected ProcessoSeletivo $processo;
+    protected Process $processo;
 
     protected function setUp(): void
     {
@@ -31,28 +31,28 @@ class GestorConsultaInscritosTest extends TestCase
         $this->actingAs($this->user);
         Livewire::actingAs($this->user);
 
-        $this->processo = ProcessoSeletivo::factory()->withInscricoes()->create();
+        $this->processo = Process::factory()->withApplications()->create();
     }
 
     public function test_gestor_acessa_pagina_inscritos()
     {
-        $response = $this->get(route('filament.gps.resources.processos.inscritos', $this->processo->idprocesso_seletivo));
+        $response = $this->get(route('filament.gps.resources.processos.inscritos', $this->processo->id));
         $response->assertStatus(200);
     }
 
     public function test_gestor_consulta_inscricoes()
     {
-        $inscricao = Inscricao::factory()->create([
-            'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+        $application = Application::factory()->create([
+            'id' => $this->processo->id,
             'code' => '123456'
         ]);
 
         Livewire::test(ManageInscritos::class, [
-            'record' => $this->processo->idprocesso_seletivo
+            'record' => $this->processo->id
         ])
-            ->assertCanSeeTableRecords($this->processo->inscricoes)
+            ->assertCanSeeTableRecords($this->processo->applications)
             ->searchTable('123456')
-            ->assertCanSeeTableRecords([$inscricao]);
+            ->assertCanSeeTableRecords([$application]);
     }
 
     // gestor visualiza inscricao

@@ -14,7 +14,7 @@ use App\Filament\Gps\Resources\InscricaoPessoas\Schemas\InscricaoPessoaForm;
 use App\Filament\Gps\Resources\InscricaoPessoas\Schemas\InscricaoPessoaInfolist;
 use App\Filament\Gps\Resources\InscricaoPessoas\Tables\InscricaoPessoasTable;
 use App\Filament\Resources\InscricaoPessoaResource\RelationManagers;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -33,7 +33,7 @@ use Illuminate\Support\Str;
 
 class InscricaoPessoaResource extends Resource
 {
-    protected static ?string $model = InscricaoPessoa::class;
+    protected static ?string $model = Candidate::class;
     protected static ?string $modelLabel = 'Candidato';
     protected static ?string $slug = 'candidatos';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';

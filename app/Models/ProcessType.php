@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class ProcessoSeletivoTipo extends Model
+class ProcessType extends Model
 {
-    use HasFactory, LogsActivity;
+    use SoftDeletes, HasFactory, LogsActivity;
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -17,10 +18,6 @@ class ProcessoSeletivoTipo extends Model
             ->logFillable()
             ->dontSubmitEmptyLogs();
     }
-
-    protected $primaryKey = 'idprocesso_seletivo_tipo';
-
-    protected $table = 'processo_seletivo_tipo';
 
     protected $fillable = [
         'description',

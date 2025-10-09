@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\CreateProcessoSeletivo;
-use App\Models\ProcessoSeletivo;
-use App\Models\ProcessoSeletivoTipo;
+use App\Models\Process;
+use App\Models\ProcessType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -16,7 +16,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-    protected ProcessoSeletivoTipo $tipo;
+    protected ProcessType $type;
     protected string $date;
 
     protected function setUp(): void
@@ -32,7 +32,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
         $this->actingAs($this->user);
 
         // Cria tipo de processo
-        $this->tipo = ProcessoSeletivoTipo::factory()->create();
+        $this->type = ProcessType::factory()->create();
 
         // Define data padrão
         $this->date = now()->toDateString();
@@ -54,7 +54,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
     {
         $formData = [
             'title' => 'Edital Monitoria',
-            'idprocesso_seletivo_tipo' => $this->tipo->idprocesso_seletivo_tipo,
+            'process_type_id' => $this->type->process_type_id,
             'number' => '01/2025',
             'document_date' => $this->date,
             'is_published' => 'S',
@@ -75,12 +75,12 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             ->call('create')
             ->assertHasNoFormErrors();
 
-        $processo = ProcessoSeletivo::latest()->first();
+        $processo = Process::latest()->first();
 
         // Valida campos do banco
-        $this->assertDatabaseHas('processo_seletivo', [
+        $this->assertDatabaseHas('process', [
             'title' => $formData['title'],
-            'idprocesso_seletivo_tipo' => $formData['idprocesso_seletivo_tipo'],
+            'process_type_id' => $formData['process_type_id'],
             'number' => $formData['number'],
             'document_date' => $this->date,
             'is_published' => 'S',
@@ -102,13 +102,13 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
     public function test_gestor_pode_alterar_processo_seletivo(): void
     {
         // 1️⃣ Cria um processo seletivo existente
-        $processo = ProcessoSeletivo::factory()->create([
+        $processo = Process::factory()->create([
             'title' => 'Processo Original',
             'description' => '<p>Texto original</p>',
-            'idprocesso_seletivo_tipo' => $this->tipo->idprocesso_seletivo_tipo,
+            'process_type_id' => $this->type->process_type_id,
             'number' => '02/2025',
             'document_date' => $this->date,
-            'is_published' => 'N',
+            'is_published' => false,
             'has_fee_exemption' => false,
             'attachment_fields' => [
                 ['item' => 'identidade']
@@ -131,8 +131,8 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             ->assertHasNoFormErrors();
 
         // 4️⃣ Valida se as alterações foram persistidas no banco
-        $this->assertDatabaseHas('processo_seletivo', [
-            'idprocesso_seletivo' => $processo->idprocesso_seletivo,
+        $this->assertDatabaseHas('process', [
+            'id' => $processo->id,
             'title' => $novosDados['title'],
             'description' => '<p>' . $novosDados['description'] . '</p>',
             'is_published' => 'S',

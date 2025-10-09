@@ -20,7 +20,7 @@ class ManageVagas extends ManageRelatedRecords
 {
     protected static string $resource = ProcessoSeletivoResource::class;
     protected static ?string $title = 'Gerenciar Vagas';
-    protected static string $relationship = 'inscricao_vaga';
+    protected static string $relationship = 'position';
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -41,7 +41,7 @@ class ManageVagas extends ManageRelatedRecords
                     ->label('Descrição')
                     ->required()
                     ->maxLength(255),
-            ]);
+            ])->columns(1);
     }
 
     public function table(Table $table): Table
@@ -68,7 +68,7 @@ class ManageVagas extends ManageRelatedRecords
                         $parentRecord = $this->getOwnerRecord();
 
                         // Set the ID of the parent resource on the form data
-                        $data['idprocesso_seletivo'] = $parentRecord->id;
+                        $data['id'] = $parentRecord->id;
 
                         return $data;
                     }),

@@ -17,12 +17,13 @@ class RecursosTable
     {
         return $table
             ->columns([
-                TextColumn::make('idrecurso'),
-                TextColumn::make('etapa_recurso.descricao')
+                TextColumn::make('id'),
+                TextColumn::make('appeal_stage.description')
                     ->label('Etapa'),
                 TextColumn::make('description')
                     ->label('Justificativa'),
                 TextColumn::make('result')
+                    ->label('Resultado')
                     ->badge()
             ])
             ->filters([

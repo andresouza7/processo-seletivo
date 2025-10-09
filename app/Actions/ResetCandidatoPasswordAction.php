@@ -3,14 +3,14 @@
 namespace App\Actions;
 
 use Throwable;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use Closure;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Str;
 
 class ResetCandidatoPasswordAction
 {
-    public function reset(InscricaoPessoa $user)
+    public function reset(Candidate $user)
     {
         try {
             // gera senha temporária

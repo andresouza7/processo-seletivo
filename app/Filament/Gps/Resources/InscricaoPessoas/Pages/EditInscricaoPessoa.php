@@ -4,7 +4,7 @@ namespace App\Filament\Gps\Resources\InscricaoPessoas\Pages;
 
 use App\Actions\ResetCandidatoEmailAction;
 use App\Filament\Gps\Resources\InscricaoPessoas\InscricaoPessoaResource;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -24,9 +24,9 @@ class EditInscricaoPessoa extends EditRecord
                 ->modalDescription('O email será alterado e uma senha temporária será enviada para o endereço fornecido.')
                 ->modalSubmitActionLabel('Confirmar')
                 ->schema([
-                    TextInput::make('email')->email()->required()->unique('inscricao_pessoa', 'email', ignoreRecord: true)
+                    TextInput::make('email')->email()->required()->unique('candidate', 'email', ignoreRecord: true)
                 ])
-                ->action(function (InscricaoPessoa $record, array $data) {
+                ->action(function (Candidate $record, array $data) {
 
                     $action = new ResetCandidatoEmailAction();
                     $action->reset($record, $data['email'], fn() => Notification::make()

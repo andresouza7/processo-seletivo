@@ -5,15 +5,16 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ProcessoSeletivoAnexo extends Model implements HasMedia
+class ProcessAttachment extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, LogsActivity;
+    use SoftDeletes, HasFactory, InteractsWithMedia, LogsActivity;
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -22,13 +23,8 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
             ->dontSubmitEmptyLogs();
     }
 
-    protected $table = 'processo_seletivo_anexo';
-
-    protected $primaryKey = 'idprocesso_seletivo_anexo';
-
     protected $fillable = [
-        'idprocesso_seletivo_anexo',
-        'idprocesso_seletivo',
+        'process_id',
         'idarquivo',
         'description',
         'publication_date',
@@ -36,21 +32,22 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
     ];
 
     protected $appends = [
-        'url_arquivo'
+        'file_url'
     ];
 
     protected $dates = [
         'publication_date'
     ];
 
-    public function getUrlArquivoAttribute()
+    public function getFileUrlAttribute()
     {
         $systemMigrationReferenceDate = Carbon::parse('2024-11-01');
 
         // Check if `data_publicacao` is older than the reference date
         if (Carbon::parse($this->publication_date)->lt($systemMigrationReferenceDate)) {
-            $oldFilePath = $this->processo_seletivo->tipo->slug . '/' .
-                $this->processo_seletivo->directory . '/' .
+            
+            $oldFilePath = $this->process->type?->slug . '/' .
+                $this->process->directory . '/' .
                 optional($this->arquivo)->codname . '.pdf';
 
             return Storage::url($oldFilePath);
@@ -60,11 +57,9 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
         return $this->getFirstMediaUrl();
     }
 
-    // public $timestamps = false;
-
-    public function processo_seletivo()
+    public function process()
     {
-        return $this->belongsTo(ProcessoSeletivo::class, 'idprocesso_seletivo', 'idprocesso_seletivo');
+        return $this->belongsTo(Process::class);
     }
 
     public function arquivo()

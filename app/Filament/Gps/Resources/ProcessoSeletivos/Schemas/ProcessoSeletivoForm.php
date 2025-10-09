@@ -25,9 +25,9 @@ class ProcessoSeletivoForm
                             ->label('Título')
                             ->columnSpan(2)
                             ->required(),
-                        Select::make('idprocesso_seletivo_tipo')
+                        Select::make('process_type_id')
                             ->label('Tipo')
-                            ->relationship('tipo', 'description')
+                            ->relationship('type', 'description')
                             ->required(),
                     ])->columns(3),
 

@@ -79,7 +79,7 @@ class CandidatoPanelProvider extends PanelProvider
             ->login(Login::class)
             ->registration(Cadastro::class)
             ->profile(EditPassword::class)
-            ->authPasswordBroker('inscricao_pessoa')
+            ->authPasswordBroker('candidate')
             ->passwordReset(RequestPasswordReset::class, ResetPassword::class) // use to edit password only
             // ->emailVerification(ConfirmEmail::class)
             ->authMiddleware([

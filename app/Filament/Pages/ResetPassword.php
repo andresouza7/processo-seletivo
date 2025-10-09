@@ -3,7 +3,7 @@
 namespace App\Filament\Pages;
 
 use Filament\Auth\Http\Responses\Contracts\PasswordResetResponse;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use App\Models\User;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
@@ -58,7 +58,7 @@ class ResetPassword extends \Filament\Auth\Pages\PasswordReset\ResetPassword
                 ->send();
 
             // Signin user after password reset
-            $user = InscricaoPessoa::where('email', $data['email'])->first();
+            $user = Candidate::where('email', $data['email'])->first();
             Auth::guard('candidato')->login($user);
             session()->regenerate();
 

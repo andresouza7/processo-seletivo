@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('process_type_id')->constrained();
             $table->text('title');
             $table->text('description');
-            $table->bigInteger('number');
+            $table->string('number')->unique();
             $table->date('document_date');
             $table->char('status', 1);
-            $table->bigInteger('views');
+            $table->unsignedBigInteger('views');
             $table->boolean('is_published');
             $table->string('directory', 30)->unique();
             $table->date('publication_start_date');
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->date('application_start_date');
             $table->date('application_end_date');
             $table->boolean('has_fee_exemption')->default(false);
-            $table->jsonb('attachment_fields');
+            $table->jsonb('attachment_fields')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

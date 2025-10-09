@@ -6,7 +6,7 @@ use App\Filament\Candidato\Pages\MeusDados;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use Livewire\Livewire;
 
 
@@ -19,7 +19,7 @@ class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
         parent::setUp();
 
       // CRIA O USUÁRIO
-        $user = InscricaoPessoa::factory()->create([
+        $user = Candidate::factory()->create([
             'name' => 'tester',
             'cpf' => '12345678901',
             'email' => 'tester@example.com',

@@ -10,7 +10,7 @@ use App\Filament\Resources\ProcessoSeletivoTipos\Pages\ListProcessoSeletivoTipos
 use App\Filament\Resources\ProcessoSeletivoTipos\Pages\CreateProcessoSeletivoTipo;
 use App\Filament\Resources\ProcessoSeletivoTipos\Pages\EditProcessoSeletivoTipo;
 use App\Filament\Resources\ProcessoSeletivoTipoResource\Pages;
-use App\Models\ProcessoSeletivoTipo;
+use App\Models\ProcessType;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProcessoSeletivoTipoResource extends Resource
 {
-    protected static ?string $model = ProcessoSeletivoTipo::class;
+    protected static ?string $model = ProcessType::class;
     protected static ?string $modelLabel = 'Modalidade PS';
     protected static ?string $pluralModelLabel = 'Modalidades PS';
     protected static ?string $slug = 'modalidades';
@@ -46,7 +46,7 @@ class ProcessoSeletivoTipoResource extends Resource
             ->description('Categoria na qual determinado processo se enquadra.')
             ->columns([
                 //
-                TextColumn::make('idprocesso_seletivo_tipo')->label('ID'),
+                TextColumn::make('process_type_id')->label('ID'),
                 TextColumn::make('description')
                     ->searchable(),
                 TextColumn::make('slug')

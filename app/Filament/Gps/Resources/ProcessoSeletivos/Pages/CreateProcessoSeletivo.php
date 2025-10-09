@@ -4,7 +4,7 @@ namespace App\Filament\Gps\Resources\ProcessoSeletivos\Pages;
 
 use Throwable;
 use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
-use App\Models\ProcessoSeletivo;
+use App\Models\Process;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;

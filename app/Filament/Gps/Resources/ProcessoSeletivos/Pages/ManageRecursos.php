@@ -25,7 +25,7 @@ class ManageRecursos extends ManageRelatedRecords
 
     protected static ?string $title = 'Gerenciar Recursos';
 
-    protected static string $relationship = 'recursos';
+    protected static string $relationship = 'appeals';
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
@@ -76,7 +76,7 @@ class ManageRecursos extends ManageRelatedRecords
             ->defaultSort('idrecurso', 'desc')
             ->columns([
                 TextColumn::make('idrecurso'),
-                TextColumn::make('etapa_recurso.descricao')
+                TextColumn::make('appeal_stage.descricao')
                     ->label('Etapa'),
                 TextColumn::make('description')
                     ->label('Justificativa'),

@@ -27,6 +27,6 @@ class Arquivo extends Model
     public $timestamps = false;
     
     public function processo_seletivo_anexo() {
-        return $this->hasOne(ProcessoSeletivoAnexo::class, 'idarquivo', 'idarquivo');
+        return $this->hasOne(ProcessAttachment::class, 'idarquivo', 'idarquivo');
     }
 }

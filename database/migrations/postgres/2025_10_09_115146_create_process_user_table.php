@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('evaluator_process', function (Blueprint $table) {
+        Schema::create('process_user', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('process_id')->constrained();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('evaluator_process');
+        Schema::dropIfExists('process_user');
     }
 };

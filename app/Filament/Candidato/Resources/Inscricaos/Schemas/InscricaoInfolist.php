@@ -15,18 +15,18 @@ class InscricaoInfolist
                 Section::make('DADOS PESSOAIS')
                     ->columns(3)
                     ->schema([
-                        TextEntry::make('inscricao_pessoa.nome')->label('Nome'),
-                        TextEntry::make('inscricao_pessoa.cpf')->label('CPF'),
-                        TextEntry::make('inscricao_pessoa.ci')->label('RG'),
+                        TextEntry::make('candidate.nome')->label('Nome'),
+                        TextEntry::make('candidate.cpf')->label('CPF'),
+                        TextEntry::make('candidate.ci')->label('RG'),
                     ]),
 
                 Section::make('DADOS DA INSCRIÇÃO')
                     ->columns(3)
                     ->schema([
                         TextEntry::make('code')->label('Inscrição'),
-                        TextEntry::make('processo_seletivo.titulo')->label('Processo Seletivo'),
-                        TextEntry::make('inscricao_vaga.descricao')->label('Vaga'),
-                        TextEntry::make('tipo_vaga.descricao')->label('Tipo de Vaga'),
+                        TextEntry::make('process.titulo')->label('Processo Seletivo'),
+                        TextEntry::make('position.descricao')->label('Vaga'),
+                        TextEntry::make('quota.descricao')->label('Tipo de Vaga'),
                     ]),
 
                 Section::make('ATENDIMENTO ESPECIAL')

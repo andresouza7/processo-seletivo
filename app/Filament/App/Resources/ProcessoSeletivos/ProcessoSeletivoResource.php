@@ -10,7 +10,7 @@ use App\Filament\App\Resources\ProcessoSeletivos\RelationManagers\AnexosRelation
 use App\Filament\App\Resources\ProcessoSeletivos\Schemas\ProcessoSeletivoForm;
 use App\Filament\App\Resources\ProcessoSeletivos\Schemas\ProcessoSeletivoInfolist;
 use App\Filament\App\Resources\ProcessoSeletivos\Tables\ProcessoSeletivoTable;
-use App\Models\ProcessoSeletivo;
+use App\Models\Process;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProcessoSeletivoResource extends Resource
 {
-    protected static ?string $model = ProcessoSeletivo::class;
+    protected static ?string $model = Process::class;
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::RectangleStack;
 

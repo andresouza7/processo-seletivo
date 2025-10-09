@@ -6,7 +6,7 @@ use App\Filament\Gps\Resources\InscricaoPessoas\InscricaoPessoaResource;
 use Filament\Resources\Pages\ViewRecord;
 use App\Actions\ResetCandidatoEmailAction;
 use App\Actions\ResetCandidatoPasswordAction;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -24,9 +24,9 @@ class ViewInscricaoPessoa extends ViewRecord
                 ->modalDescription('O email será alterado e uma senha temporária será enviada para o endereço fornecido.')
                 ->modalSubmitActionLabel('Confirmar')
                 ->schema([
-                    TextInput::make('email')->label('Novo Email')->email()->required()->unique('inscricao_pessoa', 'email', ignoreRecord: true)
+                    TextInput::make('email')->label('Novo Email')->email()->required()->unique('candidate', 'email', ignoreRecord: true)
                 ])
-                ->action(function (InscricaoPessoa $record, array $data, ResetCandidatoPasswordAction $resetAction) {
+                ->action(function (Candidate $record, array $data, ResetCandidatoPasswordAction $resetAction) {
 
                     $resetAction->reset($record);
 

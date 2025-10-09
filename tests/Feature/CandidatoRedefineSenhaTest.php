@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use App\Notifications\ResetPasswordNotification;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
@@ -21,7 +21,7 @@ class CandidatoRedefineSenhaTest extends TestCase
     {
         Notification::fake();
 
-        $user = InscricaoPessoa::factory()->create([
+        $user = Candidate::factory()->create([
             'email' => 'andre.costa@ueap.edu.br',
             'password' => Hash::make('old-password'),
         ]);
@@ -39,13 +39,13 @@ class CandidatoRedefineSenhaTest extends TestCase
 
     public function test_candidato_can_reset_password_with_token(): void
     {
-        $user = InscricaoPessoa::factory()->create([
+        $user = Candidate::factory()->create([
             'email' => 'candidato@example.com',
             'password' => Hash::make('old-password'),
         ]);
 
         // Generate token with the correct broker
-        $token = Password::broker('inscricao_pessoa')->createToken($user);
+        $token = Password::broker('candidate')->createToken($user);
 
         // Submit the reset form
         $url = Filament::getPanel('candidato')->getResetPasswordUrl($token, $user);

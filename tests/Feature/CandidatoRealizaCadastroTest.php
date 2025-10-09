@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Tests\TestCase;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use Livewire\Livewire;
 
 use function PHPUnit\Framework\assertTrue;
@@ -22,7 +22,7 @@ class CandidatoRealizaCadastroTest extends TestCase
         parent::setUp();
 
         // CRIA O USUÁRIO CORRETAMENTE
-        $user = InscricaoPessoa::factory()->create([
+        $user = Candidate::factory()->create([
             'name' => 'tester',
             'mother_name' => 'mae do tester',
             'rg' => '12344321-AP',

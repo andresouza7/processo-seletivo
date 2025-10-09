@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\assertTrue;
@@ -17,7 +17,7 @@ class CandidatoRealizaLoginTest extends TestCase
     public function test_candidato_faz_login(): void
     {
         // CRIA O USUÁRIO CORRETAMENTE
-        $user = InscricaoPessoa::factory()->create([
+        $user = Candidate::factory()->create([
             'name' => 'tester',
             'cpf' => '12345678901',
             'password' => Hash::make('pwd'),

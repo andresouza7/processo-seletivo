@@ -11,7 +11,7 @@ use App\Filament\Resources\TipoVagaResource\Pages\ListTipoVagas;
 use App\Filament\Resources\TipoVagaResource\Pages\CreateTipoVaga;
 use App\Filament\Resources\TipoVagaResource\Pages\EditTipoVaga;
 use App\Filament\Resources\TipoVagaResource\Pages;
-use App\Models\TipoVaga;
+use App\Models\Quota;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TipoVagaResource extends Resource
 {
-    protected static ?string $model = TipoVaga::class;
+    protected static ?string $model = Quota::class;
     protected static ?string $modelLabel = 'Tipo de Vaga';
     protected static ?string $pluralModelLabel = 'Tipos de Vaga';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tag';
@@ -44,7 +44,7 @@ class TipoVagaResource extends Resource
             ->heading('Gerenciar tipo de vaga')
             ->description('Condição na qual um candidato poderá concorrer a uma vaga.')
             ->columns([
-                TextColumn::make('id_tipo_vaga')->label('ID'),
+                TextColumn::make('id')->label('ID'),
                 TextColumn::make('description')
                     ->searchable(),
             ])

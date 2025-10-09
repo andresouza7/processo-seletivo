@@ -38,7 +38,7 @@ class InscricaoPessoaInfolist
                                 TextEntry::make('postal_code')->label('CEP'),
                                 TextEntry::make('address')->label('Logradouro'),
                                 TextEntry::make('district')->label('Bairro'),
-                                TextEntry::make('address_number'_number')->label('Número'),
+                                TextEntry::make('address_number')->label('Número'),
                                 TextEntry::make('address_complement')->label('Complemento'),
                                 TextEntry::make('city')->label('Cidade'),
                             ]),

@@ -19,7 +19,7 @@ use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageInscritos;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageVagas;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Schemas\ProcessoSeletivoForm;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Tables\ProcessoSeletivoTable;
-use App\Models\ProcessoSeletivo;
+use App\Models\Process;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProcessoSeletivoResource extends Resource
 {
-    protected static ?string $model = ProcessoSeletivo::class;
+    protected static ?string $model = Process::class;
     protected static ?string $modelLabel = 'Processo Seletivo';
     protected static ?string $pluralModelLabel = 'Processos Seletivos';
     protected static ?string $slug = 'processos';
@@ -94,7 +94,7 @@ class ProcessoSeletivoResource extends Resource
             'edit' => EditProcessoSeletivo::route('/{record}/edit'),
             'anexos' => ManageAnexos::route('/{record}/anexos'),
             'inscritos' => ManageInscritos::route('/{record}/inscritos'),
-            'avaliadores' => ManageAvaliadores::route('/{record}/avaliadores'),
+            'evaluators' => ManageAvaliadores::route('/{record}/evaluators'),
             'vagas' => ManageVagas::route('/{record}/vagas'),
             'etapas_recurso' => ManageEtapaRecurso::route('/{record}/etapas_recurso'),
         ];

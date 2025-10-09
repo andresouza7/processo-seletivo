@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageAnexos;
-use App\Models\InscricaoPessoa;
-use App\Models\ProcessoSeletivo;
-use App\Models\ProcessoSeletivoAnexo;
+use App\Models\Candidate;
+use App\Models\Process;
+use App\Models\ProcessAttachment;
 use App\Models\User;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
@@ -22,7 +22,7 @@ class GestorConfiguraAnexosTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-    protected ProcessoSeletivo $processo;
+    protected Process $processo;
 
     protected function setUp(): void
     {
@@ -34,12 +34,12 @@ class GestorConfiguraAnexosTest extends TestCase
         $this->actingAs($this->user);
         Livewire::actingAs($this->user);
 
-        $this->processo = ProcessoSeletivo::factory()->create();
+        $this->processo = Process::factory()->create();
     }
 
     public function test_gestor_acessa_pagina_anexos()
     {
-        $response = $this->get(route('filament.gps.resources.processos.anexos', $this->processo->idprocesso_seletivo));
+        $response = $this->get(route('filament.gps.resources.processos.anexos', $this->processo->id));
         $response->assertStatus(200);
     }
 
@@ -51,7 +51,7 @@ class GestorConfiguraAnexosTest extends TestCase
 
         // Valida campos obrigatórios
         Livewire::test(ManageAnexos::class, [
-            'record' => $this->processo->idprocesso_seletivo
+            'record' => $this->processo->id
         ])
             ->assertActionExists(TestAction::make('create')->table())
             ->callAction(TestAction::make('create')->table(), [
@@ -61,7 +61,7 @@ class GestorConfiguraAnexosTest extends TestCase
             ->assertHasNoFormErrors();
 
         // Valida que o arquivo foi adicionado na tabela do media library
-        $anexo = ProcessoSeletivoAnexo::latest()->first();
+        $anexo = ProcessAttachment::latest()->first();
         $mediaItem = $anexo->getFirstMedia();
         $this->assertNotNull($mediaItem);
 
@@ -72,18 +72,18 @@ class GestorConfiguraAnexosTest extends TestCase
 
     public function test_gestor_consulta_anexos()
     {
-        $anexos = ProcessoSeletivoAnexo::factory(5)->create([
-            'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+        $attachments = ProcessAttachment::factory(5)->create([
+            'id' => $this->processo->id,
         ]);
-        $anexo = ProcessoSeletivoAnexo::factory()->create([
-            'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+        $anexo = ProcessAttachment::factory()->create([
+            'id' => $this->processo->id,
             'description' => 'um anexo'
         ]);
 
         Livewire::test(ManageAnexos::class, [
-            'record' => $this->processo->idprocesso_seletivo
+            'record' => $this->processo->id
         ])
-            ->assertCanSeeTableRecords($anexos)
+            ->assertCanSeeTableRecords($attachments)
             ->searchTable('um anexo')
             ->assertCanSeeTableRecords([$anexo]);
     }

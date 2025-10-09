@@ -3,11 +3,11 @@
 namespace Tests\Feature;
 
 use App\Filament\Candidato\Resources\Inscricaos\Pages\CreateInscricao;
-use App\Models\Inscricao;
-use App\Models\InscricaoPessoa;
-use App\Models\InscricaoVaga;
-use App\Models\ProcessoSeletivo;
-use App\Models\TipoVaga;
+use App\Models\Application;
+use App\Models\Candidate;
+use App\Models\Position;
+use App\Models\Process;
+use App\Models\Quota;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -19,10 +19,10 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected InscricaoPessoa $user;
-    protected ProcessoSeletivo $processo;
-    protected InscricaoVaga $vaga;
-    protected TipoVaga $tipo;
+    protected Candidate $user;
+    protected Process $processo;
+    protected Position $vaga;
+    protected Quota $type;
 
     protected function setUp(): void
     {
@@ -31,18 +31,18 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
         Filament::setCurrentPanel('candidato');
 
         // Cria dados comuns para os testes
-        $this->user = InscricaoPessoa::factory()->create();
+        $this->user = Candidate::factory()->create();
         $this->actingAs($this->user, 'candidato');
         Livewire::actingAs($this->user, 'candidato');
 
 
-        $this->processo = ProcessoSeletivo::factory()->create();
-        $this->vaga = InscricaoVaga::factory()->create([
-            'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+        $this->processo = Process::factory()->create();
+        $this->vaga = Position::factory()->create([
+            'id' => $this->processo->id,
         ]);
 
-        TipoVaga::factory()->create(['id_tipo_vaga' => 1]);
-        TipoVaga::factory()->create(['id_tipo_vaga' => 3]);
+        Quota::factory()->create(['id' => 1]);
+        Quota::factory()->create(['id' => 3]);
 
         // Carrega a página primeiro para inicializar o painel do Filament
         $response = $this->actingAs($this->user, 'candidato')->get(route('filament.candidato.resources.inscricoes.create'));
@@ -53,7 +53,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
+                'id'   => $this->processo->id,
                 'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
                 'requires_assistance'  => 'N',
                 'pcd'                    => false,
@@ -68,7 +68,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
+                'id'   => $this->processo->id,
                 'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
                 'requires_assistance'  => 'N',
                 'pcd'                    => false,
@@ -79,8 +79,8 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         // Verifica se o registro foi salvo no banco
         $this->assertDatabaseHas('inscricao', [
-            'idinscricao_pessoa'     => $this->user->idpessoa,
-            'idprocesso_seletivo'    => $this->processo->idprocesso_seletivo,
+            'idinscricao_pessoa'     => $this->user->id,
+            'id'    => $this->processo->id,
             'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
             'requires_assistance'  => 'N',
         ]);
@@ -92,7 +92,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
+                'id'   => $this->processo->id,
                 'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
                 'requires_assistance' => 'S',
                 'assistance_details'       => $qualAtendimento,
@@ -104,8 +104,8 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         // Verifica se o registro foi salvo corretamente no banco
         $this->assertDatabaseHas('inscricao', [
-            'idinscricao_pessoa'     => $this->user->idpessoa,
-            'idprocesso_seletivo'    => $this->processo->idprocesso_seletivo,
+            'idinscricao_pessoa'     => $this->user->id,
+            'id'    => $this->processo->id,
             'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
             'requires_assistance'  => 'S',
             'assistance_details'       => $qualAtendimento,
@@ -116,7 +116,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
+                'id'   => $this->processo->id,
                 'requires_assistance' => 'N',
                 'pcd'                    => false,
                 'aceita_termos'          => true,
@@ -131,7 +131,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+                'id' => $this->processo->id,
                 'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
                 'requires_assistance' => 'N',
                 'pcd'                 => true,
@@ -150,7 +150,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
+                'id' => $this->processo->id,
                 'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
                 'requires_assistance' => 'N',
                 'pcd'                 => true,
@@ -160,8 +160,8 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->call('create')
             ->assertHasNoFormErrors();
 
-        $inscricao = Inscricao::latest()->first();
-        $mediaItem = $inscricao->getFirstMedia('laudo_medico');
+        $application = Application::latest()->first();
+        $mediaItem = $application->getFirstMedia('laudo_medico');
 
         $this->assertNotNull($mediaItem);
 
@@ -176,12 +176,12 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         Storage::fake('media');
 
-        /** @var \App\Models\InscricaoPessoa|\Illuminate\Contracts\Auth\Authenticatable $user */
-        $user = InscricaoPessoa::factory()->createOne();
+        /** @var \App\Models\Candidate|\Illuminate\Contracts\Auth\Authenticatable $user */
+        $user = Candidate::factory()->createOne();
         $this->actingAs($user, 'candidato');
 
-        $processo = ProcessoSeletivo::factory()->create();
-        $vaga = InscricaoVaga::factory()->create();
+        $processo = Process::factory()->create();
+        $vaga = Position::factory()->create();
 
         $invalidFile = UploadedFile::fake()->createWithContent(
             'documento.docx',
@@ -190,7 +190,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'idprocesso_seletivo' => $processo->idprocesso_seletivo,
+                'id' => $processo->id,
                 'idinscricao_vaga'    => $vaga->idinscricao_vaga,
                 'requires_assistance' => 'N',
                 'pcd'                 => true,

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -19,7 +19,7 @@ class GestorConsultaCandidatosTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-    protected InscricaoPessoa $inscricao_pessoa;
+    protected Candidate $candidate;
 
     protected function setUp(): void
     {
@@ -31,7 +31,7 @@ class GestorConsultaCandidatosTest extends TestCase
         $this->actingAs($this->user);
         Livewire::actingAs($this->user);
 
-        $this->inscricao_pessoa = InscricaoPessoa::factory()->create([
+        $this->candidate = Candidate::factory()->create([
             'nome' => 'Nome candidata teste',
             'mother_name' => 'Mãe da candidata teste',
             'cpf' => '23456781099',
@@ -47,7 +47,7 @@ class GestorConsultaCandidatosTest extends TestCase
 
     public function test_gestor_acessa_pagina_candidatos()
     {
-        $response = $this->get(route('filament.gps.resources.candidatos.index', $this->inscricao_pessoa->id_inscricaopessoa));
+        $response = $this->get(route('filament.gps.resources.candidatos.index', $this->candidate->id_inscricaopessoa));
         $response->assertStatus(200);
     }
 
@@ -55,7 +55,7 @@ class GestorConsultaCandidatosTest extends TestCase
     public function test_gestor_acessa_pagina_detalhes_dos_candidatos()
     {
         $response = $this->get(route('filament.gps.resources.candidatos.view', [
-            'record' => $this->inscricao_pessoa->getKey(),
+            'record' => $this->candidate->getKey(),
         ]));
 
         $response->assertStatus(200);
@@ -79,13 +79,13 @@ class GestorConsultaCandidatosTest extends TestCase
         Filament::setCurrentPanel('gps');
 
         // 🔹 Cria candidatos com status diferentes
-        $masculino = \App\Models\InscricaoPessoa::factory()
+        $masculino = \App\Models\Candidate::factory()
             ->count(2)
             ->create(['sex' => 'M']);
-        $nome_jose = \App\Models\InscricaoPessoa::factory()
+        $nome_jose = \App\Models\Candidate::factory()
             ->count(2)
             ->create(['nome' => 'José da Silva']);
-        $email_registrado = \App\Models\InscricaoPessoa::factory()
+        $email_registrado = \App\Models\Candidate::factory()
             ->count(1)
             ->create(['email' => 'qwerty@uol.com.br']);
 

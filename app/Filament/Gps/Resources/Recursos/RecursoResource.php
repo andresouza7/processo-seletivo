@@ -19,7 +19,7 @@ use App\Filament\Gps\Resources\RecursoResource\Pages;
 use App\Filament\Gps\Resources\RecursoResource\RelationManagers;
 use App\Filament\Gps\Resources\Recursos\Schemas\RecursoForm;
 use App\Filament\Gps\Resources\Recursos\Tables\RecursosTable;
-use App\Models\Recurso;
+use App\Models\Appeal;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Resources\Resource;
@@ -32,13 +32,13 @@ use Illuminate\Support\Facades\Auth;
 
 class RecursoResource extends Resource
 {
-    protected static ?string $model = Recurso::class;
+    protected static ?string $model = Appeal::class;
 
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
     protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 3;
 
-    // Acesso restrito a avaliadores, que julgam recursos anonimamente apenas nos processos aos quais estão vinculados
+    // Acesso restrito a evaluators, que julgam recursos anonimamente apenas nos processos aos quais estão vinculados
 
     public static function canAccess(): bool
     {
@@ -54,9 +54,9 @@ class RecursoResource extends Resource
 
         $userId = auth()->id();
 
-        $query->whereIn('idprocesso_seletivo', function ($query) use ($userId) {
-            $query->select('idprocesso_seletivo')
-                ->from('avaliador_processo_seletivo')
+        $query->whereIn('id', function ($query) use ($userId) {
+            $query->select('id')
+                ->from('process_user')
                 ->where('user_id', $userId);
         });
 

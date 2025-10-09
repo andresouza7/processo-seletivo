@@ -11,7 +11,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Component;
 use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
 use Filament\Auth\Events\Registered;
-use App\Models\InscricaoPessoa;
+use App\Models\Candidate;
 use App\Models\Pessoa;
 use Filament\Forms;
 use Filament\Pages\Page;
@@ -326,7 +326,7 @@ class Cadastro extends Register
     {
         return TextInput::make('cpf')
             ->label('CPF')
-            ->unique('inscricao_pessoa', 'cpf')
+            ->unique('candidate', 'cpf')
             ->required()
             ->rules(['cpf'])
             ->maxLength(11);
@@ -336,15 +336,15 @@ class Cadastro extends Register
     {
         try {
             return DB::transaction(function () use ($data) {
-                $lastId = InscricaoPessoa::max('idpessoa') ?? 0; // If no rows, start at 0
-                $data['idpessoa'] = $lastId + 1;
+                $lastId = Candidate::max('id') ?? 0; // If no rows, start at 0
+                $data['id'] = $lastId + 1;
                 $data['perfil'] = '';
                 $data['situacao'] = 'S';
                 $data['link_lattes'] = '';
                 $data['resumo'] = '';
                 $data['senha'] = '';
 
-                return InscricaoPessoa::create($data);
+                return Candidate::create($data);
             });
         } catch (Exception $e) {
             // Log the error for debugging purposes

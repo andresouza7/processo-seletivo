@@ -2,7 +2,7 @@
 
 namespace App\Filament\Candidato\Resources\Inscricaos\Tables;
 
-use App\Models\Inscricao;
+use App\Models\Application;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -18,7 +18,7 @@ class InscricaosTable
         return $table
             ->query(function (): Builder {
                 $guardId = Auth::guard('candidato')->id();
-                $query = Inscricao::query()->orderBy('idinscricao', 'desc');
+                $query = Application::query()->orderBy('idinscricao', 'desc');
 
                 // If there's no logged candidate, return an empty result set (don't throw)
                 if (! $guardId) {
@@ -38,23 +38,23 @@ class InscricaosTable
                         ->weight('bold')
                         ->size('sm'),
 
-                    TextColumn::make('processo_seletivo.titulo')
+                    TextColumn::make('process.titulo')
                         ->label('Processo Seletivo')
                         ->searchable()
                         ->size('sm')
                         ->color('gray'),
 
-                    TextColumn::make('inscricao_vaga.codigo')
+                    TextColumn::make('position.codigo')
                         ->label('Cód. Vaga')
                         ->size('sm')
                         ->color('gray'),
 
-                    TextColumn::make('inscricao_vaga.descricao')
+                    TextColumn::make('position.descricao')
                         ->label('Descrição')
                         ->size('sm')
                         ->color('gray'),
 
-                    TextColumn::make('tipo_vaga.descricao')
+                    TextColumn::make('quota.descricao')
                         ->label('Tipo')
                         ->size('sm')
                         ->color('gray'),
