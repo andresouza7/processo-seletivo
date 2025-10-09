@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
+use App\Filament\Gps\Resources\InscricaoPessoas\Pages\ListInscricaoPessoas;
 
 
 
@@ -30,7 +31,18 @@ class GestorConsultaCandidatosTest extends TestCase
         $this->actingAs($this->user);
         Livewire::actingAs($this->user);
 
-        $this->inscricao_pessoa = InscricaoPessoa::factory()->create();
+        $this->inscricao_pessoa = InscricaoPessoa::factory()->create([
+            'nome' => 'Nome candidata teste',
+            'mae' => 'Mãe da candidata teste',
+            'cpf' => '23456781099',
+            'ci' => '9874221-PA',
+            'data_nascimento' => '1974-02-01',
+            'sexo' => 'masculino',
+            'nome_social' => 'nome social candidata',
+            'identidade_genero' => 'T',
+            'telefone' => '(41) 98533-9922',
+            'email' => 'candidata_teste@gmail.com.br'
+        ]);
     }
 
     public function test_gestor_acessa_pagina_candidatos()
@@ -38,6 +50,67 @@ class GestorConsultaCandidatosTest extends TestCase
         $response = $this->get(route('filament.gps.resources.candidatos.index', $this->inscricao_pessoa->id_inscricaopessoa));
         $response->assertStatus(200);
     }
+
+    //
+    public function test_gestor_acessa_pagina_detalhes_dos_candidatos()
+    {
+        $response = $this->get(route('filament.gps.resources.candidatos.view', [
+            'record' => $this->inscricao_pessoa->getKey(),
+        ]));
+
+        $response->assertStatus(200);
+        // 🔹 Verifica se todos os campos do candidato aparecem na página
+        $response->assertSeeText('Nome candidata teste');
+        $response->assertSeeText('Mãe da candidata teste');
+        $response->assertSeeText('23456781099');
+        $response->assertSeeText('9874221-PA');
+        $response->assertSeeText('1974-02-01');
+        $response->assertSeeText('masculino');
+        $response->assertSeeText('nome social candidata');
+        $response->assertSeeText('T');
+        $response->assertSeeText('(41) 98533-9922');
+        $response->assertSeeText('candidata_teste@gmail.com.br');
+    }
+
+    
+
+    public function test_gestor_filtra_candidatos_por_status()
+    {
+        Filament::setCurrentPanel('gps');
+
+        // 🔹 Cria candidatos com status diferentes
+        $masculino = \App\Models\InscricaoPessoa::factory()
+            ->count(2)
+            ->create(['sexo' => 'M']);
+        $nome_jose = \App\Models\InscricaoPessoa::factory()
+            ->count(2)
+            ->create(['nome' => 'José da Silva']);
+        $email_registrado = \App\Models\InscricaoPessoa::factory()
+            ->count(1)
+            ->create(['email' => 'qwerty@uol.com.br']);
+
+
+        // 🔹 Testa filtro de masculino
+        Livewire::test(ListInscricaoPessoas::class, [
+            'tableFilters' => ['sexo' => ['value' => 'M']]
+        ])
+        ->assertCanSeeTableRecords($masculino);
+
+
+        // 🔹 Testa filtro de José da Silva
+        Livewire::test(ListInscricaoPessoas::class, [
+            'tableFilters' => ['nome' => ['value' => 'José da Silva']]
+        ])
+        ->assertCanSeeTableRecords($nome_jose);
+       
+
+        // 🔹 Testa filtro de email
+        Livewire::test(ListInscricaoPessoas::class, [
+            'tableFilters' => ['email' => ['value' => 'qwerty@uol.com.br']]
+        ])
+        ->assertCanSeeTableRecords($email_registrado);
+    }
+
 
 
 }
