@@ -20,15 +20,15 @@ class RecursosTable
                 TextColumn::make('idrecurso'),
                 TextColumn::make('etapa_recurso.descricao')
                     ->label('Etapa'),
-                TextColumn::make('descricao')
+                TextColumn::make('description')
                     ->label('Justificativa'),
-                TextColumn::make('situacao')
+                TextColumn::make('result')
                     ->badge()
             ])
             ->filters([
                 Filter::make('situacao_null')
                     ->label('Pendentes')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('situacao'))
+                    ->query(fn(Builder $query): Builder => $query->whereNull('result'))
                     ->default(true),
             ])
             ->recordActions([

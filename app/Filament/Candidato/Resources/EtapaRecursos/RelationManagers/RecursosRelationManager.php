@@ -40,15 +40,15 @@ class RecursosRelationManager extends RelationManager
         $recurso_existente = Recurso::where('idetapa_recurso', $etapa_recurso->idetapa_recurso)
             ->where('idinscricao_pessoa', auth()->guard('candidato')->id())->first();
 
-        $this->bloquear_recurso = ($recurso_existente && !$etapa_recurso->permite_multiplos_recursos) || $periodo_recurso_encerrado;
+        $this->bloquear_recurso = ($recurso_existente && !$etapa_recurso->allow_many) || $periodo_recurso_encerrado;
     }
 
     public function infolist(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextEntry::make('descricao'),
-                TextEntry::make('resposta'),
+                TextEntry::make('description'),
+                TextEntry::make('response'),
                 TextEntry::make('situacao'),
                 Actions::make([
                     Action::make('anexo_avaliador')
@@ -79,16 +79,16 @@ class RecursosRelationManager extends RelationManager
                 //             ->with(['inscricao_vaga', 'tipo_vaga']) // eager load the relation
                 //             ->get()
                 //             ->mapWithKeys(function ($inscricao) {
-                //                 $label = "{$inscricao->idinscricao} => {$inscricao->inscricao_vaga->descricao} => {$inscricao->tipo_vaga->descricao}";
+                //                 $label = "{$inscricao->idinscricao} => {$inscricao->inscricao_vaga->description} => {$inscricao->tipo_vaga->description}";
                 //                 return [$inscricao->idinscricao => $label];
                 //             });
                 //     }),
-                Textarea::make('descricao')
+                Textarea::make('description')
                     ->label('Justificativa')
                     ->required()
                     ->columnSpanFull(),
                 SpatieMediaLibraryFileUpload::make('anexo_candidato')
-                    ->visible(fn() => $this->getOwnerRecord()->requer_anexos)
+                    ->visible(fn() => $this->getOwnerRecord()->has_attachments)
                     ->columnSpanFull()
                     ->maxFiles(1)
                     ->disk('local')
@@ -105,8 +105,8 @@ class RecursosRelationManager extends RelationManager
             ->description('Para interpor um recurso, utilize o botão "Abrir Recurso". Atente-se ao prazo previsto no edital.')
             ->paginated(false)
             ->columns([
-                TextColumn::make('descricao')->limit()->label('Descrição'),
-                TextColumn::make('data_hora')->dateTime('d/m/Y H:i'),
+                TextColumn::make('description')->limit()->label('Descrição'),
+                TextColumn::make('submitted_at')->dateTime('d/m/Y H:i'),
             ])
             ->filters([
                 //

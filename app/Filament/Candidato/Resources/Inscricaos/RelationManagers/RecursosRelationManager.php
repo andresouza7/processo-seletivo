@@ -28,7 +28,7 @@ class RecursosRelationManager extends RelationManager
     public function infolist(Schema $schema): Schema
     {
         return $schema->components([
-            TextEntry::make('descricao')
+            TextEntry::make('description')
         ]);
     }
 
@@ -43,11 +43,11 @@ class RecursosRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('descricao')
+            ->recordTitleAttribute('description')
             ->emptyStateDescription('')
             ->columns([
-                TextColumn::make('descricao')->limit(),
-                TextColumn::make('data_hora')->date('m/d/Y H:m'),
+                TextColumn::make('description')->limit(),
+                TextColumn::make('submitted_at')->date('m/d/Y H:m'),
             ])
             ->filters([
                 //
@@ -57,7 +57,7 @@ class RecursosRelationManager extends RelationManager
                     ->visible(fn() => $this->getOwnerRecord()->processo_seletivo->aceita_recurso)
                     ->button()
                     ->schema([
-                        Textarea::make('descricao')
+                        Textarea::make('description')
                             ->label('Justificativa')
                             ->rows(15)
                     ])
@@ -77,9 +77,9 @@ class RecursosRelationManager extends RelationManager
                                     'idinscricao' => $inscricao->idinscricao,
                                 ],
                                 [
-                                    'descricao' => $data['descricao'],
-                                    'resposta' => '',
-                                    'data_hora' => now()
+                                    'description' => $data['description'],
+                                    'response' => '',
+                                    'submitted_at' => now()
                                 ]
                             );
 
@@ -134,20 +134,20 @@ class RecursosRelationManager extends RelationManager
                                     ->columnSpanFull(), // Spans the entire width for better visibility
 
                                 // Data e Hora entry
-                                TextEntry::make('data_hora')
+                                TextEntry::make('submitted_at')
                                     ->label('Data e Hora')
                                     ->date('m/d/Y H:m')
                                     ->columnSpan(2),
                             ]),
 
                             // Description entry
-                            TextEntry::make('descricao')
+                            TextEntry::make('description')
                                 ->label('Descrição')
                                 ->columnSpan(2), // Adjusts layout for better organization
 
                             // Situação entry
-                            TextEntry::make('situacao')
-                                ->visible(fn($record) => filled($record->situacao))
+                            TextEntry::make('result')
+                                ->visible(fn($record) => filled($record->result))
                                 ->label('Situação')
                                 ->badge()
                                 ->colors([
@@ -158,7 +158,7 @@ class RecursosRelationManager extends RelationManager
                                 ->columnSpan(2),
 
                             // Resposta badge entry with condition
-                            TextEntry::make('resposta')
+                            TextEntry::make('response')
                                 ->visible(fn($record) => filled($record->resposta))
                                 ->label('Resposta')
                                 ->html()

@@ -49,8 +49,8 @@ class EtapaRecursoResource extends Resource
             ->whereHas('processo_seletivo', function ($query) {
                 $query->whereHas('etapa_recurso', function ($subquery) {
                     $today = now()->toDateString();
-                    $subquery->whereDate('data_inicio_recebimento', '<=', $today)
-                        ->whereDate('data_fim_recebimento', '>=', $today);
+                    $subquery->whereDate('submission_start_date', '<=', $today)
+                        ->whereDate('submission_end_date', '>=', $today);
                 });
             })
             ->pluck('idprocesso_seletivo');
@@ -64,12 +64,12 @@ class EtapaRecursoResource extends Resource
         return $schema
             ->components([
                 Placeholder::make('processo_seletivo')
-                    ->helperText(fn($record) => $record->processo_seletivo->titulo)
+                    ->helperText(fn($record) => $record->processo_seletivo->title)
                     ->label('Processo Seletivo')
                     ->inlineLabel()
                     ->columnSpanFull(),
-                Placeholder::make('descricao')
-                    ->helperText(fn($record) => $record->descricao)
+                Placeholder::make('description')
+                    ->helperText(fn($record) => $record->description)
                     ->label('Etapa')
                     ->inlineLabel()
                     ->columnSpanFull(),
@@ -82,7 +82,7 @@ class EtapaRecursoResource extends Resource
             ->description('Consulte nesta seção os Processos Seletivos com período de recurso em andamento.')
             ->columns([
                 TextColumn::make('processo_seletivo.titulo'),
-                TextColumn::make('descricao')->label('Etapa'),
+                TextColumn::make('description')->label('Etapa'),
             ])
             ->paginated(false)
             ->filters([

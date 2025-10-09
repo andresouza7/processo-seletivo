@@ -38,7 +38,7 @@
                 Bem-vindo(a),
             </div>
             <div class="text-base font-semibold text-gray-800 dark:text-white">
-                {{ $user->nome }}
+                {{ $user->name }}
             </div>
         </div>
 

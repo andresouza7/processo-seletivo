@@ -19,9 +19,9 @@ class PortalConsultaProcessosSeletivosTest extends TestCase
     public function test_usuario_consegue_ver_processos_seletivos(): void
     {
         ProcessoSeletivo::factory()->create([
-            'publicado' => 'S',
-            'titulo' => 'Processo Seletivo Teste',
-            'numero' => '001/2025',
+            'is_published' => 'S',
+            'title' => 'Processo Seletivo Teste',
+            'number' => '001/2025',
         ]);
 
         $response = $this
@@ -38,20 +38,20 @@ class PortalConsultaProcessosSeletivosTest extends TestCase
         $abertos = \App\Models\ProcessoSeletivo::factory()
             ->count(5)
             ->create([
-                'publicado' => 'S',
-                'data_inscricao_inicio' => now()->subDays(2),
-                'data_inscricao_fim' => now()->addDays(2),
-                'titulo' => 'Inscrição Aberta - ' . fake()->word(),
+                'is_published' => 'S',
+                'application_start_date' => now()->subDays(2),
+                'application_end_date' => now()->addDays(2),
+                'title' => 'Inscrição Aberta - ' . fake()->word(),
             ]);
 
         // 🔹 Cria 5 processos seletivos finalizados
         $finalizados = \App\Models\ProcessoSeletivo::factory()
             ->count(5)
             ->create([
-                'publicado' => 'S',
-                'data_publicacao_inicio' => now()->subDays(10),
-                'data_publicacao_fim' => now()->subDays(5),
-                'titulo' => 'Finalizado - ' . fake()->word(),
+                'is_published' => 'S',
+                'publication_start_date' => now()->subDays(10),
+                'publication_end_date' => now()->subDays(5),
+                'title' => 'Finalizado - ' . fake()->word(),
             ]);
 
         Livewire::test(ListProcessoSeletivos::class, [

@@ -18,8 +18,8 @@ class CreateProcessoSeletivo extends CreateRecord
     {
         try {
             $data['situacao'] = $data['situacao'] ?? '';
-            $data['acessos'] = 0;
-            $data['diretorio'] = str_replace('/', '_', $data['numero']);
+            $data['views'] = 0;
+            $data['directory'] = str_replace('/', '_', $data['number']);
         } catch (Throwable $th) {
             Log::error("create processo seletivo failed: " . $th->getMessage());
             throw $th;

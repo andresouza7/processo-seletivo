@@ -15,8 +15,8 @@ class InscricaoVaga extends Model
 
     protected $fillable = [
         'idprocesso_seletivo',
-        'codigo',
-        'descricao'
+        'code',
+        'description'
     ];
 
     // public $timestamps = false;

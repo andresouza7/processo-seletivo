@@ -14,13 +14,13 @@ class EtapaRecurso extends Model
     protected $table = 'etapa_recurso';
 
     protected $fillable = [
-        'descricao',
-        'data_inicio_recebimento',
-        'data_fim_recebimento',
-        'data_inicio_resultado',
-        'data_fim_resultado',
-        'requer_anexos',
-        'permite_multiplos_recursos',
+        'description',
+        'submission_start_date',
+        'submission_end_date',
+        'result_start_date',
+        'result_end_date',
+        'has_attachments',
+        'allow_many',
         'idprocesso_seletivo',
     ];
 
@@ -35,14 +35,14 @@ class EtapaRecurso extends Model
     {
         $today = now()->toDateString(); // Get current date in 'Y-m-d' format
 
-        return $this->data_inicio_recebimento <= $today && $this->data_inicio_recebimento >= $today;
+        return $this->submission_start_date <= $today && $this->submission_start_date >= $today;
     }
 
     public function getResultadoDisponivelAttribute()
     {
         $today = now()->toDateString();
 
-        return $this->data_inicio_resultado <= $today && $this->data_inicio_resultado >= $today;
+        return $this->result_start_date <= $today && $this->result_start_date >= $today;
     }
 
     public function processo_seletivo()

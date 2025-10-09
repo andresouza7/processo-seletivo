@@ -18,7 +18,7 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['descricao', 'data_publicacao'])
+            ->logOnly(['description', 'publication_date'])
             ->dontSubmitEmptyLogs();
     }
 
@@ -30,9 +30,9 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
         'idprocesso_seletivo_anexo',
         'idprocesso_seletivo',
         'idarquivo',
-        'descricao',
-        'data_publicacao',
-        'acessos'
+        'description',
+        'publication_date',
+        'views'
     ];
 
     protected $appends = [
@@ -40,7 +40,7 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
     ];
 
     protected $dates = [
-        'data_publicacao'
+        'publication_date'
     ];
 
     public function getUrlArquivoAttribute()
@@ -48,9 +48,9 @@ class ProcessoSeletivoAnexo extends Model implements HasMedia
         $systemMigrationReferenceDate = Carbon::parse('2024-11-01');
 
         // Check if `data_publicacao` is older than the reference date
-        if (Carbon::parse($this->data_publicacao)->lt($systemMigrationReferenceDate)) {
-            $oldFilePath = $this->processo_seletivo->tipo->chave . '/' .
-                $this->processo_seletivo->diretorio . '/' .
+        if (Carbon::parse($this->publication_date)->lt($systemMigrationReferenceDate)) {
+            $oldFilePath = $this->processo_seletivo->tipo->slug . '/' .
+                $this->processo_seletivo->directory . '/' .
                 optional($this->arquivo)->codname . '.pdf';
 
             return Storage::url($oldFilePath);

@@ -18,19 +18,19 @@ class ProcessoSeletivoInfolist
         return $schema
             ->components([
                 Section::make([
-                    TextEntry::make('titulo')
+                    TextEntry::make('title')
                         ->label('Nome')
                         ->extraAttributes(['class' => 'font-semibold text-gray-700']),
-                    TextEntry::make('numero')
+                    TextEntry::make('number')
                         ->label('Número')
                         ->extraAttributes(['class' => 'font-semibold text-gray-600']),
-                    TextEntry::make('data_inscricao_inicio')
+                    TextEntry::make('application_start_date')
                         ->label('Período de Inscrições')
                         ->icon('heroicon-o-calendar')
                         ->formatStateUsing(fn($record) => sprintf(
                             "%s a %s",
-                            Carbon::parse($record->data_inscricao_inicio)->format('d/m/Y'),
-                            Carbon::parse($record->data_inscricao_fim)->format('d/m/Y')
+                            Carbon::parse($record->application_start_date)->format('d/m/Y'),
+                            Carbon::parse($record->application_end_date)->format('d/m/Y')
                         ))
                         ->extraAttributes(['class' => 'font-semibold text-gray-700']),
                     Actions::make([
@@ -47,7 +47,7 @@ class ProcessoSeletivoInfolist
                             ->button()
                             ->color('primary')
                     ]),
-                    TextEntry::make('descricao')
+                    TextEntry::make('description')
                         ->hiddenLabel()
                         ->formatStateUsing(fn(string $state): HtmlString => new HtmlString(HtmlHelper::sliceBodyContent($state))),
 

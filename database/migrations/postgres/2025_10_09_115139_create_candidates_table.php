@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('sexual_orientation');
             $table->boolean('has_disability')->default(false);
             $table->string('disability_description');
+            $table->string('race');
             $table->string('marital_status', 2);
             $table->string('community');
             $table->string('gender_identity');

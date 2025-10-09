@@ -21,18 +21,18 @@ class ProcessoSeletivoTable
                 TextColumn::make('idprocesso_seletivo')
                     ->label('ID'),
                 TextColumn::make('tipo.descricao'),
-                TextColumn::make('titulo')
+                TextColumn::make('title')
                     ->searchable()
                     ->limit(50),
-                TextColumn::make('numero')->searchable(),
-                TextColumn::make('publicado')
+                TextColumn::make('number')->searchable(),
+                TextColumn::make('is_published')
                     ->badge()
                     ->color(fn($state) => $state === 'S' ? 'success' : 'danger'),
             ])
             ->filters([
                 SelectFilter::make('tipo')
                     ->label('Tipo')
-                    ->relationship('tipo', 'descricao'),
+                    ->relationship('tipo', 'description'n'),
             ])
             ->recordActions([
                 EditAction::make()

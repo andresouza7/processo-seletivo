@@ -32,7 +32,7 @@ class TipoVagaResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('descricao')
+                TextInput::make('description')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -45,7 +45,7 @@ class TipoVagaResource extends Resource
             ->description('Condição na qual um candidato poderá concorrer a uma vaga.')
             ->columns([
                 TextColumn::make('id_tipo_vaga')->label('ID'),
-                TextColumn::make('descricao')
+                TextColumn::make('description')
                     ->searchable(),
             ])
             ->filters([

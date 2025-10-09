@@ -23,7 +23,7 @@ class TipoVaga extends Model
     protected $primaryKey = 'id_tipo_vaga';
 
     protected $fillable = [
-        'descricao',
+        'description'n',
     ];
 
     // public function processo_seletivo()

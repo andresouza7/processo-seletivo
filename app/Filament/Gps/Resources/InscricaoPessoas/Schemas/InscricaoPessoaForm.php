@@ -18,38 +18,38 @@ class InscricaoPessoaForm
                 Section::make('Dados Cadastrais')
                     ->columns(2)
                     ->schema([
-                        TextInput::make('nome')->required(),
-                        TextInput::make('mae')->label('Nome da Mãe')->required(),
+                        TextInput::make('name')->required(),
+                        TextInput::make('mother_name')->label('Nome da Mãe')->required(),
                         TextInput::make('cpf')
                             ->label('CPF')
                             ->required(),
-                        TextInput::make('ci')
+                        TextInput::make('rg')
                             ->label('RG')
                             ->required(),
-                        DatePicker::make('data_nascimento')
+                        DatePicker::make('birth_date')
                             ->label('Data de Nascimento')
                             ->minDate('1950-01-01')
                             ->required(),
-                        Select::make('sexo')
+                        Select::make('sex')
                             ->label('Sexo')
                             ->options([
                                 'M' => 'Masculino',
                                 'F' => 'Feminino'
                             ])
                             ->required(),
-                        TextInput::make('nome_social'),
-                        TextInput::make('identidade_genero')
+                        TextInput::make('social_name'),
+                        TextInput::make('gender_identity')
                             ->label('Identidade de Gênero'),
 
-                        TextInput::make('telefone')->label('Telefone')->required()->columnSpanFull(),
+                        TextInput::make('phone')->label('Telefone')->required()->columnSpanFull(),
                         Fieldset::make('Endereço')
                             ->extraAttributes((['class' => 'mt-4']))
                             ->schema([
-                                TextInput::make('endereco')->label('Logradouro')->required(),
-                                TextInput::make('bairro')->label('Bairro')->required(),
-                                TextInput::make('numero')->label('Número')->required(),
-                                TextInput::make('complemento')->label('Complemento'),
-                                TextInput::make('cidade')->label('Cidade')->required(),
+                                TextInput::make('address')->label('Logradouro')->required(),
+                                TextInput::make('district')->label('Bairro')->required(),
+                                TextInput::make('address_number')->label('Número')->required(),
+                                TextInput::make('address_complement')->label('Complemento'),
+                                TextInput::make('city')->label('Cidade')->required(),
                             ])
                     ]),
             ]);

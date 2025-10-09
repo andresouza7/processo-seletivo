@@ -47,7 +47,7 @@ class ArquivoResource extends Resource
                 TextInput::make('mimetype')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('descricao')
+                TextInput::make('description')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('codname')
@@ -75,7 +75,7 @@ class ArquivoResource extends Resource
                     ->searchable(),
                 TextColumn::make('mimetype')
                     ->searchable(),
-                TextColumn::make('descricao')
+                TextColumn::make('description')
                     ->searchable(),
                 TextColumn::make('codname')
                     ->searchable(),

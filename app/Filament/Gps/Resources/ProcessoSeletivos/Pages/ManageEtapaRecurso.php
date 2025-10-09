@@ -38,25 +38,25 @@ class ManageEtapaRecurso extends ManageRelatedRecords
     {
         return $schema
             ->components([
-                TextInput::make('descricao')
+                TextInput::make('description')
                     ->required()
                     ->placeholder('Ex: Resultado preliminar')
                     ->columnSpanFull(),
-                DatePicker::make('data_inicio_recebimento')
+                DatePicker::make('submission_start_date')
                     ->required()
                     ->helperText('Período para recebimento dos recursos'),
-                DatePicker::make('data_fim_recebimento')
+                DatePicker::make('submission_end_date')
                     ->required(),
-                DatePicker::make('data_inicio_resultado')
+                DatePicker::make('result_start_date')
                     ->required()
                     ->helperText('Período para consulta dos resultados'),
-                DatePicker::make('data_fim_resultado')
+                DatePicker::make('result_end_date')
                     ->required(),
-                Checkbox::make('requer_anexos')
+                Checkbox::make('has_attachments')
                     ->label('Requer envio de anexos?')
                     ->helperText('Será disponibilizado campo de upload de pdf ao usuário')
                     ->columnSpanFull(),
-                Checkbox::make('permite_multiplos_recursos')
+                Checkbox::make('allow_many')
                     ->label('Permitir mais de um recurso por candidato')
                     ->columnSpanFull()
             ]);
@@ -69,9 +69,9 @@ class ManageEtapaRecurso extends ManageRelatedRecords
             ->heading('Etapas')
             ->defaultSort('idetapa_recurso', 'desc')
             ->columns([
-                TextColumn::make('descricao'),
-                TextColumn::make('data_inicio_recebimento'),
-                TextColumn::make('data_fim_recebimento'),
+                TextColumn::make('description'),
+                TextColumn::make('submission_start_date'),
+                TextColumn::make('submission_end_date'),
             ])
             ->filters([])
             ->headerActions([
@@ -81,7 +81,7 @@ class ManageEtapaRecurso extends ManageRelatedRecords
                         $processo = $this->getRecord();
 
                         $exists = $processo->etapa_recurso()
-                            ->whereDate('data_fim_recebimento', '>=', now())->exists();
+                            ->whereDate('submission_end_date', '>=', now())->exists();
 
                         if ($exists) {
                             Notification::make()

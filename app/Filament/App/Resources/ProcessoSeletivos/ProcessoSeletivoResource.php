@@ -27,24 +27,24 @@ class ProcessoSeletivoResource extends Resource
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected static ?string $recordTitleAttribute = 'titulo';
+    protected static ?string $recordTitleAttribute = 'title';
 
     protected static int $globalSearchResultsLimit = 20;
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Edital' => $record->numero,
+            'Edital' => $record->number,
         ];
     }
     public static function getGloballySearchableAttributes(): array
     {
-        return ['titulo', 'numero'];
+        return ['title', 'number'];
     }
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
-        return parent::getGlobalSearchEloquentQuery()->orderBy('data_publicacao_inicio', 'desc');
+        return parent::getGlobalSearchEloquentQuery()->orderBy('publication_start_date', 'desc');
     }
 
     public static function form(Schema $schema): Schema

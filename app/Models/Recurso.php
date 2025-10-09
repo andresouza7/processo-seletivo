@@ -32,14 +32,14 @@ class Recurso extends Model implements HasMedia
     protected $primaryKey = 'idrecurso';
 
     protected $fillable = [
-        'descricao',
-        'resposta',
+        'description',
+        'response',
         'idprocesso_seletivo',
         'idinscricao_pessoa',
         'idinscricao',
         'idetapa_recurso',
-        'situacao',
-        'data_hora'
+        'result',
+        'submitted_at'
     ];
 
     // public $timestamps = false;

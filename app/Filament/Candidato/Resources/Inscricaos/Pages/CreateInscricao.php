@@ -21,10 +21,10 @@ class CreateInscricao extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['cod_inscricao'] = Inscricao::gerarCodigoUnico();
+        $data['code'] = Inscricao::gerarCodigoUnico();
         $data['idinscricao_pessoa'] = Auth::guard('candidato')->id();
-        $data['data_hora'] = now();
-        $data['qual_atendimento'] = $data['qual_atendimento'] ?? '';
+        $data['submitted_at'] = now();
+        $data['assistance_details'] = $data['assistance_details'] ?? '';
         $data['observacao'] = $data['observacao'] ?? '';
 
         // tipos de vaga cadastrados na tabela de vagas

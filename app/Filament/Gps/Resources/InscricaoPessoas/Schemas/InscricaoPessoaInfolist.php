@@ -16,31 +16,31 @@ class InscricaoPessoaInfolist
                 Section::make('Dados Cadastrais')
                     ->columns(2)
                     ->schema([
-                        TextEntry::make('nome')->label('Nome'),
-                        TextEntry::make('mae')->label('Nome da Mãe'),
+                        TextEntry::make('name')->label('Nome'),
+                        TextEntry::make('mother_name')->label('Nome da Mãe'),
                         TextEntry::make('cpf')->label('CPF'),
-                        TextEntry::make('ci')->label('RG'),
-                        TextEntry::make('data_nascimento')->label('Data de Nascimento'),
-                        TextEntry::make('sexo')
+                        TextEntry::make('rg')->label('RG'),
+                        TextEntry::make('birth_date')->label('Data de Nascimento'),
+                        TextEntry::make('sex')
                             ->label('Sexo')
                             ->formatStateUsing(fn($state) => [
                                 'M' => 'Masculino',
                                 'F' => 'Feminino',
                             ][$state] ?? $state),
-                        TextEntry::make('nome_social')->label('Nome Social'),
-                        TextEntry::make('identidade_genero')->label('Identidade de Gênero'),
-                        TextEntry::make('telefone')->label('Telefone'),
+                        TextEntry::make('social_name')->label('Nome Social'),
+                        TextEntry::make('gender_identity')->label('Identidade de Gênero'),
+                        TextEntry::make('phone')->label('Telefone'),
                         TextEntry::make('email')->label('Email'),
 
                         Fieldset::make('Endereço')
                             ->extraAttributes(['class' => 'mt-4'])
                             ->schema([
-                                TextEntry::make('cep')->label('CEP'),
-                                TextEntry::make('endereco')->label('Logradouro'),
-                                TextEntry::make('bairro')->label('Bairro'),
-                                TextEntry::make('numero')->label('Número'),
-                                TextEntry::make('complemento')->label('Complemento'),
-                                TextEntry::make('cidade')->label('Cidade'),
+                                TextEntry::make('postal_code')->label('CEP'),
+                                TextEntry::make('address')->label('Logradouro'),
+                                TextEntry::make('district')->label('Bairro'),
+                                TextEntry::make('address_number'_number')->label('Número'),
+                                TextEntry::make('address_complement')->label('Complemento'),
+                                TextEntry::make('city')->label('Cidade'),
                             ]),
                     ]),
             ]);

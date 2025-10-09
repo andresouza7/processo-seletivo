@@ -21,25 +21,25 @@ class ProcessoSeletivoForm
             ->components([
                 Section::make([
                     Group::make([
-                        TextInput::make('titulo')
+                        TextInput::make('title')
                             ->label('Título')
                             ->columnSpan(2)
                             ->required(),
                         Select::make('idprocesso_seletivo_tipo')
                             ->label('Tipo')
-                            ->relationship('tipo', 'descricao')
+                            ->relationship('tipo', 'description')
                             ->required(),
                     ])->columns(3),
 
                     Group::make([
-                        TextInput::make('numero')
+                        TextInput::make('number')
                             ->disabledOn('edit')
                             ->placeholder('Ex: 01/2025')
                             ->required(),
-                        DatePicker::make('data_criacao')
+                        DatePicker::make('document_date')
                             ->label('Data do Edital')
                             ->required(),
-                        Select::make('publicado')
+                        Select::make('is_published')
                             ->required()
                             ->options([
                                 'S' => 'Sim',
@@ -47,35 +47,35 @@ class ProcessoSeletivoForm
                             ]),
                     ])->columns(3),
 
-                    RichEditor::make('descricao')
+                    RichEditor::make('description')
                         ->required()
                         ->label('Descrição'),
 
                     Group::make([
                         Fieldset::make('Período de Publicação')
                             ->schema([
-                                DatePicker::make('data_publicacao_inicio')
+                                DatePicker::make('publication_start_date')
                                     ->label('Início')
                                     ->required(),
-                                DatePicker::make('data_publicacao_fim')
+                                DatePicker::make('publication_end_date')
                                     ->label('Fim')
                                     ->required()
                             ])->columnSpan(1),
                         Fieldset::make('Período de Inscrições')
                             ->schema([
-                                DatePicker::make('data_inscricao_inicio')
+                                DatePicker::make('application_start_date')
                                     ->label('Início')
                                     ->required(),
-                                DatePicker::make('data_inscricao_fim')
+                                DatePicker::make('application_end_date')
                                     ->label('Fim')
                                     ->required(),
                             ])->columnSpan(1),
                     ])->columns(2),
 
-                    Checkbox::make('possui_isencao')
+                    Checkbox::make('has_fee_exemption')
                         ->label('Possui isenção da taxa de inscrição'),
 
-                    Repeater::make('anexos')
+                    Repeater::make('attachment_fields')
                         ->label('Documentos Requeridos')
                         ->schema([
                             TextInput::make('item')
@@ -90,7 +90,7 @@ class ProcessoSeletivoForm
                         // ->minItems(1)
                         ->addActionLabel('Adicionar Documento')
                         ->defaultItems(function ($record) {
-                            return $record->anexos ?? [];
+                            return $record->attachment_fields ?? [];
                         }),
                 ])
             ])->columns(2);

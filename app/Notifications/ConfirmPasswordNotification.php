@@ -25,7 +25,7 @@ class ConfirmEmailNotification extends Notification
     {
          app()->setLocale('pt_BR');
 
-        $firstName = explode(' ', trim($notifiable->nome))[0];
+        $firstName = explode(' ', trim($notifiable->name))[0];
 
         return (new MailMessage)
             ->subject(Lang::get('Notificação de confirmação de email'))

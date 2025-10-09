@@ -32,7 +32,7 @@ class InscricaosTable
             ->description('Use a caixa de busca para filtrar uma informação.')
             ->columns([
                 Stack::make([
-                    TextColumn::make('cod_inscricao')
+                    TextColumn::make('code')
                         ->label('Código')
                         ->searchable()
                         ->weight('bold')

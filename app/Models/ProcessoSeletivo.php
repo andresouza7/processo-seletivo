@@ -29,23 +29,23 @@ class ProcessoSeletivo extends Model
     protected $fillable = [
         'idprocesso_seletivo',
         'idprocesso_seletivo_tipo',
-        'titulo',
-        'descricao',
-        'numero',
-        'data_criacao',
+        'title',
+        'description',
+        'number',
+        'document_date',
         'situacao',
-        'acessos',
-        'publicado',
-        'diretorio',
-        'data_publicacao_inicio',
-        'data_publicacao_fim',
-        'data_inscricao_inicio',
-        'data_inscricao_fim',
+        'views',
+        'is_published',
+        'directory',
+        'publication_start_date',
+        'publication_end_date',
+        'application_start_date',
+        'application_end_date',
         'data_recurso_inicio',
         'data_recurso_fim',
         'psu',
-        'possui_isencao',
-        'anexos'
+        'has_fee_exemption',
+        'attachment_fields'
     ];
 
     protected $appends = [
@@ -55,7 +55,7 @@ class ProcessoSeletivo extends Model
     ];
 
     protected $casts = [
-        'anexos' => 'array'
+        'attachment_fields' => 'array'
     ];
 
     protected static function booted()
@@ -74,9 +74,9 @@ class ProcessoSeletivo extends Model
         $systemMigrationReferenceDate = Carbon::parse('2024-11-01');
 
         // Check if `data_publicacao` is older than the reference date
-        if (Carbon::parse($this->data_publicacao)->lt($systemMigrationReferenceDate)) {
-            $oldFilePath = $this->processo_seletivo->tipo->chave . '/' .
-                $this->processo_seletivo->diretorio . '/' .
+        if (Carbon::parse($this->publication_date)->lt($systemMigrationReferenceDate)) {
+            $oldFilePath = $this->processo_seletivo->tipo->slug . '/' .
+                $this->processo_seletivo->directory . '/' .
                 optional($this->arquivo)->codname . '.pdf';
 
             return Storage::url($oldFilePath);
@@ -90,7 +90,7 @@ class ProcessoSeletivo extends Model
     {
         $today = now()->toDateString(); // Get current date in 'Y-m-d' format
 
-        return $this->data_inscricao_inicio <= $today && $this->data_inscricao_fim >= $today;
+        return $this->application_start_date <= $today && $this->application_end_date >= $today;
     }
 
     public function getAceitaRecursoAttribute()
@@ -98,8 +98,8 @@ class ProcessoSeletivo extends Model
         $today = now()->toDateString(); // 'Y-m-d'
 
         return $this->etapa_recurso()
-            ->whereDate('data_inicio_recebimento', '<=', $today)
-            ->whereDate('data_fim_recebimento', '>=', $today)
+            ->whereDate('submission_start_date', '<=', $today)
+            ->whereDate('submission_end_date', '>=', $today)
             ->exists();
     }
 
@@ -156,21 +156,21 @@ class ProcessoSeletivo extends Model
 
     public function scopeInscricoesAbertas(Builder $query): void
     {
-        $query->where('publicado', 'S')
-            ->whereDate('data_inscricao_inicio', '<=', now())
-            ->whereDate('data_inscricao_fim', '>=', now());
+        $query->where('is_published', 'S')
+            ->whereDate('application_start_date', '<=', now())
+            ->whereDate('application_end_date', '>=', now());
     }
 
     public function scopeEmAndamento(Builder $query): void
     {
-        $query->where('publicado', 'S')
-            ->whereDate('data_publicacao_inicio', '<=', now())
-            ->whereDate('data_publicacao_fim', '>=', now());
+        $query->where('is_published', 'S')
+            ->whereDate('publication_start_date', '<=', now())
+            ->whereDate('publication_end_date', '>=', now());
     }
 
     public function scopeFinalizados(Builder $query): void
     {
-        $query->where('publicado', 'S')
-            ->whereDate('data_publicacao_fim', '<=', now());
+        $query->where('is_published', 'S')
+            ->whereDate('publication_end_date', '<=', now());
     }
 }

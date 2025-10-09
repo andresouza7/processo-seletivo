@@ -22,32 +22,32 @@ class InscricaoPessoa extends Authenticatable implements HasName, FilamentUser
 
     protected $fillable = [
         'idpessoa',
-        'nome',
-        'nome_social',
-        'mae',
-        'data_nascimento',
-        'sexo',
-        'ci',
+        'name',
+        'social_name',
+        'mother_name',
+        'birth_date',
+        'sex',
+        'rg',
         'cpf',
         'matricula',
-        'endereco',
+        'address',
         //sociais
-        'identidade_genero',
-        'identidade_genero_descricao',
-        'orientacao_sexual',
+        'gender_identity',
+        'gender_identity_description',
+        'sexual_orientation',
         //novos
-        'raca',
-        'deficiencia',
-        'deficiencia_descricao',
-        'estado_civil',
-        'comunidade',
+        'race',
+        'has_disability',
+        'disability_description',
+        'marital_status',
+        'community',
         //endereco
-        'cep',
-        'bairro',
-        'numero',
-        'complemento',
-        'cidade',
-        'telefone',
+        'postal_code',
+        'district',
+        'address_number',
+        'address_complement',
+        'city',
+        'phone',
         'email',
         'senha',
         'password',
@@ -84,7 +84,7 @@ class InscricaoPessoa extends Authenticatable implements HasName, FilamentUser
 
     public function getFilamentName(): string
     {
-        return $this->nome;
+        return $this->name;
     }
 
     public function canAccessPanel(Panel $panel): bool
@@ -98,17 +98,17 @@ class InscricaoPessoa extends Authenticatable implements HasName, FilamentUser
     }
 
     protected const CAMPOS_OBRIGATORIOS = [
-        'mae',
-        'data_nascimento',
-        'sexo',
-        'ci',
+        'mother_name',
+        'birth_date',
+        'sex',
+        'rg',
         'email',
-        'cep',
-        'endereco',
-        'numero',
-        'bairro',
-        'cidade',
-        'telefone'
+        'postal_code',
+        'address',
+        'address_number',
+        'district',
+        'city',
+        'phone'
     ];
 
     public function possuiDadosPendentes(): bool

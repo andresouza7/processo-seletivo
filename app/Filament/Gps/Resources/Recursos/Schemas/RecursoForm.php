@@ -15,7 +15,7 @@ class RecursoForm
     {
         return $schema
             ->components([
-                Textarea::make('descricao')
+                Textarea::make('description')
                     ->columnSpanFull()
                     ->disabled(),
                 Actions::make([
@@ -24,14 +24,14 @@ class RecursoForm
                         ->url(fn($record) => route('recurso.anexo', $record->idrecurso))
                         ->openUrlInNewTab()
                 ])->columnSpanFull(),
-                Select::make('situacao')
+                Select::make('result')
                     ->required()
                     ->options([
                         'D' => 'Deferido',
                         'I' => 'Indeferido',
                         'P' => 'Parcialmente Deferido',
                     ]),
-                Textarea::make('resposta')
+                Textarea::make('response')
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(255),

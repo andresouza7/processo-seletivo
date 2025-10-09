@@ -33,14 +33,14 @@ class GestorConsultaCandidatosTest extends TestCase
 
         $this->inscricao_pessoa = InscricaoPessoa::factory()->create([
             'nome' => 'Nome candidata teste',
-            'mae' => 'Mãe da candidata teste',
+            'mother_name' => 'Mãe da candidata teste',
             'cpf' => '23456781099',
-            'ci' => '9874221-PA',
-            'data_nascimento' => '1974-02-01',
-            'sexo' => 'masculino',
-            'nome_social' => 'nome social candidata',
-            'identidade_genero' => 'T',
-            'telefone' => '(41) 98533-9922',
+            'rg' => '9874221-PA',
+            'birth_date' => '1974-02-01',
+            'sex' => 'masculino',
+            'social_name' => 'nome social candidata',
+            'gender_identity' => 'T',
+            'phone' => '(41) 98533-9922',
             'email' => 'candidata_teste@gmail.com.br'
         ]);
     }
@@ -81,7 +81,7 @@ class GestorConsultaCandidatosTest extends TestCase
         // 🔹 Cria candidatos com status diferentes
         $masculino = \App\Models\InscricaoPessoa::factory()
             ->count(2)
-            ->create(['sexo' => 'M']);
+            ->create(['sex' => 'M']);
         $nome_jose = \App\Models\InscricaoPessoa::factory()
             ->count(2)
             ->create(['nome' => 'José da Silva']);
@@ -92,7 +92,7 @@ class GestorConsultaCandidatosTest extends TestCase
 
         // 🔹 Testa filtro de masculino
         Livewire::test(ListInscricaoPessoas::class, [
-            'tableFilters' => ['sexo' => ['value' => 'M']]
+            'tableFilters' => ['sex' => ['value' => 'M']]
         ])
         ->assertCanSeeTableRecords($masculino);
 

@@ -79,13 +79,13 @@ class Cadastro extends Register
     protected function getIdentificacaoSection(): array
     {
         return [
-            TextInput::make('nome')->required(),
-            TextInput::make('mae')->label('Nome da Mãe')->required(),
+            TextInput::make('name')->required(),
+            TextInput::make('mother_name')->label('Nome da Mãe')->required(),
             $this->getCpfFormComponent(),
-            TextInput::make('ci')
+            TextInput::make('rg')
                 ->label('RG')
                 ->required(),
-            DatePicker::make('data_nascimento')
+            DatePicker::make('birth_date')
                 ->label('Data de Nascimento')
                 ->date()
                 ->minDate('1950-01-01')
@@ -93,7 +93,7 @@ class Cadastro extends Register
                 ->rules(['before_or_equal:today', 'after_or_equal:1950-01-01'])
                 ->required(),
 
-            Select::make('sexo')
+            Select::make('sex')
                 ->label('Sexo')
                 ->options([
                     'M' => 'Masculino',
@@ -114,7 +114,7 @@ class Cadastro extends Register
 
 
             /////// SELECT: DADOS DE GÊNERO
-            Select::make('identidade_genero')
+            Select::make('gender_identity')
                 ->label('Identidade de gênero')
                 ->options([
                     'C' => 'Cisgênero',
@@ -130,36 +130,36 @@ class Cadastro extends Register
 
             //////////////// AVISO DINÂMICO GENERO
             Placeholder::make('o que significa esta identidade de gênero')
-                ->content(fn (Get $get) => match ($get('identidade_genero')) {
+                ->content(fn (Get $get) => match ($get('gender_identity')) {
                     'C' => new HtmlString('<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'),
                     'T' => new HtmlString('<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'),
                     'NB' => new HtmlString('<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'),
                     default => null,
                 })
-                ->visible(fn (Get $get) => in_array($get('identidade_genero'), ['C', 'T', 'NB']))
+                ->visible(fn (Get $get) => in_array($get('gender_identity'), ['C', 'T', 'NB']))
                 ->columnSpanFull(),
 
             //////////// INPUT ESPECIFICANDO GENERO: OUTROS    
-            TextInput::make('identidade_genero_descricao')
+            TextInput::make('gender_identity_description')
                 ->label('Me identifico como')
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['O'])),
+                ->visible(fn(Get $get) => in_array($get('gender_identity'), ['O'])),
 
             ///////// CHECKBOX PARA USO DE NOME SOCIAL (default: não usar)
             Checkbox::make('usar_nome_social')
                 ->label('Usar nome social')
                 ->reactive()
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => in_array($get('identidade_genero'), ['T', 'TV', 'NB', 'O'])),
+                ->visible(fn(Get $get) => in_array($get('gender_identity'), ['T', 'TV', 'NB', 'O'])),
 
             ///////// TEXTBOX DO NOME SOCIAL
-            TextInput::make('nome_social')
+            TextInput::make('social_name')
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('usar_nome_social')),
 
 
             /////// SELECT ORIENTACAO SEXUAL  
-            Select::make('orientacao_sexual')
+            Select::make('sexual_orientation')
                 ->label('Orientação sexual:')
                 ->options([
                     'HT' => 'Heterossexual',
@@ -175,7 +175,7 @@ class Cadastro extends Register
 
             //////// AVISO DINAMICO ORIENTACAO
             Placeholder::make('o que significa esta orientaçao sexual')
-                ->content(fn (Get $get) => match ($get('orientacao_sexual')) {
+                ->content(fn (Get $get) => match ($get('sexual_orientation')) {
                     'HT' => new HtmlString(
                         '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
                     ),
@@ -193,32 +193,32 @@ class Cadastro extends Register
                     ),
                     default => null,
                 })
-                ->visible(fn (Get $get) => in_array($get('orientacao_sexual'), ['HT', 'HM', 'B', 'P', 'A']))
+                ->visible(fn (Get $get) => in_array($get('sexual_orientation'), ['HT', 'HM', 'B', 'P', 'A']))
                 ->columnSpanFull(),
 
             ///////// CHECKBOX PARA DEFICIENCIA (default: não usar)
-            Checkbox::make('deficiencia')
+            Checkbox::make('has_disability')
                 ->label('Possui deficiência, transtorno global do desenvolvimento, altas habilidades ou superdotação?')
                 ->reactive()
                 ->columnSpanFull(),
 
             ///////// TEXTBOX DA DEFICIENCIA
-            TextInput::make('deficiencia_descricao')
+            TextInput::make('disability_description')
                 ->label('Caso possuia deficiência, favor especificar qual:')
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('deficiencia')),
+                ->visible(fn(Get $get) => $get('has_disability')),
 
                     
                 
 
             ///////// TEXTBOX DA DEFICIENCIA
-            TextInput::make('deficiencia_descricao')
+            TextInput::make('disability_description')
                 ->label('Caso possuia deficiência, favor especificar qual:')
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('deficiencia')),
+                ->visible(fn(Get $get) => $get('has_disability')),
 
             /////////////// SELECT: RAÇA
-            Select::make('raca')
+            Select::make('race')
                 ->label('Raça/Cor')
                 ->options([
                     'NA' => 'Negro de cor preta',
@@ -232,7 +232,7 @@ class Cadastro extends Register
                 ->required(),
 
             /////////////// SELECT: ESTADO CIVIL
-            Select::make('estado_civil')
+            Select::make('marital_status')
                 ->label('Estado civil:')
                 ->options([
                     'C' => 'Casado (a)',
@@ -247,7 +247,7 @@ class Cadastro extends Register
                 ->required(),
 
             /////////////// SELECT: COMUNIDADE
-            Select::make('comunidade')
+            Select::make('community')
                 ->label('Você é pertencente à comunidade:')
                 ->options([
                     'R' => 'Comunidade Ribeirinha',
@@ -268,7 +268,7 @@ class Cadastro extends Register
     {
         return [
             $this->getEmailFormComponent(),
-            TextInput::make('telefone')
+            TextInput::make('phone')
                 ->label('Telefone')
                 ->mask('(99)99999-9999')
                 ->required(),
@@ -277,7 +277,7 @@ class Cadastro extends Register
                 'md' => 2,
             ])
                 ->schema([
-                    TextInput::make('cep')
+                    TextInput::make('postal_code')
                         ->label('CEP')
                         ->required()
                         ->rules(['formato_cep'])
@@ -291,19 +291,19 @@ class Cadastro extends Register
                                 $cep = $cepData->getCepModel();
 
                                 if ($cep) {
-                                    $set('endereco', $cep->logradouro);
-                                    $set('bairro', $cep->bairro);
-                                    $set('cidade', $cep->localidade);
+                                    $set('address', $cep->logradouro);
+                                    $set('district', $cep->district);
+                                    $set('city', $cep->localidade);
                                 }
                             } catch (Exception $e) {
                                 // Handle error silently
                             }
                         }),
-                    TextInput::make('endereco')->label('Logradouro')->required(),
-                    TextInput::make('bairro')->label('Bairro')->required(),
-                    TextInput::make('numero')->label('Número')->required(),
-                    TextInput::make('complemento')->label('Complemento'),
-                    TextInput::make('cidade')->label('Cidade')->required(),
+                    TextInput::make('address')->label('Logradouro')->required(),
+                    TextInput::make('district')->label('Bairro')->required(),
+                    TextInput::make('address_number')->label('Número')->required(),
+                    TextInput::make('address_complement')->label('Complemento'),
+                    TextInput::make('city')->label('Cidade')->required(),
                 ])
         ];
     }

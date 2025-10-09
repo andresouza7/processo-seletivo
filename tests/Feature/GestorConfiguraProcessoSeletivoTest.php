@@ -53,18 +53,18 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
     public function test_gestor_cria_processo_seletivo(): void
     {
         $formData = [
-            'titulo' => 'Edital Monitoria',
+            'title' => 'Edital Monitoria',
             'idprocesso_seletivo_tipo' => $this->tipo->idprocesso_seletivo_tipo,
-            'numero' => '01/2025',
-            'data_criacao' => $this->date,
-            'publicado' => 'S',
-            'descricao' => 'lorem ipsum',
-            'data_publicacao_inicio' => $this->date,
-            'data_publicacao_fim' => $this->date,
-            'data_inscricao_inicio' => $this->date,
-            'data_inscricao_fim' => $this->date,
-            'possui_isencao' => false,
-            'anexos' => [
+            'number' => '01/2025',
+            'document_date' => $this->date,
+            'is_published' => 'S',
+            'description' => 'lorem ipsum',
+            'publication_start_date' => $this->date,
+            'publication_end_date' => $this->date,
+            'application_start_date' => $this->date,
+            'application_end_date' => $this->date,
+            'has_fee_exemption' => false,
+            'attachment_fields' => [
                 ['item' => 'identidade']
             ],
         ];
@@ -79,23 +79,23 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
 
         // Valida campos do banco
         $this->assertDatabaseHas('processo_seletivo', [
-            'titulo' => $formData['titulo'],
+            'title' => $formData['title'],
             'idprocesso_seletivo_tipo' => $formData['idprocesso_seletivo_tipo'],
-            'numero' => $formData['numero'],
-            'data_criacao' => $this->date,
-            'publicado' => 'S',
-            'descricao' => '<p>lorem ipsum</p>', // Filament salva HTML
-            'data_publicacao_inicio' => $this->date,
-            'data_publicacao_fim' => $this->date,
-            'data_inscricao_inicio' => $this->date,
-            'data_inscricao_fim' => $this->date,
-            'possui_isencao' => 0,
+            'number' => $formData['number'],
+            'document_date' => $this->date,
+            'is_published' => 'S',
+            'description' => '<p>lorem ipsum</p>', // Filament salva HTML
+            'publication_start_date' => $this->date,
+            'publication_end_date' => $this->date,
+            'application_start_date' => $this->date,
+            'application_end_date' => $this->date,
+            'has_fee_exemption' => 0,
         ]);
 
         // Valida anexos
         $this->assertEquals(
-            $formData['anexos'],
-            $processo->anexos
+            $formData['attachment_fields'],
+            $processo->attachment_fields
         );
     }
 
@@ -103,23 +103,23 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
     {
         // 1️⃣ Cria um processo seletivo existente
         $processo = ProcessoSeletivo::factory()->create([
-            'titulo' => 'Processo Original',
-            'descricao' => '<p>Texto original</p>',
+            'title' => 'Processo Original',
+            'description' => '<p>Texto original</p>',
             'idprocesso_seletivo_tipo' => $this->tipo->idprocesso_seletivo_tipo,
-            'numero' => '02/2025',
-            'data_criacao' => $this->date,
-            'publicado' => 'N',
-            'possui_isencao' => false,
-            'anexos' => [
+            'number' => '02/2025',
+            'document_date' => $this->date,
+            'is_published' => 'N',
+            'has_fee_exemption' => false,
+            'attachment_fields' => [
                 ['item' => 'identidade']
             ],
         ]);
 
         // 2️⃣ Define os novos dados que o gestor vai alterar
         $novosDados = [
-            'titulo' => 'Processo Atualizado',
-            'descricao' => 'Descrição atualizada pelo gestor',
-            'publicado' => 'S',
+            'title' => 'Processo Atualizado',
+            'description' => 'Descrição atualizada pelo gestor',
+            'is_published' => 'S',
         ];
 
         // 3️⃣ Simula o componente de edição (Filament Edit Page)
@@ -133,9 +133,9 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
         // 4️⃣ Valida se as alterações foram persistidas no banco
         $this->assertDatabaseHas('processo_seletivo', [
             'idprocesso_seletivo' => $processo->idprocesso_seletivo,
-            'titulo' => $novosDados['titulo'],
-            'descricao' => '<p>' . $novosDados['descricao'] . '</p>',
-            'publicado' => 'S',
+            'title' => $novosDados['title'],
+            'description' => '<p>' . $novosDados['description'] . '</p>',
+            'is_published' => 'S',
         ]);
     }
 }

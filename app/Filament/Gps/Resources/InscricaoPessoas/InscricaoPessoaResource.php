@@ -39,7 +39,7 @@ class InscricaoPessoaResource extends Resource
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
     protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 2;
-    protected static ?string $recordTitleAttribute = 'nome';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function canAccess(): bool
     {

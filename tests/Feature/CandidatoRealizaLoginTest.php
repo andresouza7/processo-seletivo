@@ -18,7 +18,7 @@ class CandidatoRealizaLoginTest extends TestCase
     {
         // CRIA O USUÁRIO CORRETAMENTE
         $user = InscricaoPessoa::factory()->create([
-            'nome' => 'tester',
+            'name' => 'tester',
             'cpf' => '12345678901',
             'password' => Hash::make('pwd'),
         ]);

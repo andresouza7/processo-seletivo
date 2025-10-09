@@ -23,7 +23,7 @@ class ProcessoSeletivoTipo extends Model
     protected $table = 'processo_seletivo_tipo';
 
     protected $fillable = [
-        'descricao',
-        'chave'
+        'description',
+        'slug'
     ];
 }

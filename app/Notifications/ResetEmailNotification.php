@@ -23,7 +23,7 @@ class ResetEmailNotification extends Notification
  
     public function toMail(object $notifiable): MailMessage
     {
-        $firstName = explode(' ', trim($notifiable->nome))[0];
+        $firstName = explode(' ', trim($notifiable->name))[0];
 
         return (new MailMessage)
             ->subject(Lang::get('Notificação de Redefinição de Email'))

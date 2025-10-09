@@ -49,7 +49,7 @@ class RequestEmailReset extends Page implements HasSchemas
                     ->description('Informe seus dados pessoais para validarmos sua identidade')
                     ->columns(2)
                     ->schema([
-                        TextInput::make('nome')
+                        TextInput::make('name')
                             ->label('Nome completo')
                             ->required()
                             ->reactive(),
@@ -60,7 +60,7 @@ class RequestEmailReset extends Page implements HasSchemas
                             ->required()
                             ->reactive(),
 
-                        TextInput::make('ci')
+                        TextInput::make('rg')
                             ->label('Documento de Identidade (RG)')
                             ->helperText('apenas números')
                             ->required()
@@ -95,9 +95,9 @@ class RequestEmailReset extends Page implements HasSchemas
         }
 
         $usuario = InscricaoPessoa::query()
-            ->where('nome', $this->data['nome'])
+            ->where('name', $this->data['name'])
             ->where('cpf', $this->data['cpf'])
-            ->whereRaw('REGEXP_REPLACE(ci, "[^0-9]", "") = ?', $this->data['ci'])
+            ->whereRaw('REGEXP_REPLACE(ci, "[^0-9]", "") = ?', $this->data['rg'])
             ->first();
 
         if (!$usuario) {

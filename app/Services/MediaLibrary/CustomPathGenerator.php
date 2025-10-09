@@ -69,8 +69,8 @@ class CustomPathGenerator implements PathGenerator
         }
 
         $processoSeletivo = optional($model->getAttribute('processo_seletivo'));
-        $tipo = optional($processoSeletivo->tipo)->chave;
-        $diretorio = $processoSeletivo->diretorio;
+        $tipo = optional($processoSeletivo->tipo)->slug;
+        $diretorio = $processoSeletivo->directory;
 
         return rtrim("{$tipo}/{$diretorio}/{$subfolder}", '/') . '/';
     }

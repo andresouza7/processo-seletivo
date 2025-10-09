@@ -46,8 +46,8 @@ class GestorConfiguraVagasTest extends TestCase
             'record' => $this->processo->idprocesso_seletivo
         ])
             ->callAction(TestAction::make('create')->table(), [
-                'codigo' => 'E01',
-                'descricao' => 'Bolsista'
+                'code' => 'E01',
+                'description' => 'Bolsista'
             ])
             ->assertHasNoFormErrors();
     }
@@ -59,7 +59,7 @@ class GestorConfiguraVagasTest extends TestCase
         ]);
         $vaga = InscricaoVaga::factory()->create([
             'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
-            'descricao' => 'bolsista'
+            'description' => 'bolsista'
         ]);
 
         Livewire::test(ManageVagas::class, [

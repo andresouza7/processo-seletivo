@@ -16,13 +16,13 @@ class InscricaoExporter extends Exporter
     {
         return [
             // Dados Inscrição
-            ExportColumn::make('cod_inscricao')->label('Cod Inscrição'),
+            ExportColumn::make('code')->label('Cod Inscrição'),
             ExportColumn::make('processo_seletivo.titulo')->label('Processo Seletivo'),
             ExportColumn::make('inscricao_vaga.codigo')->label('Cod Vaga'),
             ExportColumn::make('inscricao_vaga.descricao')->label('Descrição Vaga'),
             ExportColumn::make('tipo_vaga.descricao'),
-            ExportColumn::make('necessita_atendimento'),
-            ExportColumn::make('qual_atendimento'),
+            ExportColumn::make('requires_assistance'),
+            ExportColumn::make('assistance_details'),
             ExportColumn::make('observacao'),
             ExportColumn::make('local_prova'),
             ExportColumn::make('link_inscricao')
@@ -33,7 +33,7 @@ class InscricaoExporter extends Exporter
                             'filament.gps.resources.processos.inscritos',
                             [
                                 $record->processo_seletivo->idprocesso_seletivo,
-                                'tableSearch' => $record->cod_inscricao
+                                'tableSearch' => $record->code
                             ]
                         );
 

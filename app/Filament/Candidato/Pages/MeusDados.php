@@ -41,7 +41,7 @@ class MeusDados extends Page implements HasSchemas
 
         $this->form->fill([
             ...$record->toArray(),
-            'usar_nome_social' => filled($record->nome_social),
+            'usar_nome_social' => filled($record->social_name),
         ]);
     }
 
@@ -65,14 +65,14 @@ class MeusDados extends Page implements HasSchemas
             ->description('Entre em contato com a DIPS para alterar estes dados')
             ->columns(3)
             ->schema([
-                TextInput::make('nome')
+                TextInput::make('name')
                     ->label('Nome')
-                    ->disabled(fn() => filled($this->record->nome))
+                    ->disabled(fn() => filled($this->record->name))
                     ->required(),
 
-                TextInput::make('mae')
+                TextInput::make('mother_name')
                     ->label('Nome da Mãe')
-                    ->disabled(fn() => filled($this->record->mae))
+                    ->disabled(fn() => filled($this->record->mother_name))
                     ->required(),
 
                 TextInput::make('cpf')
@@ -80,14 +80,14 @@ class MeusDados extends Page implements HasSchemas
                     ->disabled()
                     ->required(),
 
-                TextInput::make('ci')
+                TextInput::make('rg')
                     ->label('RG')
-                    ->disabled(fn() => filled($this->record->ci))
+                    ->disabled(fn() => filled($this->record->rg))
                     ->required(),
 
-                DatePicker::make('data_nascimento')
+                DatePicker::make('birth_date')
                     ->label('Data de Nascimento')
-                    ->disabled(fn() => filled($this->record->data_nascimento))
+                    ->disabled(fn() => filled($this->record->birth_date))
                     ->required(),
 
                 TextInput::make('email')
@@ -96,7 +96,7 @@ class MeusDados extends Page implements HasSchemas
                     ->email()
                     ->required(),
 
-                Select::make('sexo')
+                Select::make('sex')
                     ->label('Sexo')
                     ->disabled()
                     ->options([
@@ -106,7 +106,7 @@ class MeusDados extends Page implements HasSchemas
                     ->required()
                     ->columnSpanFull(),
 
-                Select::make('identidade_genero')
+                Select::make('gender_identity')
                     ->label('Identidade de Gênero')
                     ->options([
                         'C'  => 'Cisgênero',
@@ -123,7 +123,7 @@ class MeusDados extends Page implements HasSchemas
                     ->reactive()
                     ->columnSpanFull(),
 
-                TextInput::make('nome_social')
+                TextInput::make('social_name')
                     ->label('Nome Social')
                     ->visible(fn($get) => $get('usar_nome_social'))
                     ->required()
@@ -139,7 +139,7 @@ class MeusDados extends Page implements HasSchemas
         return Section::make('Endereço e contato')
             ->columns(2)
             ->schema([
-                TextInput::make('cep')
+                TextInput::make('postal_code')
                     ->label('CEP')
                     ->required()
                     ->rules(['formato_cep'])
@@ -153,36 +153,36 @@ class MeusDados extends Page implements HasSchemas
                             $cep = $cepData->getCepModel();
 
                             if ($cep) {
-                                $set('endereco', $cep->logradouro);
-                                $set('bairro', $cep->bairro);
-                                $set('cidade', $cep->localidade);
+                                $set('address', $cep->logradouro);
+                                $set('district', $cep->district);
+                                $set('city', $cep->localidade);
                             }
                         } catch (Exception $e) {
                             // Fail silently
                         }
                     }),
 
-                TextInput::make('endereco')
+                TextInput::make('address')
                     ->label('Endereço')
                     ->required(),
 
-                TextInput::make('numero')
+                TextInput::make('address_number')
                     ->label('Número')
                     ->numeric()
                     ->required(),
 
-                TextInput::make('complemento')
+                TextInput::make('address_complement')
                     ->label('Complemento'),
 
-                TextInput::make('bairro')
+                TextInput::make('district')
                     ->label('Bairro')
                     ->required(),
 
-                TextInput::make('cidade')
+                TextInput::make('city')
                     ->label('Cidade')
                     ->required(),
 
-                TextInput::make('telefone')
+                TextInput::make('phone')
                     ->label('Telefone')
                     ->required(),
             ]);
@@ -207,7 +207,7 @@ class MeusDados extends Page implements HasSchemas
     {
         $data = $this->form->getState();
 
-        $data['nome_social'] = $data['usar_nome_social'] ? $data['nome_social'] : '';
+        $data['social_name'] = $data['usar_nome_social'] ? $data['social_name'] : '';
 
         $this->record->update($data);
 

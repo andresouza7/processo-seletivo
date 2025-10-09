@@ -23,16 +23,16 @@ class NovaInscricaoNotification extends Notification implements ShouldQueue
 
     public function toMail(object $notifiable): MailMessage
     {
-        $primeiroNome = explode(' ', trim($notifiable->nome))[0];
+        $primeiroNome = explode(' ', trim($notifiable->name))[0];
 
         return (new MailMessage)
             ->subject('Recebimento de Inscrição')
             ->greeting('Prezado(a) ' . $primeiroNome . ',')
             ->line('Informamos que sua inscrição foi recebida pelo sistema.')
-            ->line('Código da inscrição: ' . $this->inscricao->cod_inscricao)
-            ->line('Processo Seletivo: ' . $this->inscricao->processo_seletivo->titulo)
-            ->line('Vaga: ' . $this->inscricao->inscricao_vaga->descricao)
-            ->line('Tipo: ' . $this->inscricao->tipo_vaga->descricao)
+            ->line('Código da inscrição: ' . $this->inscricao->code)
+            ->line('Processo Seletivo: ' . $this->inscricao->processo_seletivo->title)
+            ->line('Vaga: ' . $this->inscricao->inscricao_vaga->description)
+            ->line('Tipo: ' . $this->inscricao->tipo_vaga->description)
             ->action('Visualizar Inscrição', route('filament.candidato.resources.inscricoes.view', $this->inscricao))->success()
             ->line('Para qualquer dúvida, entrar em contato com dips@ueap.edu.br');
     }

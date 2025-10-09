@@ -45,11 +45,11 @@ class GestorConfiguraEtapaRecursoTest extends TestCase
         $endDate = now()->addDay()->toDateString();
 
         $data = [
-            'descricao' => 'Resultado Preliminar',
-            'data_inicio_recebimento' => $startDate,
-            'data_fim_recebimento' => $endDate,
-            'data_inicio_resultado' => $startDate,
-            'data_fim_resultado' => $endDate,
+            'description' => 'Resultado Preliminar',
+            'submission_start_date' => $startDate,
+            'submission_end_date' => $endDate,
+            'result_start_date' => $startDate,
+            'result_end_date' => $endDate,
         ];
 
         Livewire::test(ManageEtapaRecurso::class, [

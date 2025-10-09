@@ -37,7 +37,7 @@ class ProcessoSeletivoResource extends Resource
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-folder';
     protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 1;
-    protected static ?string $recordTitleAttribute = 'titulo';
+    protected static ?string $recordTitleAttribute = 'title';
     protected static int $globalSearchResultsLimit = 20;
 
     public static function canAccess(): bool
@@ -48,13 +48,13 @@ class ProcessoSeletivoResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Edital' => $record->numero,
+            'Edital' => $record->number,
         ];
     }
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
-        return parent::getGlobalSearchEloquentQuery()->orderBy('data_publicacao_inicio', 'desc');
+        return parent::getGlobalSearchEloquentQuery()->orderBy('publication_start_date', 'desc');
     }
 
     public static function form(Schema $schema): Schema

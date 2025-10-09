@@ -20,10 +20,10 @@ class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
 
       // CRIA O USUÁRIO
         $user = InscricaoPessoa::factory()->create([
-            'nome' => 'tester',
+            'name' => 'tester',
             'cpf' => '12345678901',
             'email' => 'tester@example.com',
-            'ci' => 'MG123456',
+            'rg' => 'MG123456',
             'password' => Hash::make('pwd'),
         ]);
         // LOGA PELO GUARD 'candidato'
@@ -63,27 +63,27 @@ class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
     {
         // VERIFICA SE OS CAMPOS ESTÃO HABILITADOS
         Livewire::test(MeusDados::class)
-            ->assertFormFieldIsEnabled('identidade_genero')
-            ->assertFormFieldIsEnabled('nome_social')
-            ->assertFormFieldIsEnabled('cep')
-            ->assertFormFieldIsEnabled('endereco')
-            ->assertFormFieldIsEnabled('numero')
-            ->assertFormFieldIsEnabled('complemento')
-            ->assertFormFieldIsEnabled('bairro')
-            ->assertFormFieldIsEnabled('cidade')
-            ->assertFormFieldIsEnabled('bairro')
-            ->assertFormFieldIsEnabled('telefone');
+            ->assertFormFieldIsEnabled('gender_identity')
+            ->assertFormFieldIsEnabled('social_name')
+            ->assertFormFieldIsEnabled('postal_code')
+            ->assertFormFieldIsEnabled('address')
+            ->assertFormFieldIsEnabled('address_number')
+            ->assertFormFieldIsEnabled('address_complement')
+            ->assertFormFieldIsEnabled('district')
+            ->assertFormFieldIsEnabled('city')
+            ->assertFormFieldIsEnabled('district')
+            ->assertFormFieldIsEnabled('phone');
     }
 
     public function test_candidato_nao_pode_editar_campos_de_identificacao(): void
     {
         // VERIFICA SE OS CAMPOS ABAIXO ESTÃO DESABILITADOS
         Livewire::test(MeusDados::class)
-            ->assertFormFieldIsDisabled('nome')
-            ->assertFormFieldIsDisabled('mae')
+            ->assertFormFieldIsDisabled('name')
+            ->assertFormFieldIsDisabled('mother_name')
             ->assertFormFieldIsDisabled('cpf')
-            ->assertFormFieldIsDisabled('ci')
-            ->assertFormFieldIsDisabled('data_nascimento')
+            ->assertFormFieldIsDisabled('rg')
+            ->assertFormFieldIsDisabled('birth_date')
             ->assertFormFieldIsDisabled('email');
     }
 

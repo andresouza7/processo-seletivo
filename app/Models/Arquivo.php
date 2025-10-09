@@ -20,7 +20,7 @@ class Arquivo extends Model
         'height',
         'name',
         'mimetype',
-        'descricao',
+        'description',
         'codname'
     ];
 

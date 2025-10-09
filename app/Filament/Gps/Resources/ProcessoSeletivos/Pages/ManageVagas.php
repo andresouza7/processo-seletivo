@@ -33,11 +33,11 @@ class ManageVagas extends ManageRelatedRecords
     {
         return $schema
             ->components([
-                TextInput::make('codigo')
+                TextInput::make('code')
                     ->label('Código')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('descricao')
+                TextInput::make('description')
                     ->label('Descrição')
                     ->required()
                     ->maxLength(255),
@@ -47,14 +47,14 @@ class ManageVagas extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('descricao')
+            ->recordTitleAttribute('description')
             ->heading('Vagas')
             ->paginated(false)
             ->columns([
-                TextColumn::make('codigo')
+                TextColumn::make('code')
                     ->label('Código')
                     ->searchable(),
-                TextColumn::make('descricao')
+                TextColumn::make('description')
                     ->label('Descrição')
                     ->searchable(),
             ])

@@ -55,7 +55,7 @@ class GestorConfiguraAnexosTest extends TestCase
         ])
             ->assertActionExists(TestAction::make('create')->table())
             ->callAction(TestAction::make('create')->table(), [
-                'descricao' => 'um anexo do concurso',
+                'description' => 'um anexo do concurso',
                 'arquivo' => $file
             ])
             ->assertHasNoFormErrors();
@@ -77,7 +77,7 @@ class GestorConfiguraAnexosTest extends TestCase
         ]);
         $anexo = ProcessoSeletivoAnexo::factory()->create([
             'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
-            'descricao' => 'um anexo'
+            'description' => 'um anexo'
         ]);
 
         Livewire::test(ManageAnexos::class, [

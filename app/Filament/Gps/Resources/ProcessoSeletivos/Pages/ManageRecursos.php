@@ -38,7 +38,7 @@ class ManageRecursos extends ManageRelatedRecords
     {
         return $schema
             ->components([
-                Textarea::make('descricao')
+                Textarea::make('description')
                     ->columnSpanFull()
                     ->disabled(),
                 \Filament\Schemas\Components\Actions::make([
@@ -47,14 +47,14 @@ class ManageRecursos extends ManageRelatedRecords
                         ->url(fn($record) => route('recurso.anexo', $record->idrecurso))
                         ->openUrlInNewTab()
                 ])->columnSpanFull(),
-                Select::make('situacao')
+                Select::make('result')
                     ->required()
                     ->options([
                         'D' => 'Deferido',
                         'I' => 'Indeferido',
                         'P' => 'Parcialmente Deferido',
                     ]),
-                Textarea::make('resposta')
+                Textarea::make('response')
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
@@ -78,15 +78,15 @@ class ManageRecursos extends ManageRelatedRecords
                 TextColumn::make('idrecurso'),
                 TextColumn::make('etapa_recurso.descricao')
                     ->label('Etapa'),
-                TextColumn::make('descricao')
+                TextColumn::make('description')
                     ->label('Justificativa'),
-                TextColumn::make('situacao')
+                TextColumn::make('result')
                     ->badge()
             ])
             ->filters([
                 Filter::make('situacao_null')
                     ->label('Pendentes')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('situacao'))
+                    ->query(fn(Builder $query): Builder => $query->whereNull('result'))
                     ->default(true),
             ])
             ->headerActions([

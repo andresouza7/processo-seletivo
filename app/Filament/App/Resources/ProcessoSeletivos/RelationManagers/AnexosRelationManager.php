@@ -26,19 +26,19 @@ class AnexosRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('descricao')
+            ->recordTitleAttribute('description')
             ->heading('Publicações')
             ->description('Utilize o campo de pesquisa para filtrar uma informação')
             ->defaultSort('idprocesso_seletivo_anexo', 'desc')
             ->columns([
                 Stack::make([
-                    TextColumn::make('data_publicacao')
+                    TextColumn::make('publication_date')
                         ->formatStateUsing(fn($record) => sprintf(
                             "<div class='text-xs font-semibold flex gap-3'><span>%s</span></div>",
-                            Carbon::parse($record->data_publicacao)->format('d/m/Y'),
+                            Carbon::parse($record->publication_date)->format('d/m/Y'),
                         ))->html()
                         ->color('gray'),
-                    TextColumn::make('descricao')
+                    TextColumn::make('description')
                         ->label('Descrição')
                         ->color('primary')
                         ->url(fn($record) => $record->url_arquivo, shouldOpenInNewTab: true)

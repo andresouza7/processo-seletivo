@@ -23,7 +23,7 @@ class InscricaoInfolist
                 Section::make('DADOS DA INSCRIÇÃO')
                     ->columns(3)
                     ->schema([
-                        TextEntry::make('cod_inscricao')->label('Inscrição'),
+                        TextEntry::make('code')->label('Inscrição'),
                         TextEntry::make('processo_seletivo.titulo')->label('Processo Seletivo'),
                         TextEntry::make('inscricao_vaga.descricao')->label('Vaga'),
                         TextEntry::make('tipo_vaga.descricao')->label('Tipo de Vaga'),
@@ -32,7 +32,7 @@ class InscricaoInfolist
                 Section::make('ATENDIMENTO ESPECIAL')
                     ->columns(3)
                     ->schema([
-                        TextEntry::make('necessita_atendimento')
+                        TextEntry::make('requires_assistance')
                             ->label('')
                             ->badge()
                             ->colors([
@@ -41,9 +41,9 @@ class InscricaoInfolist
                             ])
                             ->formatStateUsing(fn($state) => $state === 'S' ? 'solicitado' : 'não solicitado'),
 
-                        TextEntry::make('qual_atendimento')
+                        TextEntry::make('assistance_details')
                             ->label('Qual Atendimento')
-                            ->visible(fn($record) => $record->necessita_atendimento === 'S'),
+                            ->visible(fn($record) => $record->requires_assistance === 'S'),
                     ]),
             ]);
     }

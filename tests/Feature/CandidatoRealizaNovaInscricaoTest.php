@@ -55,7 +55,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->fillForm([
                 'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
                 'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-                'necessita_atendimento'  => 'N',
+                'requires_assistance'  => 'N',
                 'pcd'                    => false,
                 // 'aceita_termos' não enviado → simula checkbox desmarcado
             ])
@@ -70,7 +70,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->fillForm([
                 'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
                 'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-                'necessita_atendimento'  => 'N',
+                'requires_assistance'  => 'N',
                 'pcd'                    => false,
                 'aceita_termos'          => true, // checkbox marcado
             ])
@@ -82,7 +82,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             'idinscricao_pessoa'     => $this->user->idpessoa,
             'idprocesso_seletivo'    => $this->processo->idprocesso_seletivo,
             'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-            'necessita_atendimento'  => 'N',
+            'requires_assistance'  => 'N',
         ]);
     }
 
@@ -94,8 +94,8 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->fillForm([
                 'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
                 'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-                'necessita_atendimento' => 'S',
-                'qual_atendimento'       => $qualAtendimento,
+                'requires_assistance' => 'S',
+                'assistance_details'       => $qualAtendimento,
                 'pcd'                    => false,
                 'aceita_termos'          => true,
             ])
@@ -107,8 +107,8 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             'idinscricao_pessoa'     => $this->user->idpessoa,
             'idprocesso_seletivo'    => $this->processo->idprocesso_seletivo,
             'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-            'necessita_atendimento'  => 'S',
-            'qual_atendimento'       => $qualAtendimento,
+            'requires_assistance'  => 'S',
+            'assistance_details'       => $qualAtendimento,
         ]);
     }
 
@@ -117,7 +117,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
         Livewire::test(CreateInscricao::class)
             ->fillForm([
                 'idprocesso_seletivo'   => $this->processo->idprocesso_seletivo,
-                'necessita_atendimento' => 'N',
+                'requires_assistance' => 'N',
                 'pcd'                    => false,
                 'aceita_termos'          => true,
             ])
@@ -133,7 +133,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->fillForm([
                 'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
                 'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
-                'necessita_atendimento' => 'N',
+                'requires_assistance' => 'N',
                 'pcd'                 => true,
                 'aceita_termos'       => true,
             ])
@@ -152,7 +152,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->fillForm([
                 'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
                 'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
-                'necessita_atendimento' => 'N',
+                'requires_assistance' => 'N',
                 'pcd'                 => true,
                 'aceita_termos'       => true,
                 'laudo_medico'        => $file,
@@ -192,7 +192,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->fillForm([
                 'idprocesso_seletivo' => $processo->idprocesso_seletivo,
                 'idinscricao_vaga'    => $vaga->idinscricao_vaga,
-                'necessita_atendimento' => 'N',
+                'requires_assistance' => 'N',
                 'pcd'                 => true,
                 'aceita_termos'       => true,
                 'laudo_medico'        => $invalidFile,

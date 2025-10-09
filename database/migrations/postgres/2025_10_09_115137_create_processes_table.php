@@ -17,15 +17,15 @@ return new class extends Migration
             $table->text('title');
             $table->text('description');
             $table->bigInteger('number');
-            $table->date('creation_date');
+            $table->date('document_date');
             $table->char('status', 1);
             $table->bigInteger('views');
             $table->boolean('is_published');
             $table->string('directory', 30)->unique();
             $table->date('publication_start_date');
             $table->date('publication_end_date');
-            $table->date('registration_start_date');
-            $table->date('registration_end_date');
+            $table->date('application_start_date');
+            $table->date('application_end_date');
             $table->boolean('has_fee_exemption')->default(false);
             $table->jsonb('attachment_fields');
             $table->timestamps();

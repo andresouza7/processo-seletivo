@@ -50,7 +50,7 @@ class InscricaoForm
                 ->options(fn() => Cache::remember('processos_inscricoes_abertas_options', 60, function () {
                     return ProcessoSeletivo::inscricoesAbertas()
                         ->get()
-                        ->mapWithKeys(fn($p) => [$p->idprocesso_seletivo => "{$p->numero} - {$p->titulo}"])
+                        ->mapWithKeys(fn($p) => [$p->idprocesso_seletivo => "{$p->number} - {$p->title}"])
                         ->toArray();
                 }))
                 ->placeholder('Selecione um processo seletivo')
@@ -61,8 +61,8 @@ class InscricaoForm
                 ->live()
                 ->afterStateUpdated(function (callable $set, $state) {
                     $processo = ProcessoSeletivo::find($state);
-                    $set('possui_isencao', $processo?->possui_isencao);
-                    $set('anexos', (array) ($processo?->anexos ?? []));
+                    $set('has_fee_exemption', $processo?->has_fee_exemption);
+                    $set('attachment_fields', (array) ($processo?->attachment_fields ?? []));
                 }),
         ];
     }
@@ -76,7 +76,7 @@ class InscricaoForm
             Group::make()
                 ->visible(fn(Get $get) => (bool) $get('idprocesso_seletivo'))
                 ->schema(function (Get $get) {
-                    $anexos = (array) $get('anexos');
+                    $anexos = (array) $get('attachment_fields');
 
                     return [
                         Fieldset::make('Documentos Requeridos')
@@ -120,7 +120,7 @@ class InscricaoForm
 
                     return InscricaoVaga::where('idprocesso_seletivo', $id)
                         ->get()
-                        ->mapWithKeys(fn($v) => [$v->idinscricao_vaga => "{$v->codigo} - {$v->descricao}"])
+                        ->mapWithKeys(fn($v) => [$v->idinscricao_vaga => "{$v->code} - {$v->description}"])
                         ->toArray();
                 }),
         ];
@@ -132,7 +132,7 @@ class InscricaoForm
     private static function getAtendimentoSection(): array
     {
         return [
-            Select::make('necessita_atendimento')
+            Select::make('requires_assistance')
                 ->label('Precisa de Atendimento Especial?')
                 ->helperText('Ex: apoio para leitura ou escrita, mobiliário adaptado, etc')
                 ->required()
@@ -141,9 +141,9 @@ class InscricaoForm
                 ->options(['N' => 'Não', 'S' => 'Sim'])
                 ->live(),
 
-            Textarea::make('qual_atendimento')
-                ->visible(fn(Get $get): bool => $get('necessita_atendimento') === 'S')
-                ->required(fn(Get $get) => $get('necessita_atendimento') === 'S')
+            Textarea::make('assistance_details')
+                ->visible(fn(Get $get): bool => $get('requires_assistance') === 'S')
+                ->required(fn(Get $get) => $get('requires_assistance') === 'S')
                 ->columnSpanFull(),
         ];
     }
@@ -180,7 +180,7 @@ class InscricaoForm
         return [
             Checkbox::make('pedir_isencao')
                 ->label('Solicitar isenção da taxa de inscrição')
-                ->visible(fn(Get $get): bool => (bool) $get('possui_isencao'))
+                ->visible(fn(Get $get): bool => (bool) $get('has_fee_exemption'))
                 ->columnSpanFull()
                 ->live()
                 ->default(false),

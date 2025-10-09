@@ -28,7 +28,7 @@ class CandidatoFiltraInscricoesRealizadasTest extends TestCase
 
         // Permite filtrar pelo código da inscrição
         Livewire::test(ListInscricaos::class)
-            ->searchTable($inscricao->cod_inscricao)
-            ->assertCanSeeTableRecords($processo->inscricoes->where('cod_inscricao', $inscricao->cod_inscricao));
+            ->searchTable($inscricao->code)
+            ->assertCanSeeTableRecords($processo->inscricoes->where('code', $inscricao->code));
     }
 }

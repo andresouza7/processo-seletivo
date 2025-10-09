@@ -19,21 +19,21 @@ class ProcessoSeletivoTable
         return $table
             ->heading('Consultar Processos Seletivos')
             ->description('Utilize o campo de pesquisa para filtrar uma informação')
-            ->defaultSort('data_publicacao_inicio', 'desc')
+            ->defaultSort('publication_start_date', 'desc')
             ->columns([
                 Stack::make([
                     Split::make([
-                        TextColumn::make('numero')
+                        TextColumn::make('number')
                             ->searchable()
                             ->formatStateUsing(fn($record) => sprintf(
                                 "<div class='text-xs font-semibold flex gap-3'><span>Publicação: %s</span><span>Nº do Edital: %s</span></div>",
                                 Carbon::parse($record->data_criacao)->format('d/m/Y'),
-                                $record->numero
+                                $record->number
                             ))->html()
                             ->color('gray')
                             ->grow(false),
                     ]),
-                    TextColumn::make('titulo')
+                    TextColumn::make('title')
                         ->color('primary')
                         ->searchable()
                         ->limit()

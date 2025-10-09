@@ -25,14 +25,14 @@ class Inscricao extends Model implements HasMedia
     protected $primaryKey = 'idinscricao';
 
     protected $fillable = [
-        'cod_inscricao',
+        'code',
         'idprocesso_seletivo',
         'idinscricao_vaga',
         'idinscricao_pessoa',
         'idtipo_vaga',
-        'data_hora',
-        'necessita_atendimento',
-        'qual_atendimento',
+        'submitted_at',
+        'requires_assistance',
+        'assistance_details',
         'observacao',
         'local_prova',
         'ano_enem',
@@ -80,7 +80,7 @@ class Inscricao extends Model implements HasMedia
             $uniqueId = rand(1000000000, 9999999999);
 
             // Check if the cod_inscricao already exists in the inscricao table
-            $exists = Inscricao::where('cod_inscricao', $uniqueId)->exists();
+            $exists = Inscricao::where('code', $uniqueId)->exists();
         } while ($exists);
 
         return $uniqueId;
@@ -90,7 +90,7 @@ class Inscricao extends Model implements HasMedia
     {
         do {
             $code = str_pad(random_int(0, 9999999999), 10, '0', STR_PAD_LEFT);
-        } while (Inscricao::where('cod_inscricao', $code)->exists());
+        } while (Inscricao::where('code', $code)->exists());
 
         return $code;
     }

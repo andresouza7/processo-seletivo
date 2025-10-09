@@ -47,13 +47,13 @@ class ManageInscritos extends ManageRelatedRecords
                 // Inscrição Section
                 Section::make('Inscrição')
                     ->schema([
-                        TextEntry::make('cod_inscricao')->label('Cód. Inscrição'),
+                        TextEntry::make('code')->label('Cód. Inscrição'),
                         TextEntry::make('inscricao_vaga.descricao')->label('Vaga'),
                         TextEntry::make('tipo_vaga.descricao')->label('Tipo de Vaga'),
                     ])
                     ->columns(2),
 
-                TextEntry::make('cod_inscricao')
+                TextEntry::make('code')
                     ->label('Documentos')
                     ->formatStateUsing(function ($record) {
                         // $record é a instância do modelo
@@ -67,7 +67,7 @@ class ManageInscritos extends ManageRelatedRecords
                     ->color('primary')
                     ->html(), 
 
-                    TextEntry::make('cod_inscricao')
+                    TextEntry::make('code')
                     ->label('Laudo Médico')
                     ->formatStateUsing(function ($record) {
                         $link = tempMediaUrl($record, 'laudo_medico');
@@ -78,7 +78,7 @@ class ManageInscritos extends ManageRelatedRecords
                     ->color('primary')
                     ->html(), 
 
-                    TextEntry::make('cod_inscricao')
+                    TextEntry::make('code')
                     ->label('Isenção Taxa')
                     ->formatStateUsing(function ($record) {
                         $link = tempMediaUrl($record, 'isencao_taxa');
@@ -100,11 +100,11 @@ class ManageInscritos extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('cod_inscricao')
+            ->recordTitleAttribute('code')
             ->defaultSort('idinscricao', 'desc')
             ->heading('Inscrições')
             ->columns([
-                TextColumn::make('cod_inscricao')
+                TextColumn::make('code')
                     ->label('Cód. Inscrição')
                     ->searchable(),
                 TextColumn::make('inscricao_pessoa.nome')

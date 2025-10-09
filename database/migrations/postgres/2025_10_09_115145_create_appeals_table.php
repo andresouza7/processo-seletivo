@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('appeal_stage_id')->constrained();
             $table->text('text');
             $table->text('response')->nullable();
-            $table->char('status', 2)->nullable();
+            $table->char('result', 2)->nullable();
             $table->timestamp('submitted_at');
             $table->timestamp('evaluated_at');
             $table->timestamps();

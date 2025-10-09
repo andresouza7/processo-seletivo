@@ -13,14 +13,14 @@ class InscricaoPessoasTable
         return $table
             ->heading('Contas de candidatos')
             ->description('Gerência dos dados cadastrais dos candidatos e redefinição de senha.')
-            ->defaultSort('nome')
+            ->defaultSort('name')
             ->columns([
-                TextColumn::make('nome')
+                TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('sexo')
+                TextColumn::make('sex')
                     ->badge()
                     ->searchable(),
-                TextColumn::make('ci')
+                TextColumn::make('rg')
                     ->label('RG')
                     ->searchable(),
                 TextColumn::make('cpf')

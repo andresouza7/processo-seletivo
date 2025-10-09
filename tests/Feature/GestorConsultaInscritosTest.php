@@ -44,7 +44,7 @@ class GestorConsultaInscritosTest extends TestCase
     {
         $inscricao = Inscricao::factory()->create([
             'idprocesso_seletivo' => $this->processo->idprocesso_seletivo,
-            'cod_inscricao' => '123456'
+            'code' => '123456'
         ]);
 
         Livewire::test(ManageInscritos::class, [

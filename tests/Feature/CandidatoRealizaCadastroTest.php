@@ -23,10 +23,10 @@ class CandidatoRealizaCadastroTest extends TestCase
 
         // CRIA O USUÁRIO CORRETAMENTE
         $user = InscricaoPessoa::factory()->create([
-            'nome' => 'tester',
-            'mae' => 'mae do tester',
-            'ci' => '12344321-AP',
-            'data_nascimento' => '1990-12-25',
+            'name' => 'tester',
+            'mother_name' => 'mae do tester',
+            'rg' => '12344321-AP',
+            'birth_date' => '1990-12-25',
             'cpf' => '12345678901',
             'password' => Hash::make('pwd'),
         ]);
@@ -58,28 +58,28 @@ class CandidatoRealizaCadastroTest extends TestCase
     {
         Livewire::test(Cadastro::class)
             //identificação
-            ->assertFormFieldIsEnabled('nome')
-            ->assertFormFieldIsEnabled('mae')
+            ->assertFormFieldIsEnabled('name')
+            ->assertFormFieldIsEnabled('mother_name')
             ->assertFormFieldIsEnabled('cpf')
-            ->assertFormFieldIsEnabled('ci')
-            ->assertFormFieldIsEnabled('data_nascimento')
+            ->assertFormFieldIsEnabled('rg')
+            ->assertFormFieldIsEnabled('birth_date')
             ->assertFormFieldIsEnabled('email')
-            ->assertFormFieldIsEnabled('sexo')
+            ->assertFormFieldIsEnabled('sex')
 
             // informações sociais
-            ->assertFormFieldIsEnabled('identidade_genero')
-            ->assertFormFieldIsEnabled('orientacao_sexual')
-            ->assertFormFieldIsEnabled('nome_social')
+            ->assertFormFieldIsEnabled('gender_identity')
+            ->assertFormFieldIsEnabled('sexual_orientation')
+            ->assertFormFieldIsEnabled('social_name')
 
             // endereço
-            ->assertFormFieldIsEnabled('cep')
-            ->assertFormFieldIsEnabled('endereco')
-            ->assertFormFieldIsEnabled('numero')
-            ->assertFormFieldIsEnabled('complemento')
-            ->assertFormFieldIsEnabled('bairro')
-            ->assertFormFieldIsEnabled('cidade')
-            ->assertFormFieldIsEnabled('bairro')
-            ->assertFormFieldIsEnabled('telefone');
+            ->assertFormFieldIsEnabled('postal_code')
+            ->assertFormFieldIsEnabled('address')
+            ->assertFormFieldIsEnabled('address_number')
+            ->assertFormFieldIsEnabled('address_complement')
+            ->assertFormFieldIsEnabled('district')
+            ->assertFormFieldIsEnabled('city')
+            ->assertFormFieldIsEnabled('district')
+            ->assertFormFieldIsEnabled('phone');
     }
 
     public function test_candidato_pode_usar_nome_social(): void
@@ -92,7 +92,7 @@ class CandidatoRealizaCadastroTest extends TestCase
         ->set('data.usar_nome_social', true)
 
         // confirma que o campo está visível
-        ->assertFormFieldIsVisible('nome_social')
+        ->assertFormFieldIsVisible('social_name')
 
         // Verifica se o estado do checkbox realmente está ativo
         ->assertSet('data.usar_nome_social', true)
@@ -112,19 +112,19 @@ class CandidatoRealizaCadastroTest extends TestCase
             ->call('register')
             // Deve falhar nas validações obrigatórias
             ->assertHasFormErrors([
-                'nome' => 'required',
-                'mae' => 'required',
+                'name' => 'required',
+                'mother_name' => 'required',
                 'cpf' => 'required',
-                'ci' => 'required',
-                'data_nascimento' => 'required',
-                'sexo' => 'required',
+                'rg' => 'required',
+                'birth_date' => 'required',
+                'sex' => 'required',
                 'email' => 'required',
-                'telefone' => 'required',
-                'cep' => 'required',
-                'endereco' => 'required',
-                'bairro' => 'required',
-                'numero' => 'required',
-                'cidade' => 'required',
+                'phone' => 'required',
+                'postal_code' => 'required',
+                'address' => 'required',
+                'district' => 'required',
+                'address_number' => 'required',
+                'city' => 'required',
                 'password' => 'required',
                 'passwordConfirmation' => 'required',
             ]);
@@ -149,7 +149,7 @@ class CandidatoRealizaCadastroTest extends TestCase
             ->call('register')
             ->assertHasFormErrors([
                 'cpf',              // formato errado (regra 'cpf')
-                'data_nascimento',  // fora do intervalo (regra minDate)
+                'birth_date',  // fora do intervalo (regra minDate)
                 'email',            // formato inválido
             ]);
     }

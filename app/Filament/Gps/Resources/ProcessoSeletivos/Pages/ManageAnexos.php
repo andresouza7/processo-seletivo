@@ -37,7 +37,7 @@ class ManageAnexos extends ManageRelatedRecords
         return $schema
             ->columns(1)
             ->components([
-                TextInput::make('descricao')
+                TextInput::make('description')
                     ->required()
                     ->maxLength(255),
                 SpatieMediaLibraryFileUpload::make('arquivo')
@@ -51,11 +51,11 @@ class ManageAnexos extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('descricao')
+            ->recordTitleAttribute('description')
             ->heading('Anexos')
             ->columns([
                 TextColumn::make('idprocesso_seletivo_anexo')->searchable()->limit(70),
-                TextColumn::make('descricao')->searchable()->limit(70),
+                TextColumn::make('description')->searchable()->limit(70),
             ])
             ->headerActions([
                 CreateAction::make()
@@ -67,15 +67,15 @@ class ManageAnexos extends ManageRelatedRecords
                         $id = ProcessoSeletivoAnexo::latest('idprocesso_seletivo_anexo')
                             ->value('idprocesso_seletivo_anexo') ?? 0;
                         $data['idprocesso_seletivo_anexo'] = $id + 1;
-                        $data['data_publicacao'] = now();
-                        $data['acessos'] = 0;
+                        $data['publication_date'] = now();
+                        $data['views'] = 0;
 
                         return $data;
                     }),
             ])
             ->recordActions([
                 EditAction::make()
-                    ->hidden(fn($record) => Carbon::parse($record->data_publicacao)->lt(Carbon::parse('2024-11-01'))),
+                    ->hidden(fn($record) => Carbon::parse($record->publication_date)->lt(Carbon::parse('2024-11-01'))),
                 DeleteAction::make(),
                 Action::make('download')
                     ->disabled(fn($record) => !$record->url_arquivo)

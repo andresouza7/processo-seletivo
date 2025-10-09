@@ -156,7 +156,7 @@
                     @php
 
                         $processos = \App\Models\ProcessoSeletivo::emAndamento()
-                            ->latest('data_criacao')
+                            ->latest('document_date')
                             ->limit(10)
                             ->get();
                     @endphp
@@ -171,13 +171,13 @@
 
                                     <div class="flex-1">
                                         <div class="text-xs font-medium text-gray-800">
-                                            Edital nº {{ $processo->numero }}
+                                            Edital nº {{ $processo->number }}
                                         </div>
 
                                         <a href="{{ route('filament.app.resources.processo-seletivos.view', ['record' => $processo->idprocesso_seletivo]) }}"
                                             class="text-primary-600 text-sm font-medium hover:underline mt-1.5"
-                                            title="{{ $processo->titulo }}">
-                                            {{ \Illuminate\Support\Str::limit($processo->titulo, 100) }}
+                                            title="{{ $processo->title }}">
+                                            {{ \Illuminate\Support\Str::limit($processo->title, 100) }}
                                         </a>
                                     </div>
                                 </div>
@@ -191,7 +191,7 @@
 
                 <div x-show="tab === 'tab2'">
                     @php
-                        $anexos = \App\Models\ProcessoSeletivoAnexo::latest('data_publicacao')->limit(10)->get();
+                        $anexos = \App\Models\ProcessoSeletivoAnexo::latest('publication_date')->limit(10)->get();
                     @endphp
 
                     <div class="divide-y divide-gray-200">
@@ -201,19 +201,19 @@
                                     {{-- Coluna da Data --}}
                                     <div class="w-20 shrink-0">
                                         <span class="text-xs text-gray-500 block">
-                                            {{ \Carbon\Carbon::parse($anexo->data_publicacao)->format('d/m/Y') }}
+                                            {{ \Carbon\Carbon::parse($anexo->publication_date)->format('d/m/Y') }}
                                         </span>
                                     </div>
 
                                     {{-- Coluna do Conteúdo --}}
                                     <div class="flex-1 text-sm text-gray-700">
                                         <div class="text-xs font-medium text-gray-800">
-                                            {{ $anexo->processo_seletivo->titulo }} – Edital nº
-                                            {{ $anexo->processo_seletivo->numero }}
+                                            {{ $anexo->processo_seletivo->title }} – Edital nº
+                                            {{ $anexo->processo_seletivo->number }}
                                         </div>
                                         <a href="{{ $anexo->url_arquivo }}" target="_blank"
                                             class="text-primary-600 text-sm font-medium hover:underline mt-1.5">
-                                            {{ \Illuminate\Support\Str::limit($anexo->descricao, 100) }}
+                                            {{ \Illuminate\Support\Str::limit($anexo->description, 100) }}
                                         </a>
                                     </div>
                                 </div>
