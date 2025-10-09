@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('process_attachments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('process_id')->constrained();
+            $table->integer('file_id')->nullable()->comment('referência a arquivos do sistema legado');
+            $table->string('description');
+            $table->date('publication_date');
+            $table->bigInteger('views')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('process_attachments');
+    }
+};
