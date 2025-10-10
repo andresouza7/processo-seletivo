@@ -42,8 +42,8 @@ class ProcessoSeletivoForm
                         Select::make('is_published')
                             ->required()
                             ->options([
-                                'S' => 'Sim',
-                                'N' => 'Não'
+                                true => 'Sim',
+                                false => 'Não'
                             ]),
                     ])->columns(3),
 

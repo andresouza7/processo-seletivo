@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('description');
             $table->string('number')->unique();
             $table->date('document_date');
-            $table->char('status', 1);
             $table->unsignedBigInteger('views');
             $table->boolean('is_published');
             $table->string('directory', 30)->unique();

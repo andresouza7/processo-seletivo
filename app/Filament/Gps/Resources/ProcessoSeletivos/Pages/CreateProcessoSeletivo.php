@@ -17,7 +17,6 @@ class CreateProcessoSeletivo extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         try {
-            $data['situacao'] = $data['situacao'] ?? '';
             $data['views'] = 0;
             $data['directory'] = str_replace('/', '_', $data['number']);
         } catch (Throwable $th) {

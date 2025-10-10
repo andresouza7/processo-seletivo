@@ -98,7 +98,7 @@ class Process extends Model
 
     public function getAppealLinkAttribute()
     {
-        $stage = AppealStage::where('id', $this->id)->orderBy('id', 'desc')->first();
+        $stage = AppealStage::where('process_id', $this->id)->orderBy('id', 'desc')->first();
 
         return $stage ? route('filament.candidato.resources.etapa-recursos.edit', $stage->id) : null;
     }

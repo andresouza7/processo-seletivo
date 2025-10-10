@@ -35,7 +35,7 @@ class GestorConsultaCandidatosTest extends TestCase
             'cpf' => '23456781099',
             'rg' => '9874221-PA',
             'birth_date' => '1974-02-01',
-            'sex' => 'masculino',
+            'sex' => 'M',
             'social_name' => 'nome social candidata',
             'gender_identity' => 'T',
             'phone' => '(41) 98533-9922',
@@ -62,7 +62,7 @@ class GestorConsultaCandidatosTest extends TestCase
         $response->assertSeeText('23456781099');
         $response->assertSeeText('9874221-PA');
         $response->assertSeeText('1974-02-01');
-        $response->assertSeeText('masculino');
+        $response->assertSeeText('M');
         $response->assertSeeText('nome social candidata');
         $response->assertSeeText('T');
         $response->assertSeeText('(41) 98533-9922');

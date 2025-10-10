@@ -43,7 +43,7 @@ class GestorConsultaInscritosTest extends TestCase
     public function test_gestor_consulta_inscricoes()
     {
         $application = Application::factory()->create([
-            'id' => $this->processo->id,
+            'process_id' => $this->processo->id,
             'code' => '123456'
         ]);
 
