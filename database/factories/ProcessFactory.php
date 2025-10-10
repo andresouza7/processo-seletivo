@@ -29,8 +29,6 @@ class ProcessFactory extends Factory
             'description' => $this->faker->paragraph(),
             'number' => $number,
             'document_date' => $today,
-            // 'status' => $this->faker->randomElement(['A', 'I']),
-            'status' => 'A',
             'views' => $this->faker->numberBetween(0, 1000),
             'is_published' => true,
             'directory' => $directory,
