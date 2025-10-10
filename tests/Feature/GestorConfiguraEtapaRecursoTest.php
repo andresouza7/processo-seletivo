@@ -58,7 +58,7 @@ class GestorConfiguraEtapaRecursoTest extends TestCase
             ->callAction(TestAction::make('create')->table(), $data)
             ->assertHasNoFormErrors();
 
-        $this->assertDatabaseHas('appeal_stage', $data);
+        $this->assertDatabaseHas('appeal_stages', $data);
 
         $etapa = AppealStage::latest()->first();
 

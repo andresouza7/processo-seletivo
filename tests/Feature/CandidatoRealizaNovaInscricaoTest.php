@@ -38,7 +38,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         $this->processo = Process::factory()->create();
         $this->vaga = Position::factory()->create([
-            'id' => $this->processo->id,
+            'process_id' => $this->processo->id,
         ]);
 
         Quota::factory()->create(['id' => 1]);
@@ -53,9 +53,9 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'id'   => $this->processo->id,
-                'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-                'requires_assistance'  => 'N',
+                'process_id'   => $this->processo->id,
+                'position_id'       => $this->vaga->id,
+                'requires_assistance'  => false,
                 'pcd'                    => false,
                 // 'aceita_termos' não enviado → simula checkbox desmarcado
             ])
@@ -68,9 +68,9 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'id'   => $this->processo->id,
-                'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-                'requires_assistance'  => 'N',
+                'process_id'   => $this->processo->id,
+                'position_id'       => $this->vaga->id,
+                'requires_assistance'  => false,
                 'pcd'                    => false,
                 'aceita_termos'          => true, // checkbox marcado
             ])
@@ -78,11 +78,11 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->assertHasNoFormErrors();
 
         // Verifica se o registro foi salvo no banco
-        $this->assertDatabaseHas('inscricao', [
-            'idinscricao_pessoa'     => $this->user->id,
-            'id'    => $this->processo->id,
-            'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-            'requires_assistance'  => 'N',
+        $this->assertDatabaseHas('applications', [
+            'candidate_id'     => $this->user->id,
+            'process_id'    => $this->processo->id,
+            'position_id'       => $this->vaga->id,
+            'requires_assistance'  => false,
         ]);
     }
 
@@ -92,9 +92,9 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'id'   => $this->processo->id,
-                'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-                'requires_assistance' => 'S',
+                'process_id'   => $this->processo->id,
+                'position_id'       => $this->vaga->id,
+                'requires_assistance' => true,
                 'assistance_details'       => $qualAtendimento,
                 'pcd'                    => false,
                 'aceita_termos'          => true,
@@ -103,11 +103,11 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             ->assertHasNoFormErrors();
 
         // Verifica se o registro foi salvo corretamente no banco
-        $this->assertDatabaseHas('inscricao', [
-            'idinscricao_pessoa'     => $this->user->id,
-            'id'    => $this->processo->id,
-            'idinscricao_vaga'       => $this->vaga->idinscricao_vaga,
-            'requires_assistance'  => 'S',
+        $this->assertDatabaseHas('applications', [
+            'candidate_id'     => $this->user->id,
+            'process_id'    => $this->processo->id,
+            'position_id'       => $this->vaga->id,
+            'requires_assistance'  => true,
             'assistance_details'       => $qualAtendimento,
         ]);
     }
@@ -116,13 +116,13 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'id'   => $this->processo->id,
-                'requires_assistance' => 'N',
+                'process_id'   => $this->processo->id,
+                'requires_assistance' => false,
                 'pcd'                    => false,
                 'aceita_termos'          => true,
             ])
             ->call('create')
-            ->assertHasFormErrors(['idinscricao_vaga' => 'required']);
+            ->assertHasFormErrors(['position_id' => 'required']);
     }
 
     public function test_user_cannot_submit_without_laudo_medico(): void
@@ -131,9 +131,9 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'id' => $this->processo->id,
-                'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
-                'requires_assistance' => 'N',
+                'process_id' => $this->processo->id,
+                'position_id'    => $this->vaga->idinscricao_vaga,
+                'requires_assistance' => false,
                 'pcd'                 => true,
                 'aceita_termos'       => true,
             ])
@@ -150,9 +150,9 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'id' => $this->processo->id,
-                'idinscricao_vaga'    => $this->vaga->idinscricao_vaga,
-                'requires_assistance' => 'N',
+                'process_id' => $this->processo->id,
+                'position_id'    => $this->vaga->id,
+                'requires_assistance' => false,
                 'pcd'                 => true,
                 'aceita_termos'       => true,
                 'laudo_medico'        => $file,
@@ -190,9 +190,9 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         Livewire::test(CreateInscricao::class)
             ->fillForm([
-                'id' => $processo->id,
-                'idinscricao_vaga'    => $vaga->idinscricao_vaga,
-                'requires_assistance' => 'N',
+                'process_id' => $processo->id,
+                'position_id'    => $vaga->id,
+                'requires_assistance' => false,
                 'pcd'                 => true,
                 'aceita_termos'       => true,
                 'laudo_medico'        => $invalidFile,

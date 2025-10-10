@@ -22,13 +22,13 @@ class CandidatoFiltraInscricoesRealizadasTest extends TestCase
         $response = $this->get(route('filament.candidato.resources.inscricoes.index'));
         $response->assertStatus(200);
 
-        $processo = Process::factory()->withApplications()->create();
+        $process = Process::factory()->withApplications()->create();
 
-        $application = $processo->applications()->first();
+        $application = $process->applications()->first();
 
         // Permite filtrar pelo código da inscrição
         Livewire::test(ListInscricaos::class)
             ->searchTable($application->code)
-            ->assertCanSeeTableRecords($processo->applications->where('code', $application->code));
+            ->assertCanSeeTableRecords($process->applications->where('code', $application->code));
     }
 }

@@ -22,7 +22,7 @@ class CandidatoConsultaInscricoesRealizadasTest extends TestCase
         $response = $this->get(route('filament.candidato.resources.inscricoes.index'));
         $response->assertStatus(200);
 
-        $processo = Process::factory()->withApplications()->create();
-        Livewire::test(ListInscricaos::class)->assertCanSeeTableRecords($processo->applications);
+        $process = Process::factory()->withApplications()->create();
+        Livewire::test(ListInscricaos::class)->assertCanSeeTableRecords($process->applications);
     }
 }

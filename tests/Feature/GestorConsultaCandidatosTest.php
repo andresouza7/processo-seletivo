@@ -11,8 +11,6 @@ use Filament\Facades\Filament;
 use Livewire\Livewire;
 use App\Filament\Gps\Resources\InscricaoPessoas\Pages\ListInscricaoPessoas;
 
-
-
 class GestorConsultaCandidatosTest extends TestCase
 {
     
@@ -32,7 +30,7 @@ class GestorConsultaCandidatosTest extends TestCase
         Livewire::actingAs($this->user);
 
         $this->candidate = Candidate::factory()->create([
-            'nome' => 'Nome candidata teste',
+            'name' => 'Nome candidata teste',
             'mother_name' => 'Mãe da candidata teste',
             'cpf' => '23456781099',
             'rg' => '9874221-PA',
@@ -47,15 +45,14 @@ class GestorConsultaCandidatosTest extends TestCase
 
     public function test_gestor_acessa_pagina_candidatos()
     {
-        $response = $this->get(route('filament.gps.resources.candidatos.index', $this->candidate->id_inscricaopessoa));
+        $response = $this->get(route('filament.gps.resources.candidatos.index', $this->candidate->id));
         $response->assertStatus(200);
     }
 
-    //
     public function test_gestor_acessa_pagina_detalhes_dos_candidatos()
     {
         $response = $this->get(route('filament.gps.resources.candidatos.view', [
-            'record' => $this->candidate->getKey(),
+            'record' => $this->candidate->id,
         ]));
 
         $response->assertStatus(200);
@@ -72,8 +69,6 @@ class GestorConsultaCandidatosTest extends TestCase
         $response->assertSeeText('candidata_teste@gmail.com.br');
     }
 
-    
-
     public function test_gestor_filtra_candidatos_por_status()
     {
         Filament::setCurrentPanel('gps');
@@ -84,11 +79,10 @@ class GestorConsultaCandidatosTest extends TestCase
             ->create(['sex' => 'M']);
         $nome_jose = \App\Models\Candidate::factory()
             ->count(2)
-            ->create(['nome' => 'José da Silva']);
+            ->create(['name' => 'José da Silva']);
         $email_registrado = \App\Models\Candidate::factory()
             ->count(1)
             ->create(['email' => 'qwerty@uol.com.br']);
-
 
         // 🔹 Testa filtro de masculino
         Livewire::test(ListInscricaoPessoas::class, [
@@ -96,14 +90,12 @@ class GestorConsultaCandidatosTest extends TestCase
         ])
         ->assertCanSeeTableRecords($masculino);
 
-
         // 🔹 Testa filtro de José da Silva
         Livewire::test(ListInscricaoPessoas::class, [
-            'tableFilters' => ['nome' => ['value' => 'José da Silva']]
+            'tableFilters' => ['name' => ['value' => 'José da Silva']]
         ])
         ->assertCanSeeTableRecords($nome_jose);
        
-
         // 🔹 Testa filtro de email
         Livewire::test(ListInscricaoPessoas::class, [
             'tableFilters' => ['email' => ['value' => 'qwerty@uol.com.br']]

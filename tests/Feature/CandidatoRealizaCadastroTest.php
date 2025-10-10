@@ -40,7 +40,6 @@ class CandidatoRealizaCadastroTest extends TestCase
         // ASSERT DE SUCESSO
         $response->assertStatus(200);
         $response->assertSee('Inscrever-se'); 
-
     }
 
     public function test_candidato_entra_na_tela_de_cadastro(): void
@@ -86,7 +85,7 @@ class CandidatoRealizaCadastroTest extends TestCase
     {
         Livewire::test(Cadastro::class)
         // Primeiro define o campo de gênero como transgênero (ativa o checkbox)
-        ->set('data.identidade_genero', 'T')
+        ->set('data.gender_identity', 'T')
 
         // Marca o checkbox “usar nome social”
         ->set('data.usar_nome_social', true)
@@ -98,10 +97,10 @@ class CandidatoRealizaCadastroTest extends TestCase
         ->assertSet('data.usar_nome_social', true)
 
         // Define o nome social
-        ->set('data.nome_social', 'Maria Clara')
+        ->set('data.social_name', 'Maria Clara')
 
         // Verifica se o nome social foi corretamente setado
-        ->assertSet('data.nome_social', 'Maria Clara');
+        ->assertSet('data.social_name', 'Maria Clara');
     }
 
     public function test_validacoes_do_cadastro_funcionam_corretamente(): void
@@ -131,21 +130,21 @@ class CandidatoRealizaCadastroTest extends TestCase
 
         // SEGUNDO TESTE: testa formato incorreto de CPF e data inválida
         Livewire::test(\App\Filament\Candidato\Pages\Auth\Cadastro::class)
-            ->set('data.nome', 'João Teste')
-            ->set('data.mae', 'Maria Teste')
-            ->set('data.ci', '12345')
-            ->set('data.data_nascimento', '3020-01-01') // data futura (inválida)
+            ->set('data.name', 'João Teste')
+            ->set('data.mother_name', 'Maria Teste')
+            ->set('data.rg', '12345')
+            ->set('data.birth_date', '3020-01-01') // data futura (inválida)
             ->set('data.cpf', '12345678999') // formato incorreto (não passa regra 'cpf')
             ->set('data.email', 'email_invalido')
-            ->set('data.telefone', '(00)12345-1234')
-            ->set('data.cep', '00000-000')
-            ->set('data.endereco', 'Rua Teste')
-            ->set('data.bairro', 'Centro')
-            ->set('data.numero', '100')
-            ->set('data.cidade', 'Macapá')
+            ->set('data.phone', '(00)12345-1234')
+            ->set('data.postal_code', '00000-000')
+            ->set('data.address', 'Rua Teste')
+            ->set('data.distric', 'Centro')
+            ->set('data.address_number', '100')
+            ->set('data.city', 'Macapá')
             ->set('data.password', 'senha')
             ->set('data.passwordConfirmation', 'senha')
-            ->set('data.sexo', 'M')
+            ->set('data.sex', 'M')
             ->call('register')
             ->assertHasFormErrors([
                 'cpf',              // formato errado (regra 'cpf')

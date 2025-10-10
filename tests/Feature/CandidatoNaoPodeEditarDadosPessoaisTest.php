@@ -38,24 +38,24 @@ class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
     public function candidato_tem_que_preencher_campos_requeridos()
     {
         Livewire::test(MeusDados::class)
-            ->set('data.nome', '')
-            ->set('data.mae', '')
+            ->set('data.name', '')
+            ->set('data.mother_name', '')
             ->set('data.cpf', '')
-            ->set('data.ci', '')
-            ->set('data.data_nascimento', '')
+            ->set('data.rg', '')
+            ->set('data.birth_date', '')
             ->set('data.email', '')
-            ->set('data.sexo', '')
-            ->set('data.identidade_genero', '')
+            ->set('data.sex', '')
+            ->set('data.gender_identity', '')
             ->call('save') // chama o método de gravação
             ->assertHasErrors([
-                'data.nome' => 'required',
-                'data.mae' => 'required',
+                'data.name' => 'required',
+                'data.mother_name' => 'required',
                 'data.cpf' => 'required',
-                'data.ci' => 'required',
-                'data.data_nascimento' => 'required',
+                'data.rg' => 'required',
+                'data.birth_date' => 'required',
                 'data.email' => 'required',
-                'data.sexo' => 'required',
-                'data.identidade_genero' => 'required',
+                'data.sex' => 'required',
+                'data.gender_identity' => 'required',
             ]);
     }
 

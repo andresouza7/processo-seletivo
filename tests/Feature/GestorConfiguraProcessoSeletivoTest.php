@@ -54,10 +54,10 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
     {
         $formData = [
             'title' => 'Edital Monitoria',
-            'process_type_id' => $this->type->process_type_id,
+            'process_type_id' => $this->type->id,
             'number' => '01/2025',
             'document_date' => $this->date,
-            'is_published' => 'S',
+            'is_published' => true,
             'description' => 'lorem ipsum',
             'publication_start_date' => $this->date,
             'publication_end_date' => $this->date,
@@ -83,7 +83,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'process_type_id' => $formData['process_type_id'],
             'number' => $formData['number'],
             'document_date' => $this->date,
-            'is_published' => 'S',
+            'is_published' => true,
             'description' => '<p>lorem ipsum</p>', // Filament salva HTML
             'publication_start_date' => $this->date,
             'publication_end_date' => $this->date,
@@ -105,7 +105,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
         $processo = Process::factory()->create([
             'title' => 'Processo Original',
             'description' => '<p>Texto original</p>',
-            'process_type_id' => $this->type->process_type_id,
+            'process_type_id' => $this->type->id,
             'number' => '02/2025',
             'document_date' => $this->date,
             'is_published' => false,
@@ -119,7 +119,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
         $novosDados = [
             'title' => 'Processo Atualizado',
             'description' => 'Descrição atualizada pelo gestor',
-            'is_published' => 'S',
+            'is_published' => true,
         ];
 
         // 3️⃣ Simula o componente de edição (Filament Edit Page)
@@ -135,7 +135,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'id' => $processo->id,
             'title' => $novosDados['title'],
             'description' => '<p>' . $novosDados['description'] . '</p>',
-            'is_published' => 'S',
+            'is_published' => true,
         ]);
     }
 }

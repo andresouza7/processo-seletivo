@@ -73,10 +73,10 @@ class GestorConfiguraAnexosTest extends TestCase
     public function test_gestor_consulta_anexos()
     {
         $attachments = ProcessAttachment::factory(5)->create([
-            'id' => $this->processo->id,
+            'process_id' => $this->processo->id,
         ]);
         $anexo = ProcessAttachment::factory()->create([
-            'id' => $this->processo->id,
+            'process_id' => $this->processo->id,
             'description' => 'um anexo'
         ]);
 

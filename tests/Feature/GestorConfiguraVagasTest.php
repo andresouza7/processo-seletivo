@@ -55,10 +55,10 @@ class GestorConfiguraVagasTest extends TestCase
     public function test_gestor_consulta_vagas()
     {
         $vagas = Position::factory(5)->create([
-            'id' => $this->processo->id,
+            'process_id' => $this->processo->id,
         ]);
         $vaga = Position::factory()->create([
-            'id' => $this->processo->id,
+            'process_id' => $this->processo->id,
             'description' => 'bolsista'
         ]);
 
