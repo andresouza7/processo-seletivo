@@ -105,7 +105,8 @@ class Process extends Model
 
     public function type()
     {
-        return $this->belongsTo(ProcessType::class);
+        // *fk manually declared because its different than method name
+        return $this->belongsTo(ProcessType::class, 'process_type_id');
     }
 
     public function attachments()

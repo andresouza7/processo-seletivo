@@ -78,7 +78,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
         $processo = Process::latest()->first();
 
         // Valida campos do banco
-        $this->assertDatabaseHas('process', [
+        $this->assertDatabaseHas('processes', [
             'title' => $formData['title'],
             'process_type_id' => $formData['process_type_id'],
             'number' => $formData['number'],
@@ -131,7 +131,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             ->assertHasNoFormErrors();
 
         // 4️⃣ Valida se as alterações foram persistidas no banco
-        $this->assertDatabaseHas('process', [
+        $this->assertDatabaseHas('processes', [
             'id' => $processo->id,
             'title' => $novosDados['title'],
             'description' => '<p>' . $novosDados['description'] . '</p>',
