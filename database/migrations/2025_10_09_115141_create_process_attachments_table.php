@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('process_id')->constrained();
             $table->integer('idarquivo')->nullable()->comment('referência a arquivos do sistema legado');
             $table->string('description');
-            $table->date('publication_date');
             $table->unsignedBigInteger('views')->default(0);
             $table->timestamps();
             $table->softDeletes();

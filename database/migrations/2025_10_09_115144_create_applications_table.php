@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('position_id')->constrained();
             $table->foreignId('process_id')->nullable()->constrained()->comment('analisar remoção do campo');
             $table->foreignId('quota_id')->nullable();
-            $table->timestamp('submitted_at');
             $table->boolean('requires_assistance')->default(false);
             $table->text('assistance_details')->nullable();
             $table->timestamps();

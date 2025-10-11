@@ -16,7 +16,6 @@ class ProcessAttachmentFactory extends Factory
             'process_id' => Process::factory(), // create a related ProcessoSeletivo
             'idarquivo' => null, // optional, set manually if needed
             'description' => $this->faker->sentence(6),
-            'publication_date' => $this->faker->date(),
             'views' => $this->faker->numberBetween(0, 100),
             'created_at' => now(),
             'updated_at' => now(),

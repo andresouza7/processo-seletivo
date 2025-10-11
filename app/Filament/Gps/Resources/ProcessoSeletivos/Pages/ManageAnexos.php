@@ -38,6 +38,7 @@ class ManageAnexos extends ManageRelatedRecords
             ->columns(1)
             ->components([
                 TextInput::make('description')
+                    ->label('Descrição')
                     ->required()
                     ->maxLength(255),
                 SpatieMediaLibraryFileUpload::make('arquivo')
@@ -53,25 +54,17 @@ class ManageAnexos extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('description')
             ->heading('Anexos')
+            ->modelLabel('Anexo')
             ->columns([
-                TextColumn::make('id')->searchable()->limit(70),
-                TextColumn::make('description')->searchable()->limit(70),
+                TextColumn::make('description')
+                    ->label('Descrição')
+                    ->searchable()
+                    ->limit(70),
             ])
             ->headerActions([
                 CreateAction::make()
                     ->label('Novo Anexo')
                     ->createAnother(false)
-                    ->databaseTransaction()
-                    ->mutateDataUsing(function (array $data) {
-
-                        $id = ProcessAttachment::latest('id')
-                            ->value('id') ?? 0;
-                        $data['id'] = $id + 1;
-                        $data['publication_date'] = now();
-                        $data['views'] = 0;
-
-                        return $data;
-                    }),
             ])
             ->recordActions([
                 EditAction::make()

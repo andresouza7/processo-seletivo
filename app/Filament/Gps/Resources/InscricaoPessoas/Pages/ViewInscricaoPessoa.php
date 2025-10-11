@@ -24,7 +24,7 @@ class ViewInscricaoPessoa extends ViewRecord
                 ->modalDescription('O email será alterado e uma senha temporária será enviada para o endereço fornecido.')
                 ->modalSubmitActionLabel('Confirmar')
                 ->schema([
-                    TextInput::make('email')->label('Novo Email')->email()->required()->unique('candidate', 'email', ignoreRecord: true)
+                    TextInput::make('email')->label('Novo Email')->email()->required()->unique('candidates', 'email', ignoreRecord: true)
                 ])
                 ->action(function (Candidate $record, array $data, ResetCandidatoPasswordAction $resetAction) {
 

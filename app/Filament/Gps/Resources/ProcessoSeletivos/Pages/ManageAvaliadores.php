@@ -57,24 +57,24 @@ class ManageAvaliadores extends ManageRelatedRecords
             ->recordTitleAttribute('name')
             // ->inverseRelationship('processes')
             ->heading('Avaliadores')
+            ->modelLabel('Avaliador')
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
                 TextColumn::make('name')
                     ->label('Nome')
+                    ->searchable(),
+                TextColumn::make('email')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                AttachAction::make()->label('Cadastrar Avaliador')->preloadRecordSelect()
+                AttachAction::make()->preloadRecordSelect()->color('primary')
             ])
             ->recordActions([
                 ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
-                DetachAction::make()->label('Remover Avaliador')->requiresConfirmation(),
+                DetachAction::make()->requiresConfirmation(),
             ])
             ->toolbarActions([
                 // Tables\Actions\BulkActionGroup::make([

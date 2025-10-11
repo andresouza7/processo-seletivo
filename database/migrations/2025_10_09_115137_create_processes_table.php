@@ -17,10 +17,9 @@ return new class extends Migration
             $table->text('title');
             $table->text('description');
             $table->string('number')->unique();
-            $table->date('document_date');
-            $table->unsignedBigInteger('views');
-            $table->boolean('is_published');
             $table->string('directory', 30)->unique();
+            $table->unsignedBigInteger('views')->default(0);
+            $table->boolean('is_published');
             $table->date('publication_start_date');
             $table->date('publication_end_date');
             $table->date('application_start_date');

@@ -10,6 +10,7 @@ use Filament\Facades\Filament;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Tables\Table;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -54,5 +55,8 @@ class AppServiceProvider extends ServiceProvider
 
         Section::configureUsing(fn(Section $section) => $section
             ->columnSpanFull());
+
+        Table::configureUsing(fn(Table $table) => $table
+            ->emptyStateDescription(null));
     }
 }

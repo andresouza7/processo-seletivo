@@ -25,25 +25,26 @@ class ProcessoSeletivoForm
                             ->label('Título')
                             ->columnSpan(2)
                             ->required(),
-                        Select::make('process_type_id')
-                            ->label('Tipo')
-                            ->relationship('type', 'description')
-                            ->required(),
-                    ])->columns(3),
-
-                    Group::make([
                         TextInput::make('number')
+                            ->label('Número')
                             ->disabledOn('edit')
+                            ->mask('99/9999')
                             ->placeholder('Ex: 01/2025')
                             ->required(),
-                        DatePicker::make('document_date')
-                            ->label('Data do Edital')
+
+                    ])->columns(3),
+                    Group::make([
+                        Select::make('process_type_id')
+                            ->label('Tipo')
+                            ->columnSpan(2)
+                            ->relationship('type', 'description')
                             ->required(),
                         Select::make('is_published')
+                            ->label('Status')
                             ->required()
                             ->options([
-                                true => 'Sim',
-                                false => 'Não'
+                                true => 'Publicado',
+                                false => 'Despublicado'
                             ]),
                     ])->columns(3),
 
@@ -82,7 +83,7 @@ class ProcessoSeletivoForm
                                 ->label('Nome do Documento')
                                 ->required() //causou problemas com testes (factory), mas deixa como está
                         ])
-                        ->itemLabel(fn (array $state): ?string => $state['item'] ?? null)
+                        ->itemLabel(fn(array $state): ?string => $state['item'] ?? null)
                         ->cloneable()
                         ->compact()
                         ->collapsed()

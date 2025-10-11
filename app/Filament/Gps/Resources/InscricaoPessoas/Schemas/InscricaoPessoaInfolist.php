@@ -20,7 +20,7 @@ class InscricaoPessoaInfolist
                         TextEntry::make('mother_name')->label('Nome da Mãe'),
                         TextEntry::make('cpf')->label('CPF'),
                         TextEntry::make('rg')->label('RG'),
-                        TextEntry::make('birth_date')->label('Data de Nascimento'),
+                        TextEntry::make('birth_date')->label('Data de Nascimento')->date('d/m/Y'),
                         TextEntry::make('sex')
                             ->label('Sexo')
                             ->formatStateUsing(fn($state) => [

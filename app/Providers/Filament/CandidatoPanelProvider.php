@@ -42,9 +42,11 @@ class CandidatoPanelProvider extends PanelProvider
             ->widgets([
                 // Widgets\AccountWidget::class,
             ])
+            ->resourceCreatePageRedirect('index')
+            ->resourceEditPageRedirect('index')
             ->collapsibleNavigationGroups(false)
-             ->userMenuItems([
-                'profile' => fn (Action $action) => $action->label('Perfil')->url(route('filament.candidato.pages.meus-dados')),
+            ->userMenuItems([
+                'profile' => fn(Action $action) => $action->label('Perfil')->url(route('filament.candidato.pages.meus-dados')),
             ])
             ->navigationItems([
                 NavigationItem::make('Nova Inscrição')

@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::factory()->count(10)->create();
+        User::factory()->count(5)->create();
 
         // ------------------------
         // 2️⃣ Tipos de Cotas
@@ -48,11 +48,7 @@ class DatabaseSeeder extends Seeder
             ['description' => 'Interiorização'],
         ];
 
-        foreach ($tiposFixos as $tipo) {
-            Quota::firstOrCreate(['description' => $tipo['description']], $tipo);
-        }
-
-        // Quota::factory()->count(5)->create();
+        Quota::insert($tiposFixos);
 
         // ------------------------
         // 3️⃣ Tipos de Processo Seletivo
@@ -64,56 +60,14 @@ class DatabaseSeeder extends Seeder
             ['description' => 'Transferência', 'slug' => 'TRA'],
         ];
 
-        foreach ($psTiposFixos as $tipo) {
-            ProcessType::firstOrCreate(['slug' => $tipo['slug']], $tipo);
-        }
-
-        // Process::factory()->count(3)->create();
-
-        // ------------------------
-        // 4️⃣ Pessoas inscritas
-        // ------------------------
-        Candidate::factory()->count(50)->create();
+        ProcessType::insert($psTiposFixos);
 
         // ------------------------
         // 5️⃣ Processos Seletivos
         // ------------------------
-        $processos = Process::factory()
+        Process::factory()
             ->count(5)
-            ->withApplications(3,10,2)
+            ->withApplications(3, 10, 2)
             ->create();
-
-        // ------------------------
-        // 7️⃣ Anexos de Processos Seletivos
-        // ------------------------
-        foreach ($processos as $processo) {
-            ProcessAttachment::factory()
-                ->count(rand(1, 3))
-                ->create([
-                    'process_id' => $processo->id
-                ]);
-        }
-
-        // ------------------------
-        // 8️⃣ Inscrição Vaga
-        // ------------------------
-        foreach ($processos as $processo) {
-            $vagas = Position::factory()->count(3)->create([
-                'process_id' => $processo->id,
-            ]);
-
-            $pessoas = Candidate::all();
-
-            // Cria inscrições
-            Application::factory()
-                ->count(10)
-                ->withFiles(2)
-                ->sequence(fn($sequence) => [
-                    'process_id' => $processo->id,
-                    'position_id' => $vagas->random()->id,
-                    'candidate_id' => $pessoas->random()->id,
-                ])
-                ->create();
-        }
     }
 }

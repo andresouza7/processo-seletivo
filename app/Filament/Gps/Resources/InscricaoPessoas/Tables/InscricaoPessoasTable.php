@@ -16,8 +16,10 @@ class InscricaoPessoasTable
             ->defaultSort('name')
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nome')
                     ->searchable(),
                 TextColumn::make('sex')
+                    ->label('Sexo')
                     ->badge()
                     ->searchable(),
                 TextColumn::make('rg')

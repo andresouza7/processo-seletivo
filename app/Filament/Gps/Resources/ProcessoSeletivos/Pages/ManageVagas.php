@@ -11,6 +11,7 @@ use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +23,7 @@ class ManageVagas extends ManageRelatedRecords
     protected static ?string $title = 'Gerenciar Vagas';
     protected static string $relationship = 'position';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedBriefcase;
 
     public static function getNavigationLabel(): string
     {

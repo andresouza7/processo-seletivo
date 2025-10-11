@@ -18,15 +18,14 @@ class ApplicationFactory extends Factory
     public function definition()
     {
         $needs_assistance = $this->faker->randomElement([true, false]);
-        $quota = Quota::factory()->create();
+        $quota = Quota::inRandomOrder()->first()?->id ?? Quota::factory();
 
         return [
             'code' => Application::generateUniqueCode(),
             'process_id' => Process::factory(),
             'position_id' => Position::factory(),
             'candidate_id' => Candidate::factory(),
-            'quota_id' => $quota->id,
-            'submitted_at' => now(),
+            'quota_id' => $quota,
             'requires_assistance' => $needs_assistance,
             'assistance_details' => $needs_assistance ? $this->faker->optional()->sentence() : null,
 

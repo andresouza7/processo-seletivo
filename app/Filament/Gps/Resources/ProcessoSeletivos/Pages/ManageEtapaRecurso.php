@@ -76,6 +76,7 @@ class ManageEtapaRecurso extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('description')
             ->heading('Etapas')
+            ->modelLabel('Etapa de Recurso')
             ->defaultSort('id', 'desc')
             ->columns([
                 TextColumn::make('description')->label('Descrição'),
@@ -83,7 +84,6 @@ class ManageEtapaRecurso extends ManageRelatedRecords
             ->filters([])
             ->headerActions([
                 CreateAction::make()
-                    ->label('Criar Etapa de Recurso')
                     ->createAnother(false)
                     ->before(function (CreateAction $action) {
                         $processo = $this->getRecord();
@@ -94,7 +94,7 @@ class ManageEtapaRecurso extends ManageRelatedRecords
                         if ($exists) {
                             Notification::make()
                                 ->title('Já existe uma etapa em andamento.')
-                                ->body('Você não pode criar outra enquanto houver uma ainda não finalizada.')
+                                ->body('Você só pode criar outra após esta ser finalizada.')
                                 ->danger()
                                 ->send();
 

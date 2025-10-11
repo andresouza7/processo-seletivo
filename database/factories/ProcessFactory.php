@@ -23,12 +23,13 @@ class ProcessFactory extends Factory
         $number = $this->faker->bothify('##/####');
         $directory = str_replace('/', '_', $number);
 
+        $type = ProcessType::inRandomOrder()->first()?->id ?? ProcessType::factory();
+
         return [
-            'process_type_id' => ProcessType::factory(),
+            'process_type_id' => $type,
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->paragraph(),
             'number' => $number,
-            'document_date' => $today,
             'views' => $this->faker->numberBetween(0, 1000),
             'is_published' => true,
             'directory' => $directory,
