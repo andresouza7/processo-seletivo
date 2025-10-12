@@ -16,6 +16,7 @@ use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageAnexos;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageAvaliadores;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageEtapaRecurso;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageInscritos;
+use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageRecursos;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageVagas;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Schemas\ProcessoSeletivoForm;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Tables\ProcessoSeletivoTable;
@@ -81,6 +82,7 @@ class ProcessoSeletivoResource extends Resource
             ManageAnexos::class,
             ManageInscritos::class,
             ManageVagas::class,
+            ManageRecursos::class,
             ManageEtapaRecurso::class,
             ManageAvaliadores::class,
         ]);
@@ -95,6 +97,7 @@ class ProcessoSeletivoResource extends Resource
             'anexos' => ManageAnexos::route('/{record}/anexos'),
             'inscritos' => ManageInscritos::route('/{record}/inscritos'),
             'evaluators' => ManageAvaliadores::route('/{record}/evaluators'),
+            'recursos' => ManageRecursos::route('/{record}/recursos'),
             'vagas' => ManageVagas::route('/{record}/vagas'),
             'etapas_recurso' => ManageEtapaRecurso::route('/{record}/etapas_recurso'),
         ];

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('code', 32)->unique();
             $table->foreignId('candidate_id')->constrained();
             $table->foreignId('position_id')->constrained();
-            $table->foreignId('process_id')->nullable()->constrained()->comment('analisar remoção do campo');
+            $table->foreignId('process_id')->constrained();
             $table->foreignId('quota_id')->nullable();
             $table->boolean('requires_assistance')->default(false);
             $table->text('assistance_details')->nullable();

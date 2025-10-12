@@ -154,7 +154,7 @@ class MeusDados extends Page implements HasSchemas
 
                             if ($cep) {
                                 $set('address', $cep->logradouro);
-                                $set('district', $cep->district);
+                                $set('district', $cep->bairro);
                                 $set('city', $cep->localidade);
                             }
                         } catch (Exception $e) {

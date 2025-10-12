@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/css/filament/app/theme.css',
                 'resources/css/filament/candidato/theme.css',
+                'resources/css/filament/gps/theme.css',
             ],
             refresh: [
                 ...refreshPaths,

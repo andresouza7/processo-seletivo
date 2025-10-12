@@ -28,6 +28,7 @@ class GpsPanelProvider extends PanelProvider
         return $panel
             ->id('gps')
             ->path('gps')
+            ->viteTheme('resources/css/filament/gps/theme.css')
             ->login()
             ->brandName('GPS - UEAP')
             ->profile()
@@ -59,7 +60,7 @@ class GpsPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-             ->passwordReset(RequestPasswordReset::class)
+            ->passwordReset(RequestPasswordReset::class)
             ->authMiddleware([
                 Authenticate::class,
             ]);

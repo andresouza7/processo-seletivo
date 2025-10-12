@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // Composite unique: number + process_type_id
+            // Composite unique key
             $table->unique(['number', 'process_type_id']);
             $table->unique(['directory', 'process_type_id']);
         });

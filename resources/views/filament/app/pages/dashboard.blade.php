@@ -168,7 +168,7 @@
 
                     <div class="divide-y divide-gray-200">
                         @foreach ($processos as $processo)
-                            <div class="flex items-start gap-4 text-sm text-gray-700">
+                            <div class="flex items-start gap-4 text-sm text-gray-700 py-2">
                                 <div class="w-20 text-xs text-gray-500">
                                     {{ \Carbon\Carbon::parse($processo->data_criacao)->format('d/m/Y') }}
                                 </div>
@@ -197,7 +197,7 @@
 
                     <div class="divide-y divide-gray-200">
                         @foreach ($anexos as $anexo)
-                            <div class="flex items-start gap-4">
+                            <div class="flex items-start gap-4 py-2">
                                 {{-- Coluna da Data --}}
                                 <div class="w-20 shrink-0">
                                     <span class="text-xs text-gray-500 block">

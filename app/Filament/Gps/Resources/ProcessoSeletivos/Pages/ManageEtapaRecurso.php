@@ -29,6 +29,7 @@ class ManageEtapaRecurso extends ManageRelatedRecords
     protected static ?string $navigationLabel = 'Etapas de Recurso';
     protected static ?string $breadcrumb = 'Etapas de Recurso';
     protected static string $relationship = 'appeal_stage';
+    protected static bool $shouldRegisterNavigation = false;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
@@ -80,6 +81,8 @@ class ManageEtapaRecurso extends ManageRelatedRecords
             ->defaultSort('id', 'desc')
             ->columns([
                 TextColumn::make('description')->label('Descrição'),
+                TextColumn::make('submission_start_date')->label('Início')->date('d/m/Y'),
+                TextColumn::make('submission_end_date')->label('Fim')->date('d/m/Y'),
             ])
             ->filters([])
             ->headerActions([

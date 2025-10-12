@@ -5,8 +5,12 @@ namespace App\Filament\Gps\Resources\ProcessoSeletivos\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
 class ProcessoSeletivoTable
@@ -29,18 +33,20 @@ class ProcessoSeletivoTable
                 TextColumn::make('number')
                     ->label('Número')
                     ->searchable(),
-                TextColumn::make('is_published')
+                IconColumn::make('is_published')
                     ->label('Publicado')
-                    ->badge()
-                    ->color(fn($state) => $state ? 'success' : 'danger'),
+                    ->boolean()
             ])
             ->filters([
                 SelectFilter::make('type')
                     ->label('Tipo')
                     ->relationship('type', 'description'),
+                TrashedFilter::make('trash')
             ])
             ->recordActions([
-                EditAction::make()
+                EditAction::make(),
+                RestoreAction::make(),
+                // ForceDeleteAction::make()
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

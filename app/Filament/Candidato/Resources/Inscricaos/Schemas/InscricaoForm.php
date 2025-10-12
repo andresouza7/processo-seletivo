@@ -70,6 +70,7 @@ class InscricaoForm
                 ->live()
                 ->afterStateUpdated(function (callable $set, $state) {
                     $processo = Process::find($state);
+                    // dd($processo);
                     $set('has_fee_exemption', $processo?->has_fee_exemption);
                     $set('attachment_fields', (array) ($processo?->attachment_fields ?? []));
                 }),
@@ -83,28 +84,27 @@ class InscricaoForm
     {
         return [
             Group::make()
-                ->visible(fn(Get $get) => (bool) $get('process_id'))
+                ->hidden(fn(Get $get) => empty($get('attachment_fields')))
                 ->schema(function (Get $get) {
                     $attachments = (array) $get('attachment_fields');
 
                     return [
                         Fieldset::make('Documentos Requeridos')
-                            ->hidden(fn() => isEmpty($attachments))
                             ->schema(
                                 collect($attachments)->map(function ($item, $index) {
                                     $label = $item['item'] ?? "documento_{$index}";
                                     $fieldKey = 'documentos_requeridos_' . Str::slug("{$index}_{$label}");
 
                                     return SpatieMediaLibraryFileUpload::make($fieldKey)
-                                        ->label(fn() => $label)
+                                        ->label($label)
                                         ->disk('local')
                                         ->maxFiles(1)
                                         ->required()
                                         ->rules(['file', 'mimes:pdf', 'max:2048'])
                                         ->acceptedFileTypes(['application/pdf'])
-                                        ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file) use ($label): string {
-                                            return Str::slug($label) . '.' . $file->getClientOriginalExtension();
-                                        });
+                                        ->getUploadedFileNameForStorageUsing(
+                                            fn(TemporaryUploadedFile $file) => Str::slug($label) . '.' . $file->getClientOriginalExtension()
+                                        );
                                 })->toArray()
                             ),
                     ];

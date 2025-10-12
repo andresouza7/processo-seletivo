@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('process_types', function (Blueprint $table) {
             $table->id();
             $table->text('description');
-            $table->string('slug', 30);
+            $table->string('slug', 30)->unique();
             $table->timestamps();
             $table->softDeletes();
         });

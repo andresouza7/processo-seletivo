@@ -26,6 +26,7 @@ class ManageAvaliadores extends ManageRelatedRecords
     protected static ?string $title = 'Gerenciar Avaliadores';
     protected static string $relationship = 'evaluators';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function getNavigationLabel(): string
     {

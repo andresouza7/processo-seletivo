@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -52,8 +53,16 @@ class Process extends Model
     {
         static::deleting(function ($processo) {
             $processo->applications()->each(function ($application) {
-                $application->clearMediaCollection('documentos_requeridos');
+                $application->clearMedia();
             });
+        });
+
+        static::saved(function () {
+            Cache::forget('processos_inscricoes_abertas_options');
+        });
+
+        static::deleted(function () {
+            Cache::forget('processos_inscricoes_abertas_options');
         });
     }
 

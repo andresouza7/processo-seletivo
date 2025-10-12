@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('text');
             $table->text('response')->nullable();
             $table->char('result', 2)->nullable();
-            $table->timestamp('submitted_at');
             $table->timestamp('evaluated_at');
             $table->timestamps();
             $table->softDeletes();
