@@ -49,12 +49,19 @@ class InscricaoForm
         return [
             Select::make('process_id')
                 ->label('Processo Seletivo')
-                ->options(fn() => Cache::remember('processos_inscricoes_abertas_options', 60, function () {
+                // ->options(fn() => Cache::remember('processos_inscricoes_abertas_options', 60, function () {
+                //     return Process::inscricoesAbertas()
+                //         ->get()
+                //         ->mapWithKeys(fn($p) => [$p->id => "{$p->number} - {$p->title}"])
+                //         ->toArray();
+                // }))
+                ->options(function () {
                     return Process::inscricoesAbertas()
                         ->get()
                         ->mapWithKeys(fn($p) => [$p->id => "{$p->number} - {$p->title}"])
                         ->toArray();
-                }))
+                })
+                ->noSearchResultsMessage('Nenhum Processo Seletivo encontrado')
                 ->placeholder('Selecione um processo seletivo')
                 ->searchable()
                 ->preload()

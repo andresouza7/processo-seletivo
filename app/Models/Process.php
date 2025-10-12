@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Filament\Candidato\Resources\EtapaRecursos\EtapaRecursoResource;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +26,6 @@ class Process extends Model
         'title',
         'description',
         'number',
-        'document_date',
         'status',
         'views',
         'is_published',
@@ -60,30 +57,13 @@ class Process extends Model
         });
     }
 
-    // public $timestamps = false;
-
-    public function getUrlArquivoAttribute()
-    {
-        $systemMigrationReferenceDate = Carbon::parse('2024-11-01');
-
-        // Check if `data_publicacao` is older than the reference date
-        if (Carbon::parse($this->publication_date)->lt($systemMigrationReferenceDate)) {
-            $oldFilePath = $this->process->tipo->slug . '/' .
-                $this->process->directory . '/' .
-                optional($this->arquivo)->codname . '.pdf';
-
-            return Storage::url($oldFilePath);
-        }
-
-        // Otherwise, return the URL from Spatie Media Library
-        return $this->getFirstMediaUrl();
-    }
-
     public function getCanApplyAttribute()
     {
         $today = now()->toDateString(); // Get current date in 'Y-m-d' format
 
-        return $this->application_start_date <= $today && $this->application_end_date >= $today;
+        return $this->position->count() > 0 &&
+            $this->application_start_date <= $today &&
+            $this->application_end_date >= $today;
     }
 
     public function getCanAppealAttribute()
@@ -146,7 +126,8 @@ class Process extends Model
     {
         $query->where('is_published', true)
             ->whereDate('application_start_date', '<=', now())
-            ->whereDate('application_end_date', '>=', now());
+            ->whereDate('application_end_date', '>=', now())
+            ->has('position');
     }
 
     public function scopeEmAndamento(Builder $query): void

@@ -32,10 +32,10 @@ class AnexosRelationManager extends RelationManager
             ->defaultSort('id', 'desc')
             ->columns([
                 Stack::make([
-                    TextColumn::make('publication_date')
+                    TextColumn::make('created_at')
                         ->formatStateUsing(fn($record) => sprintf(
                             "<div class='text-xs font-semibold flex gap-3'><span>%s</span></div>",
-                            Carbon::parse($record->publication_date)->format('d/m/Y'),
+                            Carbon::parse($record->created_at)->format('d/m/Y'),
                         ))->html()
                         ->color('gray'),
                     TextColumn::make('description')

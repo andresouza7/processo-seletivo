@@ -23,7 +23,6 @@ class CreateInscricao extends CreateRecord
     {
         $data['code'] = Application::generateUniqueCode();
         $data['candidate_id'] = Auth::guard('candidato')->id();
-        $data['submitted_at'] = now();
 
         // tipos de vaga cadastrados na tabela de vagas
         $data['quota_id'] = $data['pcd'] ? 3 : 1;

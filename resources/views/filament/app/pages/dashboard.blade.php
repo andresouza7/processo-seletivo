@@ -46,23 +46,32 @@
                         'label' => 'Área do Candidato',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
-                            'status' => 'inscricoes_abertas',
-                        ]),
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl(
+                            'index',
+                            [
+                                'status' => 'inscricoes_abertas',
+                            ],
+                        ),
                         'img' => '/img/menu/inscricoes-abertas.jpg',
                         'label' => 'Inscrições Abertas',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
-                            'status' => 'em_andamento',
-                        ]),
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl(
+                            'index',
+                            [
+                                'status' => 'em_andamento',
+                            ],
+                        ),
                         'img' => '/img/menu/editais-andamento.jpg',
                         'label' => 'Editais em Andamento',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl('index', [
-                            'status' => 'finalizados',
-                        ]),
+                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl(
+                            'index',
+                            [
+                                'status' => 'finalizados',
+                            ],
+                        ),
                         'img' => '/img/menu/editais-finalizados.jpg',
                         'label' => 'Editais Encerrados',
                     ],
@@ -154,74 +163,63 @@
             <div>
                 <div x-show="tab === 'tab1'">
                     @php
-
-                        $processos = \App\Models\Process::emAndamento()
-                            ->latest('document_date')
-                            ->limit(10)
-                            ->get();
+                        $processos = \App\Models\Process::emAndamento()->latest('created_at')->limit(10)->get();
                     @endphp
 
                     <div class="divide-y divide-gray-200">
                         @foreach ($processos as $processo)
-                            <div class="py-4">
-                                <div class="flex items-start gap-4 text-sm text-gray-700">
-                                    <div class="w-20 text-xs text-gray-500">
-                                        {{ \Carbon\Carbon::parse($processo->data_criacao)->format('d/m/Y') }}
+                            <div class="flex items-start gap-4 text-sm text-gray-700">
+                                <div class="w-20 text-xs text-gray-500">
+                                    {{ \Carbon\Carbon::parse($processo->data_criacao)->format('d/m/Y') }}
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="text-xs font-medium text-gray-800">
+                                        Edital nº {{ $processo->number }}
                                     </div>
 
-                                    <div class="flex-1">
-                                        <div class="text-xs font-medium text-gray-800">
-                                            Edital nº {{ $processo->number }}
-                                        </div>
-
-                                        <a href="{{ route('filament.app.resources.processo-seletivos.view', ['record' => $processo->id]) }}"
-                                            class="text-primary-600 text-sm font-medium hover:underline mt-1.5"
-                                            title="{{ $processo->title }}">
-                                            {{ \Illuminate\Support\Str::limit($processo->title, 100) }}
-                                        </a>
-                                    </div>
+                                    <a href="{{ route('filament.app.resources.processo-seletivos.view', ['record' => $processo->id]) }}"
+                                        class="text-primary-600 text-sm font-medium hover:underline mt-1.5"
+                                        title="{{ $processo->title }}">
+                                        {{ \Illuminate\Support\Str::limit($processo->title, 100) }}
+                                    </a>
                                 </div>
                             </div>
                         @endforeach
                     </div>
 
-
-                    {{-- @livewire('public-dashboard-table-processos') --}}
                 </div>
 
                 <div x-show="tab === 'tab2'">
                     @php
-                        $anexos = \App\Models\ProcessAttachment::latest('publication_date')->limit(10)->get();
+                        $anexos = \App\Models\ProcessAttachment::latest('created_at')->limit(10)->get();
                     @endphp
 
                     <div class="divide-y divide-gray-200">
                         @foreach ($anexos as $anexo)
-                            <div class="py-4">
-                                <div class="flex items-start gap-4">
-                                    {{-- Coluna da Data --}}
-                                    <div class="w-20 shrink-0">
-                                        <span class="text-xs text-gray-500 block">
-                                            {{ \Carbon\Carbon::parse($anexo->publication_date)->format('d/m/Y') }}
-                                        </span>
-                                    </div>
+                            <div class="flex items-start gap-4">
+                                {{-- Coluna da Data --}}
+                                <div class="w-20 shrink-0">
+                                    <span class="text-xs text-gray-500 block">
+                                        {{ \Carbon\Carbon::parse($anexo->created_at)->format('d/m/Y') }}
+                                    </span>
+                                </div>
 
-                                    {{-- Coluna do Conteúdo --}}
-                                    <div class="flex-1 text-sm text-gray-700">
-                                        <div class="text-xs font-medium text-gray-800">
-                                            {{ $anexo->process->title }} – Edital nº
-                                            {{ $anexo->process->number }}
-                                        </div>
-                                        <a href="{{ $anexo->file_url }}" target="_blank"
-                                            class="text-primary-600 text-sm font-medium hover:underline mt-1.5">
-                                            {{ \Illuminate\Support\Str::limit($anexo->description, 100) }}
-                                        </a>
+                                {{-- Coluna do Conteúdo --}}
+                                <div class="flex-1 text-sm text-gray-700">
+                                    <div class="text-xs font-medium text-gray-800">
+                                        {{ $anexo->process->title }} – Edital nº
+                                        {{ $anexo->process->number }}
                                     </div>
+                                    <a href="{{ $anexo->file_url }}" target="_blank"
+                                        class="text-primary-600 text-sm font-medium hover:underline mt-1.5">
+                                        {{ \Illuminate\Support\Str::limit($anexo->description, 100) }}
+                                    </a>
                                 </div>
                             </div>
                         @endforeach
                     </div>
 
-                    {{-- @livewire('public-dashboard-table-attachments') --}}
                 </div>
             </div>
         </div>
@@ -290,8 +288,7 @@
                                 stroke-width="1.5" stroke="currentColor"
                                 class="w-5 h-5 text-gray-400 transition-transform duration-300"
                                 :class="{ 'rotate-180': open }">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                             </svg>
                         </button>
                         <div x-show="open" x-collapse class="px-4 py-3 border-t border-gray-200">

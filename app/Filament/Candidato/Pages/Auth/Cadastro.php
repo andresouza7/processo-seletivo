@@ -79,11 +79,12 @@ class Cadastro extends Register
     protected function getIdentificacaoSection(): array
     {
         return [
-            TextInput::make('name')->required(),
+            TextInput::make('name')->label('Nome')->required(),
             TextInput::make('mother_name')->label('Nome da Mãe')->required(),
             $this->getCpfFormComponent(),
             TextInput::make('rg')
                 ->label('RG')
+                ->maxLength(20)
                 ->required(),
             DatePicker::make('birth_date')
                 ->label('Data de Nascimento')
@@ -105,14 +106,10 @@ class Cadastro extends Register
         ];
     }
 
-
     /////////// NOVO GRUPO DE INFORMAÇÕES
     protected function getInformacoesSociaisSection(): array
     {
         return [
-
-
-
             /////// SELECT: DADOS DE GÊNERO
             Select::make('gender_identity')
                 ->label('Identidade de gênero')
@@ -208,15 +205,6 @@ class Cadastro extends Register
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('has_disability')),
 
-
-
-
-            ///////// TEXTBOX DA DEFICIENCIA
-            TextInput::make('disability_description')
-                ->label('Caso possuia deficiência, favor especificar qual:')
-                ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('has_disability')),
-
             /////////////// SELECT: RAÇA
             Select::make('race')
                 ->label('Raça/Cor')
@@ -262,7 +250,6 @@ class Cadastro extends Register
 
         ];
     }
-
 
     protected function getContatoSection(): array
     {

@@ -11,7 +11,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Validation\Rules\Unique;
 
 class ProcessoSeletivoForm
 {
@@ -30,6 +32,11 @@ class ProcessoSeletivoForm
                             ->disabledOn('edit')
                             ->mask('99/9999')
                             ->placeholder('Ex: 01/2025')
+                            ->unique(
+                                table: 'processes',
+                                column: 'number',
+                                modifyRuleUsing: fn(Unique $rule, Get $get) => $rule->where('process_type_id', $get('process_type_id') ?? null)
+                            )
                             ->required(),
 
                     ])->columns(3),

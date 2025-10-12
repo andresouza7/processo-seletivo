@@ -19,7 +19,7 @@ class ProcessAttachment extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['description', 'publication_date'])
+            ->logOnly(['description'])
             ->dontSubmitEmptyLogs();
     }
 
@@ -27,16 +27,11 @@ class ProcessAttachment extends Model implements HasMedia
         'process_id',
         'idarquivo',
         'description',
-        'publication_date',
         'views'
     ];
 
     protected $appends = [
         'file_url'
-    ];
-
-    protected $dates = [
-        'publication_date'
     ];
 
     public function getFileUrlAttribute()

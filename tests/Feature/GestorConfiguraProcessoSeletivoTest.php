@@ -56,7 +56,6 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'title' => 'Edital Monitoria',
             'process_type_id' => $this->type->id,
             'number' => '01/2025',
-            'document_date' => $this->date,
             'is_published' => true,
             'description' => 'lorem ipsum',
             'publication_start_date' => $this->date,
@@ -82,7 +81,6 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'title' => $formData['title'],
             'process_type_id' => $formData['process_type_id'],
             'number' => $formData['number'],
-            'document_date' => $this->date,
             'is_published' => true,
             'description' => '<p>lorem ipsum</p>', // Filament salva HTML
             'publication_start_date' => $this->date,
@@ -107,7 +105,6 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'description' => '<p>Texto original</p>',
             'process_type_id' => $this->type->id,
             'number' => '02/2025',
-            'document_date' => $this->date,
             'is_published' => false,
             'has_fee_exemption' => false,
             'attachment_fields' => [

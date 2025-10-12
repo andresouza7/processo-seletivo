@@ -14,7 +14,7 @@
     </div>
 
     <!-- Footer copyright -->
-    <div class="w-full bg-black/50 py-4 text-center">
+    <div class="w-full bg-black/20 py-4 text-center">
         <span class="text-xs text-gray-200 tracking-tight">
             © {{ now()->format('Y') }}
             <a href="#" class="text-white hover:underline">Site desenvolvido pela DINFO/UEAP</a>

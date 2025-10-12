@@ -27,7 +27,7 @@ class ProcessoSeletivoTable
                             ->searchable()
                             ->formatStateUsing(fn($record) => sprintf(
                                 "<div class='text-xs font-semibold flex gap-3'><span>Publicação: %s</span><span>Nº do Edital: %s</span></div>",
-                                Carbon::parse($record->data_criacao)->format('d/m/Y'),
+                                Carbon::parse($record->created_at)->format('d/m/Y'),
                                 $record->number
                             ))->html()
                             ->color('gray')
@@ -54,7 +54,7 @@ class ProcessoSeletivoTable
                             'inscricoes_abertas' => $query->inscricoesAbertas(),
                             'em_andamento' => $query->emAndamento(),
                             'finalizados' => $query->finalizados(),
-                            default => $query->whereRaw('1 = 0'),
+                            default => $query->whereRaw('1 = 0'), // no results
                         };
                     }),
             ])

@@ -68,7 +68,7 @@ class ManageAnexos extends ManageRelatedRecords
             ])
             ->recordActions([
                 EditAction::make()
-                    ->hidden(fn($record) => Carbon::parse($record->publication_date)->lt(Carbon::parse('2024-11-01'))),
+                    ->hidden(fn($record) => Carbon::parse($record->created_at)->lt(Carbon::parse('2024-11-01'))),
                 DeleteAction::make(),
                 Action::make('download')
                     ->disabled(fn($record) => !$record->file_url)

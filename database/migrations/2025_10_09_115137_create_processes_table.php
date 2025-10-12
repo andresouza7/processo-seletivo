@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('process_type_id')->constrained();
             $table->text('title');
             $table->text('description');
-            $table->string('number')->unique();
-            $table->string('directory', 30)->unique();
+            $table->string('number');
+            $table->string('directory', 30);
             $table->unsignedBigInteger('views')->default(0);
             $table->boolean('is_published');
             $table->date('publication_start_date');
@@ -28,6 +28,10 @@ return new class extends Migration
             $table->jsonb('attachment_fields')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            // Composite unique: number + process_type_id
+            $table->unique(['number', 'process_type_id']);
+            $table->unique(['directory', 'process_type_id']);
         });
     }
 
