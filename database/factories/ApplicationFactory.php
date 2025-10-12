@@ -18,7 +18,7 @@ class ApplicationFactory extends Factory
     public function definition()
     {
         $needs_assistance = $this->faker->randomElement([true, false]);
-        $quota = Quota::inRandomOrder()->first()?->id ?? Quota::factory();
+        $quota = Quota::inRandomOrder()->first()?->id;
 
         return [
             'code' => Application::generateUniqueCode(),
@@ -42,7 +42,7 @@ class ApplicationFactory extends Factory
         return $this->afterCreating(function ($application) use ($count) {
             $content = file_get_contents(storage_path('app/public/template.pdf'));
             $process = $application->process;
-            $type = optional($process->type)->slug;
+            $type = $process->type->slug;
             $directory = $process->directory;
             $id = $application->id;
 
@@ -52,7 +52,7 @@ class ApplicationFactory extends Factory
                 $application
                     ->addMediaFromString($content)
                     ->usingFileName($filepath)
-                    ->toMediaCollection('documentos_requeridos');
+                    ->toMediaCollection('default', 'local');
             }
         });
     }

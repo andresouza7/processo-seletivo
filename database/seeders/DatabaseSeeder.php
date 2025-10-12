@@ -2,11 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Application;
-use App\Models\Candidate;
-use App\Models\Position;
 use App\Models\Process;
-use App\Models\ProcessAttachment;
 use App\Models\ProcessType;
 use App\Models\Quota;
 use Illuminate\Database\Seeder;
@@ -24,7 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // ------------------------
-        // 1️⃣ Usuários
+        // Usuários
         // ------------------------
         User::firstOrCreate(
             ['email' => 'admin@example.com'],
@@ -38,7 +34,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(5)->create();
 
         // ------------------------
-        // 2️⃣ Tipos de Cotas
+        // Tipos de Cotas
         // ------------------------
         $tiposFixos = [
             // ['description' => 'Ampla Concorrência'],
@@ -51,23 +47,23 @@ class DatabaseSeeder extends Seeder
         Quota::insert($tiposFixos);
 
         // ------------------------
-        // 3️⃣ Tipos de Processo Seletivo
+        // Tipos de Processo Seletivo
         // ------------------------
         $psTiposFixos = [
-            ['description' => 'Processo Seletivo Simplificado', 'slug' => 'PSS'],
-            ['description' => 'Concurso Público', 'slug' => 'CON'],
-            ['description' => 'Edital Interno', 'slug' => 'EDI'],
-            ['description' => 'Transferência', 'slug' => 'TRA'],
+            ['description' => 'Processo Seletivo Simplificado', 'slug' => 'pss'],
+            ['description' => 'Processo Seletivo', 'slug' => 'ps'],
+            ['description' => 'Editais', 'slug' => 'editais'],
+            ['description' => 'Pós-Graduação', 'slug' => 'pos'],
         ];
 
         ProcessType::insert($psTiposFixos);
 
         // ------------------------
-        // 5️⃣ Processos Seletivos
+        // Processos Seletivos
         // ------------------------
         Process::factory()
             ->count(5)
-            ->withApplications(3, 10, 2)
+            ->withApplications(3, 10, 2) // vagas, inscricoes, anexos
             ->create();
     }
 }

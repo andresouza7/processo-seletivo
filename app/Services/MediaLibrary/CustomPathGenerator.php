@@ -2,42 +2,26 @@
 
 namespace App\Services\MediaLibrary;
 
-use App\Models\Application;
-use App\Models\ProcessAttachment;
-use App\Models\Appeal;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * Este gerador de caminhos personalizado define como os arquivos de mídia são armazenados
- * com base no modelo associado ao arquivo (media).
+ * Define onde os arquivos de mídia serão armazenados, conforme o modelo associado.
  *
- * Regras de armazenamento:
- * 
- * 1. Se o modelo for uma instância de:
- *    - ProcessAttachment: os arquivos são armazenados em:
- *        {type}/{diretorio}/{id}/
- * 
- *    - Application: os arquivos são armazenados em:
- *        {type}/{diretorio}/applications/
- * 
- *    - Appeal: os arquivos são armazenados em:
- *        {type}/{diretorio}/appeals/
+ * Regras:
+ * 1. Se o model tiver o relacionamento `process`, usa a estrutura:
+ *      {type}/{diretorio}
+ * 2. Caso contrário, gera um caminho padrão com hash MD5:
+ *      media/md5(media_id + app_key)
+ * 3. Conversões e imagens responsivas ficam em:
+ *      conversions/ e responsive-images/
  *
- * 2. Se o modelo não for um dos acima, um caminho padrão é gerado com um hash MD5:
- *        md5(media_id + app_key)
+ * Observações:
+ * - Anexos de processo seletivo são públicos.
+ * - Demais arquivos ficam no disco local, acessíveis apenas por rota protegida.
  *
- * 3. Conversões e imagens responsivas são armazenadas dentro dos respectivos diretórios:
- *    - conversions/
- *    - responsive-images/
- *
- * Observação:
- * - Arquivos vinculados ao modelo ProcessAttachment são de acesso público na web.
- * - Arquivos vinculados a outros modelos são armazenados localmente e acessados
- *   somente através de uma rota protegida personalizada.
- *
- * Exemplo de caminho gerado:
- *    "seletivo2025/documentos/applications/conversions/"
+ * Exemplo:
+ *   "editais/01_2025/"
  */
 
 class CustomPathGenerator implements PathGenerator
@@ -59,41 +43,15 @@ class CustomPathGenerator implements PathGenerator
 
     private function basePath(Media $media): string
     {
-        $model = $media->model;
+        $process = $media->model?->process;
 
-        $subfolder = $this->resolveSubfolder($model);
-
-        if ($subfolder === null) {
-            // fallback to default path when model not supported
-            return $this->defaultPath($media) . '/';
-        }
-
-        $processoSeletivo = optional($model->getAttribute('process'));
-        $type = optional($processoSeletivo->type)->slug;
-        $diretorio = $processoSeletivo->directory;
-
-        return rtrim("{$type}/{$diretorio}/{$subfolder}", '/') . '/';
-    }
-
-    /**
-     * Map model types to subfolders.
-     * Return `''` for no subfolder, or `null` if not supported.
-     */
-    private function resolveSubfolder($model): ?string
-    {
-        return match (true) {
-            $model instanceof ProcessAttachment => '',           // no subfolder
-            $model instanceof Application             => 'applications',
-            $model instanceof Appeal               => 'appeals',
-            // 🔮 easy to extend here later:
-            // $model instanceof LaudoMedico           => 'laudos',
-            default                                 => null,         // fallback to default path
-        };
+        return $process
+            ? "{$process->type->slug}/{$process->directory}/"
+            : $this->defaultPath($media);
     }
 
     private function defaultPath(Media $media): string
     {
-        return md5($media->id . config('app.key'));
+        return "media/" . md5($media->id . config('app.key'));
     }
 }
-

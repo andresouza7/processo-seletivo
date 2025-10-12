@@ -44,9 +44,9 @@ class ProcessAttachment extends Model implements HasMedia
         $systemMigrationReferenceDate = Carbon::parse('2024-11-01');
 
         // Check if `data_publicacao` is older than the reference date
-        if (Carbon::parse($this->publication_date)->lt($systemMigrationReferenceDate)) {
+        if (Carbon::parse($this->created_at)->lt($systemMigrationReferenceDate)) {
             
-            $oldFilePath = $this->process->type?->slug . '/' .
+            $oldFilePath = $this->process->type->slug . '/' .
                 $this->process->directory . '/' .
                 optional($this->arquivo)->codname . '.pdf';
 

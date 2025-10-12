@@ -20,10 +20,11 @@ class ProcessFactory extends Factory
         $today = Carbon::today();
         $oneMonthLater = $today->copy()->addMonth();
 
-        $number = $this->faker->bothify('##/####');
+        // $number = $this->faker->bothify('##/####');
+        $number = $this->faker->numberBetween(1, 99) . '/' . $this->faker->randomElement([2025, 2026]);
         $directory = str_replace('/', '_', $number);
 
-        $type = ProcessType::inRandomOrder()->first()?->id ?? ProcessType::factory();
+        $type = ProcessType::inRandomOrder()->first()?->id;
 
         return [
             'process_type_id' => $type,
