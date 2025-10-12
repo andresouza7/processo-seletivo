@@ -21,33 +21,34 @@ class Appeal extends Model implements HasMedia
             ->dontSubmitEmptyLogs();
     }
 
-    protected static function booted()
-    {
-        static::deleting(function ($model) {
-            $model->clearMediaCollection(); // remove todos os arquivos associados
-        });
-    }
-
     protected $fillable = [
-        'description',
+        'text',
         'response',
         'process_id',
         'candidate_id',
         'application_id',
         'appeal_stage_id',
         'result',
-        'submitted_at'
     ];
+
+    protected $appends = [
+        'process'
+    ];
+
+    public function getProcessAttribute()
+    {
+        return $this->appeal_stage->process;
+    }
 
     public function application()
     {
         return $this->belongsTo(Application::class);
     }
 
-    public function process()
-    {
-        return $this->belongsTo(Process::class);
-    }
+    // public function process()
+    // {
+    //     return $this->belongsTo(Process::class);
+    // }
 
     public function candidate()
     {

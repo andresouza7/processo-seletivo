@@ -6,7 +6,9 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class RecursoForm
@@ -15,33 +17,46 @@ class RecursoForm
     {
         return $schema
             ->components([
-                Textarea::make('description')
-                    ->columnSpanFull()
-                    ->disabled(),
-                Actions::make([
-                    Action::make('ver_anexo')
-                        ->visible(fn($record) => $record->hasMedia('anexo_recurso'))
-                        ->url(fn($record) => route('recurso.anexo', $record->idrecurso))
-                        ->openUrlInNewTab()
-                ])->columnSpanFull(),
-                Select::make('result')
-                    ->required()
-                    ->options([
-                        'D' => 'Deferido',
-                        'I' => 'Indeferido',
-                        'P' => 'Parcialmente Deferido',
-                    ]),
-                Textarea::make('response')
-                    ->columnSpanFull()
-                    ->required()
-                    ->maxLength(255),
+                Section::make([
 
-                SpatieMediaLibraryFileUpload::make('anexo_avaliador')
-                    ->columnSpanFull()
-                    ->maxFiles(1)
-                    ->disk('local')
-                    ->collection('anexo_avaliador')
-                    ->rules(['file', 'mimes:pdf', 'max:2048'])
+                    TextEntry::make('text')
+                        ->label('Justificativa Candidato')
+                        ->columnSpanFull(),
+
+                    TextEntry::make('text')
+                        ->visible(fn($record) => $record->hasMedia('anexo_candidato'))
+                        ->hiddenLabel()
+                        ->formatStateUsing(function ($record) {
+                            $link = tempMediaUrl($record, 'anexo_candidato');
+                            $text = '<a href="' . $link . '" target="_blank" class="hover:underline">Visualizar Anexo</a>';
+
+                            return $link ? $text : '-';
+                        })
+                        ->color('primary')
+                        ->html(),
+
+                    Select::make('result')
+                        ->label('Resultado')
+                        ->required()
+                        ->options([
+                            'D' => 'Deferido',
+                            'I' => 'Indeferido',
+                            'DP' => 'Parcialmente Deferido',
+                        ]),
+
+                    Textarea::make('response')
+                        ->label('Resposta Avaliador')
+                        ->columnSpanFull()
+                        ->required()
+                        ->maxLength(255),
+
+                    SpatieMediaLibraryFileUpload::make('anexo_avaliador')
+                        ->columnSpanFull()
+                        ->maxFiles(1)
+                        ->disk('public')
+                        ->collection('anexo_avaliador')
+                        ->rules(['file', 'mimes:pdf', 'max:2048'])
+                ])
             ]);
     }
 }

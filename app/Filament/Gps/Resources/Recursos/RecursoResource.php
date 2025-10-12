@@ -43,7 +43,7 @@ class RecursoResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::user()->hasAnyRole('admin|avaliador');
+        return Auth::user()->hasRole('admin|avaliador');
     }
 
     public static function getEloquentQuery(): Builder
@@ -55,10 +55,12 @@ class RecursoResource extends Resource
 
         $userId = auth()->id();
 
-        $query->whereIn('id', function ($query) use ($userId) {
-            $query->select('id')
-                ->from('process_user')
-                ->where('user_id', $userId);
+        $query->whereHas('appeal_stage', function (Builder $q) use ($userId) {
+            $q->whereIn('process_id', function ($sub) use ($userId) {
+                $sub->select('process_id')
+                    ->from('process_user')
+                    ->where('user_id', $userId);
+            });
         });
 
         return $query;

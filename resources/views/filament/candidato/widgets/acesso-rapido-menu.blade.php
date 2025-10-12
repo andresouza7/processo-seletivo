@@ -15,7 +15,7 @@
                     'label' => 'Nova Inscrição',
                 ],
                 [
-                    'url' => route('filament.candidato.resources.etapa-recursos.index'),
+                    'url' => route('filament.candidato.pages.recurso'),
                     'icon' => 'heroicon-o-chat-bubble-left-right',
                     'label' => 'Recursos',
                 ],

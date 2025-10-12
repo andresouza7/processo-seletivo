@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('appeals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('candidate_id')->constrained();
             $table->foreignId('application_id')->constrained();
             $table->foreignId('appeal_stage_id')->constrained();
             $table->text('text');
             $table->text('response')->nullable();
             $table->char('result', 2)->nullable();
-            $table->timestamp('evaluated_at');
+            $table->timestamp('evaluated_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

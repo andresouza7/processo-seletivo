@@ -52,6 +52,6 @@ class CustomPathGenerator implements PathGenerator
 
     private function defaultPath(Media $media): string
     {
-        return "media/" . md5($media->id . config('app.key'));
+        return md5($media->id . config('app.key'));
     }
 }

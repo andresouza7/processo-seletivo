@@ -13,7 +13,7 @@ class ManageRecursos extends Page
 
     protected static string $resource = ProcessoSeletivoResource::class;
 
-     protected static ?string $title = 'Recursos';
+    protected static ?string $title = 'Recursos';
 
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
 

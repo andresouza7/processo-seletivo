@@ -41,8 +41,7 @@ class Process extends Model
 
     protected $appends = [
         'can_apply',
-        'can_appeal',
-        'appeal_link'
+        'can_appeal'
     ];
 
     protected $casts = [
@@ -83,13 +82,6 @@ class Process extends Model
             ->whereDate('submission_start_date', '<=', $today)
             ->whereDate('submission_end_date', '>=', $today)
             ->exists();
-    }
-
-    public function getAppealLinkAttribute()
-    {
-        $stage = AppealStage::where('process_id', $this->id)->orderBy('id', 'desc')->first();
-
-        return $stage ? route('filament.candidato.resources.etapa-recursos.edit', $stage->id) : null;
     }
 
     public function type()

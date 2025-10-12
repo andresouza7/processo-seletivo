@@ -18,13 +18,15 @@ class RecursosTable
         return $table
             ->columns([
                 TextColumn::make('id'),
+                TextColumn::make('appeal_stage.process.title')
+                    ->label('Processo Seletivo')
+                    ->limit(),
                 TextColumn::make('appeal_stage.description')
-                    ->label('Etapa'),
-                TextColumn::make('description')
-                    ->label('Justificativa'),
-                TextColumn::make('result')
-                    ->label('Resultado')
-                    ->badge()
+                    ->label('Etapa')
+                    ->limit(),
+                TextColumn::make('text')
+                    ->label('Justificativa')
+                    ->limit(),
             ])
             ->filters([
                 Filter::make('situacao_null')
