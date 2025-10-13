@@ -20,11 +20,11 @@ class ProcessFactory extends Factory
         $today = Carbon::today();
         $oneMonthLater = $today->copy()->addMonth();
 
-        // $number = $this->faker->bothify('##/####');
-        $number = $this->faker->numberBetween(1, 99) . '/' . $this->faker->randomElement([2025, 2026]);
+        $number = $this->faker->bothify('##/####');
+        // $number = $this->faker->numberBetween(1, 99) . '/' . $this->faker->randomElement([2025, 2026]);
         $directory = str_replace('/', '_', $number);
 
-        $type = ProcessType::inRandomOrder()->first()?->id;
+        $type = ProcessType::inRandomOrder()->first()?->id ?? ProcessType::factory();
 
         return [
             'process_type_id' => $type,
@@ -62,8 +62,8 @@ class ProcessFactory extends Factory
      * Attach applications to the process.
      */
     public function withApplications(
-        int $positionCount = 3,
-        int $applicationCount = 5,
+        int $positionCount = 2,
+        int $applicationCount = 3,
         int $fileCount = 1
     ): static {
         return $this->afterCreating(function ($process) use ($positionCount, $applicationCount, $fileCount) {

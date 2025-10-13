@@ -61,7 +61,7 @@ class GestorConsultaCandidatosTest extends TestCase
         $response->assertSeeText('Mãe da candidata teste');
         $response->assertSeeText('23456781099');
         $response->assertSeeText('9874221-PA');
-        $response->assertSeeText('1974-02-01');
+        $response->assertSeeText('01/02/1974');
         $response->assertSeeText('M');
         $response->assertSeeText('nome social candidata');
         $response->assertSeeText('T');

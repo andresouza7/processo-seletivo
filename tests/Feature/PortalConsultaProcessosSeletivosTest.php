@@ -35,7 +35,7 @@ class PortalConsultaProcessosSeletivosTest extends TestCase
     {
         Filament::setCurrentPanel('app');
         // 🔹 Cria 5 processos seletivos com inscrições abertas / em andamento
-        $abertos = \App\Models\Process::factory()
+        $abertos = \App\Models\Process::factory()->withPositions()
             ->count(5)
             ->create([
                 'is_published' => true,
