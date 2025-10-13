@@ -39,13 +39,13 @@
                 @php
                     $statusColors = [
                         'D' => 'success',
-                        'DP' => 'warning',
+                        'P' => 'warning',
                         'I' => 'danger',
                     ];
 
                     $statusLabels = [
                         'D' => 'Deferido',
-                        'DP' => 'Deferido parcialmente',
+                        'P' => 'Deferido parcialmente',
                         'I' => 'Indeferido',
                     ];
 

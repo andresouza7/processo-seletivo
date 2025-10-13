@@ -41,7 +41,7 @@ class RecursoForm
                         ->options([
                             'D' => 'Deferido',
                             'I' => 'Indeferido',
-                            'DP' => 'Parcialmente Deferido',
+                            'P' => 'Parcialmente Deferido',
                         ]),
 
                     Textarea::make('response')

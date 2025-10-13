@@ -37,13 +37,13 @@ class ProcessoSeletivoInfolist
                         Action::make('createInscricao')
                             ->visible(fn($record) => $record->can_apply)
                             ->label('Realizar Inscrição')
-                            ->url(route('filament.candidato.resources.inscricoes.create'))
+                            ->url(fn() => route('filament.candidato.resources.inscricoes.create'))
                             ->button()
                             ->color('primary'),
                         Action::make('createRecurso')
                             ->visible(fn($record) => $record->can_appeal)
                             ->label('Recursos')
-                            ->url(fn($record) => $record->appeal_link)
+                            ->url(fn() => route('filament.candidato.pages.recurso'))
                             ->button()
                             ->color('primary')
                     ]),
