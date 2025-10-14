@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Filament\Candidato\Resources\Inscricaos\Pages\ListInscricaos;
+use App\Models\Application;
 use App\Models\Candidate;
 use App\Models\Process;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +14,7 @@ use Tests\TestCase;
 class CandidatoConsultaInscricoesRealizadasTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function test_candidato_consulta_inscricoes_realizadas(): void
     {
         $user = Candidate::factory()->create();
@@ -22,7 +23,11 @@ class CandidatoConsultaInscricoesRealizadasTest extends TestCase
         $response = $this->get(route('filament.candidato.resources.inscricoes.index'));
         $response->assertStatus(200);
 
-        $process = Process::factory()->withApplications()->create();
-        Livewire::test(ListInscricaos::class)->assertCanSeeTableRecords($process->applications);
+        $application = Application::factory()->create([
+            'candidate_id' => $user->id
+        ]);
+
+        // dd($process->applications);
+        Livewire::test(ListInscricaos::class)->assertCanSeeTableRecords([$application]);
     }
 }

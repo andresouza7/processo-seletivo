@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         // Tipos de Cotas
         // ------------------------
         $tiposFixos = [
-            // ['description' => 'Ampla Concorrência'],
+            ['description' => 'Ampla Concorrência'],
             ['description' => 'Cota Racial'],
             ['description' => 'Pessoa com Deficiência'],
             ['description' => 'Escola Pública'],
