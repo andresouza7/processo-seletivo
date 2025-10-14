@@ -22,11 +22,11 @@ class AppealStage extends Model
     ];
 
      protected $appends = [
-        'can_appeal',
+        'accepts_appeal',
         'has_result'
     ];
 
-    public function getCanAppealAttribute()
+    public function getAcceptsAppealAttribute()
     {
         $today = now()->toDateString(); // Get current date in 'Y-m-d' format
 

@@ -20,7 +20,7 @@ class RecursoForm
                 Section::make([
 
                     TextEntry::make('text')
-                        ->label('Justificativa Candidato')
+                        ->label('Justificativa do Candidato')
                         ->columnSpanFull(),
 
                     TextEntry::make('text')

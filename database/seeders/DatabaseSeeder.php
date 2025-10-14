@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         // Tipos de Cotas
         // ------------------------
         $tiposFixos = [
-            // ['description' => 'Ampla Concorrência'],
+            ['description' => 'Ampla Concorrência'],
             ['description' => 'Cota Racial'],
             ['description' => 'Pessoa com Deficiência'],
             ['description' => 'Escola Pública'],
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
         // ------------------------
         Process::factory()
             ->count(5)
-            ->withApplications(3, 10, 0) // vagas, inscricoes, anexos
+            ->withApplications(3, 4, 0) // vagas, inscricoes, anexos
             ->create();
     }
 }

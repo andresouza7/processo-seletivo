@@ -17,8 +17,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
-use function PHPUnit\Framework\isEmpty;
-
 class InscricaoForm
 {
     public static function configure(Schema $schema): Schema

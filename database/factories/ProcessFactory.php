@@ -74,9 +74,8 @@ class ProcessFactory extends Factory
             ]);
 
             // Retrieve existing candidates or create new ones
-            $candidates = Candidate::query()->exists()
-                ? Candidate::all()
-                : Candidate::factory($applicationCount)->create();
+            Candidate::factory($applicationCount)->create();
+            $candidates = Candidate::all();
 
             // Create applications with random position and candidate
             Application::factory()
