@@ -35,11 +35,21 @@ class CandidatoRealizaCadastroTest extends TestCase
         $this->actingAs($user, 'web'); //OBS.: neste testCase nao é necessário login de nenhum tipo.
 
         // Usa a rota FILAMENT diretamente via URL ou route
-        $response = $this->get(route('filament.candidato.auth.register'));
+        $response = $this->get(route('filament.candidato.auth.register')); 
+    }
 
-        // ASSERT DE SUCESSO
-        $response->assertStatus(200);
-        $response->assertSee('Inscrever-se'); 
+    public function test_pagina_de_inscricao_esta_disponivel_em_portugues()
+    {
+        // Verifica se o locale está definido corretamente
+        $currentLocale = app()->getLocale();
+        $expectedLocale = 'pt_BR';
+
+        $this->assertEquals(
+            $expectedLocale,
+            $currentLocale,
+            "O locale atual é '{$currentLocale}', mas o teste requer '{$expectedLocale}'. 
+            Verifique se o arquivo .env.testing contém APP_LOCALE=pt_BR"
+        );
     }
 
     public function test_candidato_entra_na_tela_de_cadastro(): void
@@ -49,7 +59,7 @@ class CandidatoRealizaCadastroTest extends TestCase
         $response = $this->get(route('filament.candidato.auth.register'));
         // ASSERT DE SUCESSO
         $response->assertStatus(200);
-        $response->assertSee('Inscrever-se'); 
+        $response->assertSee('Inscrever-se', 'A página deve conter o texto "Inscrever-se" em português.');
 
     }
 
