@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
         // ------------------------
         Process::factory()
             ->count(5)
-            ->withApplications(3, 10, 0) // vagas, inscricoes, anexos
+            ->withApplications(3, 4, 0) // vagas, inscricoes, anexos
             ->create();
     }
 }

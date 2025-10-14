@@ -73,4 +73,48 @@ class Application extends Model implements HasMedia
 
         return $uniqueId;
     }
+
+    public function activeAppealStage(): ?AppealStage
+    {
+        return $this->process->appeal_stage()->latest()->first();
+    }
+
+    public function canAppeal()
+    {
+        $stage = $this->activeAppealStage();
+        if (!$stage || !$stage->accepts_appeal) {
+            return false;
+        }
+
+        $appealExists = $this->appeals()->where('appeal_stage_id', $stage->id)->exists();
+
+        return !$appealExists || $stage->allow_many; // true se existe uma etapa com recurso aberto e o usuário não fez um recurso pra ela
+    }
+
+    public function scopeCanAppeal($query)
+    {
+        $today = now()->toDateString();
+
+        return $query
+            ->whereDoesntHave('appeals')
+            ->whereHas('process.appeal_stage', function ($q) use ($today) {
+                $q->where(function ($q) use ($today) {
+                    $q->whereDate('submission_start_date', '<=', $today)
+                        ->whereDate('submission_end_date', '>=', $today);
+                });
+            });
+    }
+
+    public function scopeCanViewAppeal($query)
+    {
+        $today = now()->toDateString();
+
+        return $query
+            ->whereHas('process.appeal_stage', function ($q) use ($today) {
+                $q->where(function ($q) use ($today) {
+                    $q->whereDate('result_start_date', '<=', $today)
+                        ->whereDate('result_end_date', '>=', $today);
+                });
+            });
+    }
 }

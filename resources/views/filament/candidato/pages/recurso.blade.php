@@ -1,24 +1,71 @@
 <x-filament-panels::page>
-    {{ $this->form }}
+    <div class="space-y-4">
+        @if (count($this->options))
+            {{ $this->form }}
+        @else
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md text-yellow-700 text-sm shadow-sm">
+                Você não possui inscrições elegíveis para abrir um recurso.
+            </div>
+        @endif
 
-    @if ($appeal)
-        <x-filament::section>
-            <x-slot name="description">
-                Acompanhe o andamento do seu recurso
-            </x-slot>
+        @php
+            $resultLabels = [
+                'D' => ['label' => 'Deferido', 'color' => 'success'],
+                'I' => ['label' => 'Indeferido', 'color' => 'danger'],
+                'P' => ['label' => 'Deferido Parcialmente', 'color' => 'warning'],
+            ];
+        @endphp
 
-            <div class="space-y-4 text-sm">
-                {{-- Justificativa --}}
-                <div>
-                    <span class="font-semibold text-gray-800">Justificativa:</span>
-                    <p class="mt-1 text-gray-700">{{ $appeal->text }}</p>
+        @if (count($appeals))
+            <div class="bg-white border-l-4 border-gray-400 p-4 rounded-md text-gray-700 text-sm shadow-sm">
+                Consulte abaixo os seus recursos em andamento
+            </div>
+        @endif
+
+        @foreach ($appeals as $appeal)
+            @php
+                $result = $resultLabels[$appeal->result] ?? ['label' => 'Em análise', 'color' => 'info'];
+            @endphp
+
+            <div class="bg-white shadow-xs border border-gray-200 rounded-xl p-6">
+                {{-- Header --}}
+                <div class="flex items-center justify-between border-b border-gray-300 pb-3 mb-4">
+                    <span class="text-md font-bold text-primary-600">
+                        {{-- Protocolo #{{ $appeal->id }} --}}
+                        Inscrição #{{ $appeal->application->code }}
+                    </span>
+                    <span class="text-xs text-gray-500">
+                        Enviado em {{ $appeal->created_at->format('d/m/Y H:i') }}
+                    </span>
                 </div>
 
-                {{-- Resposta da banca --}}
-                @if ($appeal->response)
+                {{-- Etapa + Processo + Resultado --}}
+                <div class="flex items-center justify-between text-sm text-gray-700 mb-3">
                     <div class="space-y-1">
-                        <span class="font-semibold text-gray-800">Resposta da banca:</span>
-                        <p class="mt-1 text-gray-700">{{ $appeal->response }}</p>
+                        <p><span class="font-semibold">Processo Seletivo:</span> {{ $appeal->process->title }}</p>
+                        <p><span class="font-semibold">Etapa:</span> {{ $appeal->appeal_stage->description }}</p>
+                    </div>
+
+                    <x-filament::badge :color="$result['color']">
+                        {{ $result['label'] }}
+                    </x-filament::badge>
+                </div>
+
+                {{-- Texto do Recurso --}}
+                <div class="mt-4 text-sm">
+                    <p class="font-semibold text-gray-800">Texto do Recurso:</p>
+                    <div class="mt-1 text-gray-600 bg-gray-50 rounded-lg p-3">
+                        {{ $appeal->text }}
+                    </div>
+                </div>
+
+                {{-- Resposta da Banca --}}
+                @if ($appeal->result && $appeal->response)
+                    <div class="mt-4 text-sm">
+                        <p class="font-semibold text-gray-800">Resposta da Banca:</p>
+                        <div class="mt-1 text-gray-600 bg-gray-50 rounded-lg p-3">
+                            {{ $appeal->response }}
+                        </div>
 
                         @if ($appeal->hasMedia('anexo_avaliador'))
                             @php
@@ -26,42 +73,19 @@
                             @endphp
                             @if ($link)
                                 <p>
-                                    <a href="{{ $link }}" target="_blank" class="text-primary-600 hover:underline">
+                                    <a href="{{ $link }}" target="_blank"
+                                        class="text-primary-600 hover:underline">
                                         Visualizar Anexo
                                     </a>
                                 </p>
                             @endif
                         @endif
+
                     </div>
                 @endif
 
-                {{-- Status / Resultado --}}
-                @php
-                    $statusColors = [
-                        'D' => 'success',
-                        'P' => 'warning',
-                        'I' => 'danger',
-                    ];
-
-                    $statusLabels = [
-                        'D' => 'Deferido',
-                        'P' => 'Deferido parcialmente',
-                        'I' => 'Indeferido',
-                    ];
-
-                    $badgeColor = $appeal->result ? $statusColors[$appeal->result] ?? 'gray' : 'info';
-                    $badgeLabel = $appeal->result ? $statusLabels[$appeal->result] ?? $appeal->result : 'Em análise';
-                @endphp
-
-                <div class="flex items-center gap-2">
-                    <x-filament::badge size="sm" :color="$badgeColor">
-                        {{ $badgeLabel }}
-                    </x-filament::badge>
-                    <span class="text-xs text-gray-500">
-                        Enviado em {{ $appeal->created_at->format('d/m/Y H:i') }}
-                    </span>
-                </div>
             </div>
-        </x-filament::section>
-    @endif
+        @endforeach
+    </div>
+
 </x-filament-panels::page>

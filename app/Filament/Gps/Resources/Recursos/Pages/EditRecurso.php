@@ -11,6 +11,8 @@ use Filament\Resources\Pages\EditRecord;
 class EditRecurso extends EditRecord
 {
     protected static string $resource = RecursoResource::class;
+    protected static ?string $title = 'Responder Recurso';
+    protected static ?string $breadcrumb = 'Responder';
 
     protected function getHeaderActions(): array
     {

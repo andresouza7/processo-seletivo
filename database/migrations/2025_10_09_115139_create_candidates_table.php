@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Candidate;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -47,6 +48,12 @@ return new class extends Migration
         });
 
         Schema::enableForeignKeyConstraints();
+
+        Candidate::factory()->create([
+            'name' => 'Andre Souza da Costa',
+            'cpf' => '00547940211',
+            'password' => bcrypt('pid96sqdi')
+        ]);
     }
 
     /**

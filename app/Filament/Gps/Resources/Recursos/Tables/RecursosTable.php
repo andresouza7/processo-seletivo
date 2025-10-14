@@ -36,7 +36,7 @@ class RecursosTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()->label('Responder'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
