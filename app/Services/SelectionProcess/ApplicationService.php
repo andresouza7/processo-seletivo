@@ -5,6 +5,7 @@ namespace App\Services\SelectionProcess;
 use App\Models\Application;
 use App\Models\Process;
 use App\Notifications\NovaInscricaoNotification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class ApplicationService
@@ -41,5 +42,30 @@ class ApplicationService
     public function notifyApplicationCreated(Application $record): void
     {
         $record->candidate->notify(new NovaInscricaoNotification($record));
+    }
+
+    public function fetchLatestApplicationsForProcess(Process $process): Builder
+    {
+        $query = Application::where('process_id', $process->id);
+
+        if ($process->multiple_applications) {
+            // ✅ Pega a última inscrição do candidato em cada vaga (distinct por candidato + vaga)
+            $query->whereIn('id', function ($sub) {
+                $sub->selectRaw('MAX(id)')
+                    ->from('applications')
+                    ->groupBy('candidate_id', 'position_id', 'process_id');
+            });
+        } else {
+            // ✅ Só a última inscrição do candidato, independente da vaga
+            $query->whereIn('id', function ($sub) {
+                $sub->selectRaw('MAX(id)')
+                    ->from('applications')
+                    ->groupBy('candidate_id', 'process_id');
+            });
+        }
+
+        $query->orderByDesc('created_at');
+
+        return $query;
     }
 }

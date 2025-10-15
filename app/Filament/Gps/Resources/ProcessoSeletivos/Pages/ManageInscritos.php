@@ -10,6 +10,7 @@ use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Exports\InscricaoExporter;
 use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
+use App\Services\SelectionProcess\ApplicationService;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Infolists\Components\TextEntry;
@@ -104,27 +105,10 @@ class ManageInscritos extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('code')
             ->heading('Inscrições')
-            ->modifyQueryUsing(function (Builder $query) {
-                $process = $this->getOwnerRecord();
-
-                if ($process->multiple_applications) {
-                    // ✅ Pega a última inscrição do candidato em cada vaga (distinct por candidato + vaga)
-                    $query->whereIn('id', function ($sub) {
-                        $sub->selectRaw('MAX(id)')
-                            ->from('applications')
-                            ->groupBy('candidate_id', 'position_id', 'process_id');
-                    });
-                } else {
-                    // ✅ Só a última inscrição do candidato, independente da vaga
-                    $query->whereIn('id', function ($sub) {
-                        $sub->selectRaw('MAX(id)')
-                            ->from('applications')
-                            ->groupBy('candidate_id', 'process_id');
-                    });
-                }
-
-                $query->orderByDesc('created_at');
-            })
+            ->query(
+                fn(ApplicationService $service) =>
+                $service->fetchLatestApplicationsForProcess($this->getOwnerRecord())
+            )
             ->columns([
                 TextColumn::make('code')
                     ->label('Cód. Inscrição')
