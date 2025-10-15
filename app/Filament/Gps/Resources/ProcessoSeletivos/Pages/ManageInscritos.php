@@ -106,8 +106,8 @@ class ManageInscritos extends ManageRelatedRecords
             ->heading('Inscrições')
             // Seleciona apenas a última inscrição por vaga no ps
             ->modifyQueryUsing(function (Builder $query) {
-                $query->whereIn('created_at', function ($sub) {
-                    $sub->selectRaw('MAX(created_at)')
+                $query->whereIn('id', function ($sub) {
+                    $sub->selectRaw('MAX(id)')
                         ->from('applications')
                         ->groupBy('candidate_id', 'position_id', 'process_id');
                 })->orderByDesc('created_at');
