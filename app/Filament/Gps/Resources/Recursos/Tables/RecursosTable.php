@@ -16,16 +16,22 @@ class RecursosTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->heading('Avaliação de Recursos')
+            ->description('Revise e avalie os recursos que foram atribuídos a você')
             ->columns([
-                TextColumn::make('id'),
+                TextColumn::make('id')
+                    ->label('ID Recurso'),
                 TextColumn::make('appeal_stage.process.title')
                     ->label('Processo Seletivo')
+                    ->searchable()
                     ->limit(),
                 TextColumn::make('appeal_stage.description')
                     ->label('Etapa')
+                    ->searchable()
                     ->limit(),
-                TextColumn::make('text')
-                    ->label('Justificativa')
+                TextColumn::make('application.position.description')
+                    ->label('Vaga')
+                    ->searchable()
                     ->limit(),
             ])
             ->filters([

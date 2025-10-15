@@ -116,14 +116,6 @@ class Process extends Model
         return $this->hasMany(AppealStage::class);
     }
 
-    public function evaluators()
-    {
-        return $this->belongsToMany(User::class);
-        // ->whereHas('roles', function ($query) {
-        //     $query->where('name', 'avaliador');
-        // });
-    }
-
     public function scopeInscricoesAbertas(Builder $query): void
     {
         $query->where('is_published', true)

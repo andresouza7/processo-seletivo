@@ -23,11 +23,13 @@ class Appeal extends Model implements HasMedia
 
     protected $fillable = [
         'text',
-        'response',
         'process_id',
         'candidate_id',
         'application_id',
         'appeal_stage_id',
+        'evaluator_id',
+        'evaluated_at',
+        'response',
         'result',
     ];
 
@@ -49,6 +51,11 @@ class Appeal extends Model implements HasMedia
     public function appeal_stage()
     {
         return $this->belongsTo(AppealStage::class);
+    }
+
+    public function evaluator()
+    {
+        return $this->belongsTo(User::class, 'evaluator_id');
     }
 
     public function scopeAvailable($query)

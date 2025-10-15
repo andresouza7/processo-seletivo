@@ -55,13 +55,7 @@ class RecursoResource extends Resource
 
         $userId = auth()->id();
 
-        $query->whereHas('appeal_stage', function (Builder $q) use ($userId) {
-            $q->whereIn('process_id', function ($sub) use ($userId) {
-                $sub->select('process_id')
-                    ->from('process_user')
-                    ->where('user_id', $userId);
-            });
-        });
+        $query->where('evaluator_id', $userId);
 
         return $query;
     }

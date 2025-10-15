@@ -43,7 +43,6 @@ class GpsPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->resourceCreatePageRedirect('index')
-            ->resourceEditPageRedirect('index')
             ->discoverWidgets(in: app_path('Filament/Gps/Widgets'), for: 'App\\Filament\\Gps\\Widgets')
             ->widgets([
                 AccountWidget::class,

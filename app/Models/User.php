@@ -67,8 +67,8 @@ class User extends Authenticatable implements FilamentUser
         return true;
     }
 
-    public function processes()
+    public function appeals()
     {
-        return $this->belongsToMany(Process::class);
+        return $this->belongsToMany(Appeal::class);
     }
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('text');
             $table->text('response')->nullable();
             $table->char('result', 1)->nullable();
+            $table->foreignId('evaluator_id')->nullable()->constrained('users');
             $table->timestamp('evaluated_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

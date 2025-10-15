@@ -18,7 +18,14 @@ class EditRecurso extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            // DeleteAction::make(),
         ];
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['evaluated_at'] = now();
+
+        return $data;
     }
 }
