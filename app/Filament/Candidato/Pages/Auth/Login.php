@@ -56,7 +56,7 @@ class Login extends \Filament\Auth\Pages\Login
         return TextInput::make('cpf')
             ->label('CPF')
             ->required()
-            ->rules(['cpf'])
+            // ->rules(['cpf'])
             ->maxLength(11)
             ->extraInputAttributes(['tabindex' => 1]);
     }

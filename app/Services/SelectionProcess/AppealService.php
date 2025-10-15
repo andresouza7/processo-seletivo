@@ -16,6 +16,7 @@ class AppealService
             $appeal = Appeal::create([
                 'candidate_id'    => $application->candidate_id,
                 'application_id'  => $application->id,
+                'process_id'      => $application->process_id,
                 'appeal_stage_id' => $application->activeAppealStage()->id,
                 'text'            => $data['text'],
             ]);

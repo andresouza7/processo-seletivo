@@ -31,24 +31,15 @@ class Appeal extends Model implements HasMedia
         'result',
     ];
 
-    protected $appends = [
-        'process'
-    ];
-
-    public function getProcessAttribute()
-    {
-        return $this->appeal_stage->process;
-    }
-
     public function application()
     {
         return $this->belongsTo(Application::class);
     }
 
-    // public function process()
-    // {
-    //     return $this->belongsTo(Process::class);
-    // }
+    public function process()
+    {
+        return $this->belongsTo(Process::class);
+    }
 
     public function candidate()
     {
