@@ -66,9 +66,9 @@ class ManageInscritos extends ManageRelatedRecords
                         return $links ?: '-';
                     })
                     ->color('primary')
-                    ->html(), 
+                    ->html(),
 
-                    TextEntry::make('code')
+                TextEntry::make('code')
                     ->label('Laudo Médico')
                     ->formatStateUsing(function ($record) {
                         $link = tempMediaUrl($record, 'laudo_medico');
@@ -77,9 +77,9 @@ class ManageInscritos extends ManageRelatedRecords
                         return $link ? $text : '-';
                     })
                     ->color('primary')
-                    ->html(), 
+                    ->html(),
 
-                    TextEntry::make('code')
+                TextEntry::make('code')
                     ->label('Isenção Taxa')
                     ->formatStateUsing(function ($record) {
                         $link = tempMediaUrl($record, 'isencao_taxa');
@@ -102,14 +102,25 @@ class ManageInscritos extends ManageRelatedRecords
     {
         return $table
             ->recordTitleAttribute('code')
-            ->defaultSort('id', 'desc')
+            // ->defaultSort('id', 'desc')
             ->heading('Inscrições')
+            // Seleciona apenas a última inscrição por vaga no ps
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->whereIn('created_at', function ($sub) {
+                    $sub->selectRaw('MAX(created_at)')
+                        ->from('applications')
+                        ->groupBy('candidate_id', 'position_id', 'process_id');
+                })->orderByDesc('created_at');
+            })
             ->columns([
                 TextColumn::make('code')
                     ->label('Cód. Inscrição')
                     ->searchable(),
                 TextColumn::make('candidate.name')
                     ->label('Candidato')
+                    ->searchable(),
+                TextColumn::make('position.description')
+                    ->label('Vaga')
                     ->searchable(),
             ])
             ->filters([

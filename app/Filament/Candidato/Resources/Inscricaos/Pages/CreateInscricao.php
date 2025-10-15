@@ -50,27 +50,27 @@ class CreateInscricao extends CreateRecord
         }
 
         // 🚨 Check if candidate already has an application
-        $data = $this->service->prepareFormData($this->form->getState());
-        $existing = $this->service->checkExisting($candidate->id, $data);
+        // $data = $this->service->prepareFormData($this->form->getState());
+        // $existing = $this->service->checkExisting($candidate->id, $data);
 
-        if ($existing) {
-            Notification::make()
-                ->warning()
-                ->title('Inscrição já realizada')
-                ->body('Você já possui uma inscrição para esta vaga. Para visualizar, acesse sua inscrição abaixo.')
-                ->persistent()
-                ->actions([
-                    Action::make('verInscricao')
-                        ->label('Ver Inscrição')
-                        ->button()
-                        ->color('primary')
-                        ->url(static::getResource()::getUrl('view', ['record' => $existing])),
-                ])
-                ->send();
+        // if ($existing) {
+        //     Notification::make()
+        //         ->warning()
+        //         ->title('Inscrição já realizada')
+        //         ->body('Você já possui uma inscrição para esta vaga. Para visualizar, acesse sua inscrição abaixo.')
+        //         ->persistent()
+        //         ->actions([
+        //             Action::make('verInscricao')
+        //                 ->label('Ver Inscrição')
+        //                 ->button()
+        //                 ->color('primary')
+        //                 ->url(static::getResource()::getUrl('view', ['record' => $existing])),
+        //         ])
+        //         ->send();
 
-            $this->halt();
-            return;
-        }
+        //     $this->halt();
+        //     return;
+        // }
     }
 
     protected function afterCreate(): void

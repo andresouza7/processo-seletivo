@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('candidate_id')->constrained();
             $table->foreignId('application_id')->constrained();
+            $table->foreignId('process_id')->constrained();
             $table->foreignId('appeal_stage_id')->constrained();
             $table->text('text');
             $table->text('response')->nullable();
