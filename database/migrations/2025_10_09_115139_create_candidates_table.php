@@ -51,7 +51,7 @@ return new class extends Migration
 
         Candidate::factory()->create([
             'name' => 'Candidato',
-            'cpf' => '00547940211',
+            'cpf' => '12345678910',
             'password' => bcrypt('123456')
         ]);
     }
