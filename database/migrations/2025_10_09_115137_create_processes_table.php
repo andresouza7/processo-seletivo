@@ -26,7 +26,7 @@ return new class extends Migration
             $table->date('application_end_date');
             $table->boolean('has_fee_exemption')->default(false);
             $table->jsonb('attachment_fields')->nullable();
-            $table->boolean('single_application')->default(false);
+            $table->boolean('multiple_applications')->default(false);
             $table->timestamps();
             $table->softDeletes();
 

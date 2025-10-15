@@ -54,28 +54,28 @@ class CreateInscricao extends CreateRecord
         $process = Process::find($data['process_id']); // supondo que você tenha um método para buscar o processo
 
         // 🚨 Verifica se o processo restringe a inscrição para mais de um tipo de vaga
-        if ($process->single_application) {
-            $existing = $this->service->checkExistingDifferentPosition($candidate->id, $data);
+        // if ($process->single_application) {
+        //     $existing = $this->service->checkExistingDifferentPosition($candidate->id, $data);
 
-            if ($existing) {
-                Notification::make()
-                    ->warning()
-                    ->title('Inscrição única por vaga')
-                    ->body('Você já se inscreveu em outra vaga. Veja sua inscrição abaixo.')
-                    ->persistent()
-                    ->actions([
-                        Action::make('verInscricao')
-                            ->label('Ver Inscrição')
-                            ->button()
-                            ->color('primary')
-                            ->url(static::getResource()::getUrl('view', ['record' => $existing])),
-                    ])
-                    ->send();
+        //     if ($existing) {
+        //         Notification::make()
+        //             ->warning()
+        //             ->title('Inscrição única por vaga')
+        //             ->body('Você já se inscreveu em outra vaga. Veja sua inscrição abaixo.')
+        //             ->persistent()
+        //             ->actions([
+        //                 Action::make('verInscricao')
+        //                     ->label('Ver Inscrição')
+        //                     ->button()
+        //                     ->color('primary')
+        //                     ->url(static::getResource()::getUrl('view', ['record' => $existing])),
+        //             ])
+        //             ->send();
 
-                $this->halt();
-                return;
-            }
-        }
+        //         $this->halt();
+        //         return;
+        //     }
+        // }
     }
 
     protected function afterCreate(): void

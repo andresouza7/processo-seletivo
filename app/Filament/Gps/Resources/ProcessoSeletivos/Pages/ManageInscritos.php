@@ -18,6 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class ManageInscritos extends ManageRelatedRecords
 {
@@ -102,15 +103,27 @@ class ManageInscritos extends ManageRelatedRecords
     {
         return $table
             ->recordTitleAttribute('code')
-            // ->defaultSort('id', 'desc')
             ->heading('Inscrições')
-            // Seleciona apenas a última inscrição por vaga no ps
             ->modifyQueryUsing(function (Builder $query) {
-                $query->whereIn('id', function ($sub) {
-                    $sub->selectRaw('MAX(id)')
-                        ->from('applications')
-                        ->groupBy('candidate_id', 'position_id', 'process_id');
-                })->orderByDesc('created_at');
+                $process = $this->getOwnerRecord();
+
+                if ($process->multiple_applications) {
+                    // ✅ Pega a última inscrição do candidato em cada vaga (distinct por candidato + vaga)
+                    $query->whereIn('id', function ($sub) {
+                        $sub->selectRaw('MAX(id)')
+                            ->from('applications')
+                            ->groupBy('candidate_id', 'position_id', 'process_id');
+                    });
+                } else {
+                    // ✅ Só a última inscrição do candidato, independente da vaga
+                    $query->whereIn('id', function ($sub) {
+                        $sub->selectRaw('MAX(id)')
+                            ->from('applications')
+                            ->groupBy('candidate_id', 'process_id');
+                    });
+                }
+
+                $query->orderByDesc('created_at');
             })
             ->columns([
                 TextColumn::make('code')
