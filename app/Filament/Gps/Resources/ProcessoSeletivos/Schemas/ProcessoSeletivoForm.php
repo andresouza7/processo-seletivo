@@ -84,6 +84,9 @@ class ProcessoSeletivoForm
                     Checkbox::make('has_fee_exemption')
                         ->label('Possui isenção da taxa de inscrição'),
 
+                    Checkbox::make('single_application')
+                        ->label('Proibir inscrições para múltiplas vagas'),
+
                     Repeater::make('attachment_fields')
                         ->label('Documentos Requeridos')
                         ->schema([

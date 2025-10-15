@@ -3,6 +3,7 @@
 namespace App\Filament\Candidato\Resources\Inscricaos\Pages;
 
 use App\Filament\Candidato\Resources\Inscricaos\InscricaoResource;
+use App\Models\Process;
 use App\Services\SelectionProcess\ApplicationService;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -49,28 +50,32 @@ class CreateInscricao extends CreateRecord
             return;
         }
 
-        // 🚨 Check if candidate already has an application
-        // $data = $this->service->prepareFormData($this->form->getState());
-        // $existing = $this->service->checkExisting($candidate->id, $data);
+        $data = $this->service->prepareFormData($this->form->getState());
+        $process = Process::find($data['process_id']); // supondo que você tenha um método para buscar o processo
 
-        // if ($existing) {
-        //     Notification::make()
-        //         ->warning()
-        //         ->title('Inscrição já realizada')
-        //         ->body('Você já possui uma inscrição para esta vaga. Para visualizar, acesse sua inscrição abaixo.')
-        //         ->persistent()
-        //         ->actions([
-        //             Action::make('verInscricao')
-        //                 ->label('Ver Inscrição')
-        //                 ->button()
-        //                 ->color('primary')
-        //                 ->url(static::getResource()::getUrl('view', ['record' => $existing])),
-        //         ])
-        //         ->send();
+        // 🚨 Verifica se o processo restringe a inscrição para mais de um tipo de vaga
+        if ($process->single_application) {
+            $existing = $this->service->checkExistingDifferentPosition($candidate->id, $data);
 
-        //     $this->halt();
-        //     return;
-        // }
+            if ($existing) {
+                Notification::make()
+                    ->warning()
+                    ->title('Inscrição única por vaga')
+                    ->body('Você já se inscreveu em outra vaga. Veja sua inscrição abaixo.')
+                    ->persistent()
+                    ->actions([
+                        Action::make('verInscricao')
+                            ->label('Ver Inscrição')
+                            ->button()
+                            ->color('primary')
+                            ->url(static::getResource()::getUrl('view', ['record' => $existing])),
+                    ])
+                    ->send();
+
+                $this->halt();
+                return;
+            }
+        }
     }
 
     protected function afterCreate(): void
