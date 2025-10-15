@@ -91,9 +91,11 @@ class InscricaoForm
                             ->schema(
                                 collect($attachments)->map(function ($item, $index) {
                                     $label = $item['item'] ?? "documento_{$index}";
+                                    $description = $item['description'] ?? '';
                                     $fieldKey = 'documentos_requeridos_' . Str::slug("{$index}_{$label}");
 
                                     return SpatieMediaLibraryFileUpload::make($fieldKey)
+                                        ->helperText($description)
                                         ->label($label)
                                         ->disk('local')
                                         ->maxFiles(1)

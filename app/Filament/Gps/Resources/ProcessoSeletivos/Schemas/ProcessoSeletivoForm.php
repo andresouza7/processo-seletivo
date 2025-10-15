@@ -7,6 +7,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Group;
@@ -88,7 +89,10 @@ class ProcessoSeletivoForm
                         ->schema([
                             TextInput::make('item')
                                 ->label('Nome do Documento')
-                                ->required() //causou problemas com testes (factory), mas deixa como está
+                                ->required(), //causou problemas com testes (factory), mas deixa como está
+                            Textarea::make('description')
+                                ->label('Descrição')
+                                ->required()
                         ])
                         ->itemLabel(fn(array $state): ?string => $state['item'] ?? null)
                         ->cloneable()
