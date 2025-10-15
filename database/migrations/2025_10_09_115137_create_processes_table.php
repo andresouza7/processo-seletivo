@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('process_type_id')->constrained();
             $table->text('title');
             $table->text('description');
-            $table->string('number');
-            $table->string('directory', 30);
+            $table->string('number', 20);
+            $table->string('directory', 20);
             $table->unsignedBigInteger('views')->default(0);
             $table->boolean('is_published');
             $table->date('publication_start_date');

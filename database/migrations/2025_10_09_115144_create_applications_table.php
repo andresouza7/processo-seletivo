@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('candidate_id')->constrained();
             $table->foreignId('position_id')->constrained();
             $table->foreignId('process_id')->constrained();
-            $table->foreignId('quota_id')->nullable();
+            $table->foreignId('quota_id')->nullable()->constrained();
             $table->boolean('requires_assistance')->default(false);
             $table->text('assistance_details')->nullable();
             $table->timestamps();
