@@ -60,7 +60,7 @@ class ManageInscritos extends ManageRelatedRecords
                         // $record é a instância do modelo
                         $links = $record->getMedia()->map(function ($media) {
                             $route = route('media.temp', $media?->uuid);
-                            return '<a href="' . $route . '" target="_blank" class="text-blue-600 hover:underline">' . $media->file_name . '</a>';
+                            return '<a href="' . $route . '" target="_blank" class="text-primary hover:underline">' . $media->name . '</a>';
                         })->implode('<br>');
 
                         return $links ?: '-';
@@ -72,7 +72,7 @@ class ManageInscritos extends ManageRelatedRecords
                     ->label('Laudo Médico')
                     ->formatStateUsing(function ($record) {
                         $link = tempMediaUrl($record, 'laudo_medico');
-                        $text = '<a href="' . $link . '" target="_blank" class="text-blue-600 hover:underline">Abrir</a>';
+                        $text = '<a href="' . $link . '" target="_blank" class="text-primary hover:underline">Abrir</a>';
 
                         return $link ? $text : '-';
                     })
@@ -83,7 +83,7 @@ class ManageInscritos extends ManageRelatedRecords
                     ->label('Isenção Taxa')
                     ->formatStateUsing(function ($record) {
                         $link = tempMediaUrl($record, 'isencao_taxa');
-                        $text = '<a href="' . $link . '" target="_blank" class="text-blue-600 hover:underline">Abrir</a>';
+                        $text = '<a href="' . $link . '" target="_blank" class="text-primary hover:underline">Abrir</a>';
 
                         return $link ? $text : '-';
                     })

@@ -102,9 +102,7 @@ class InscricaoForm
                                         ->required()
                                         ->rules(['file', 'mimes:pdf', 'max:2048'])
                                         ->acceptedFileTypes(['application/pdf'])
-                                        ->getUploadedFileNameForStorageUsing(
-                                            fn(TemporaryUploadedFile $file) => Str::slug($label) . '.' . $file->getClientOriginalExtension()
-                                        );
+                                        ->mediaName(Str::slug($label));
                                 })->toArray()
                             ),
                     ];

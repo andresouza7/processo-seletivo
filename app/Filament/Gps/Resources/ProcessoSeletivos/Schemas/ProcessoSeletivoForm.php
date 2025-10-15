@@ -89,9 +89,11 @@ class ProcessoSeletivoForm
                         ->schema([
                             TextInput::make('item')
                                 ->label('Nome do Documento')
+                                ->maxLength(100)
                                 ->required(), //causou problemas com testes (factory), mas deixa como está
                             Textarea::make('description')
                                 ->label('Descrição')
+                                ->maxLength(250)
                                 ->required()
                         ])
                         ->itemLabel(fn(array $state): ?string => $state['item'] ?? null)
