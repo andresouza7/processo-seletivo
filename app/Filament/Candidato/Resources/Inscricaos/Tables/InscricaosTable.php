@@ -62,7 +62,7 @@ class InscricaosTable
                             ->size('xs')
                             ->extraAttributes(['class' => 'text-gray-500'])
                             ->html()
-                            ->formatStateUsing(fn($state) => "Envio em:<br>" . $state->format('d/m/Y H:i'))
+                            ->formatStateUsing(fn($state) => "Inscrito em:<br>" . $state->format('d/m/Y H:i'))
                     ]),
             ])
             ->recordActions([

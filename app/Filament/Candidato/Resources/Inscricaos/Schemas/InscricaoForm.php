@@ -2,6 +2,7 @@
 
 namespace App\Filament\Candidato\Resources\Inscricaos\Schemas;
 
+use App\Filament\Components\AttachmentUpload;
 use App\Models\Position;
 use App\Models\Process;
 use Filament\Forms\Components\Checkbox;
@@ -94,15 +95,11 @@ class InscricaoForm
                                     $description = $item['description'] ?? '';
                                     $fieldKey = 'documentos_requeridos_' . Str::slug("{$index}_{$label}");
 
-                                    return SpatieMediaLibraryFileUpload::make($fieldKey)
+                                    return AttachmentUpload::make($fieldKey)
                                         ->helperText($description)
                                         ->label($label)
-                                        ->disk('local')
-                                        ->maxFiles(1)
-                                        ->required()
-                                        ->rules(['file', 'mimes:pdf', 'max:2048'])
-                                        ->acceptedFileTypes(['application/pdf'])
-                                        ->mediaName(Str::slug($label));
+                                        ->mediaName($label)
+                                        ->disk('local');
                                 })->toArray()
                             ),
                     ];
@@ -168,14 +165,11 @@ class InscricaoForm
                 ->live()
                 ->default(false),
 
-            SpatieMediaLibraryFileUpload::make('laudo_medico')
+            AttachmentUpload::make('laudo_medico')
                 ->label('Anexar laudo médico')
                 ->visible(fn(Get $get): bool => (bool) $get('pcd'))
-                ->required(fn(Get $get) => (bool) $get('pcd'))
-                ->maxFiles(1)
                 ->disk('local')
                 ->collection('laudo_medico')
-                ->rules(['file', 'mimes:pdf', 'max:2048'])
                 ->columnSpanFull(),
         ];
     }
@@ -193,14 +187,11 @@ class InscricaoForm
                 ->live()
                 ->default(false),
 
-            SpatieMediaLibraryFileUpload::make('isencao_taxa')
+            AttachmentUpload::make('isencao_taxa')
                 ->label('Comprovante de isenção de taxa')
                 ->visible(fn(Get $get): bool => (bool) $get('pedir_isencao'))
-                ->required(fn(Get $get): bool => (bool) $get('pedir_isencao'))
-                ->maxFiles(1)
                 ->disk('local')
                 ->collection('isencao_taxa')
-                ->rules(['file', 'mimes:pdf', 'max:2048'])
                 ->columnSpanFull(),
         ];
     }

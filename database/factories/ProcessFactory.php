@@ -80,7 +80,7 @@ class ProcessFactory extends Factory
             // Create applications with random position and candidate
             Application::factory()
                 ->count($applicationCount)
-                ->withFiles($fileCount)
+                // ->withFiles($fileCount)
                 ->sequence(fn() => [
                     'process_id'   => $process->id,
                     'position_id'  => $positions->random()->id,

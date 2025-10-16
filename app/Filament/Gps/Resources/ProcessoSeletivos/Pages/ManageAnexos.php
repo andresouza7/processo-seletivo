@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\ProcessoSeletivos\Pages;
 
+use App\Filament\Components\AttachmentUpload;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
@@ -41,10 +42,8 @@ class ManageAnexos extends ManageRelatedRecords
                     ->label('Descrição')
                     ->required()
                     ->maxLength(255),
-                SpatieMediaLibraryFileUpload::make('arquivo')
+                AttachmentUpload::make('arquivo')
                     ->label('Arquivo')
-                    ->required()
-                    ->acceptedFileTypes(['application/pdf'])
                     ->helperText('* É necessário salvar as alterações após a inclusão do arquivo.')
             ]);
     }

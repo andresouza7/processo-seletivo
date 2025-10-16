@@ -2,6 +2,7 @@
 
 namespace App\Filament\Candidato\Pages;
 
+use App\Filament\Components\AttachmentUpload;
 use App\Models\Appeal;
 use App\Models\Application;
 use App\Services\SelectionProcess\AppealService;
@@ -134,10 +135,10 @@ class Recurso extends Page implements HasSchemas
                     ->required()
                     ->rows(6)
                     ->columnSpanFull(),
-                SpatieMediaLibraryFileUpload::make('anexo_candidato')
+                AttachmentUpload::make('anexo_candidato')
                     ->columnSpanFull()
-                    ->maxFiles(1)
-                    ->rules(['file', 'mimes:pdf', 'max:2048']),
+                    ->required(false)
+                    ->disk('local'),
                 Actions::make([
                     Action::make('create')
                         ->label('Enviar Recurso')

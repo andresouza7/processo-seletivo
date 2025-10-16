@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\Recursos\Schemas;
 
+use App\Filament\Components\AttachmentUpload;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -50,12 +51,11 @@ class RecursoForm
                         ->required()
                         ->maxLength(255),
 
-                    SpatieMediaLibraryFileUpload::make('anexo_avaliador')
+                    AttachmentUpload::make('anexo_avaliador')
                         ->columnSpanFull()
-                        ->maxFiles(1)
                         ->disk('public')
+                        ->required(false)
                         ->collection('anexo_avaliador')
-                        ->rules(['file', 'mimes:pdf', 'max:2048'])
                 ])
             ]);
     }
