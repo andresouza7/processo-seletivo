@@ -29,7 +29,6 @@ use Illuminate\Support\HtmlString;
 
 class Login extends \Filament\Auth\Pages\Login
 {
-
     protected function getFormActions(): array
     {
         return [
@@ -69,50 +68,11 @@ class Login extends \Filament\Auth\Pages\Login
         ];
     }
 
-    public function authenticate(): ?LoginResponse
-    {
-        try {
-            $this->rateLimit(5);
-        } catch (TooManyRequestsException $exception) {
-            $this->getRateLimitedNotification($exception)?->send();
-
-            return null;
-        }
-
-        $data = $this->getCredentialsFromFormData($this->form->getState());
-
-        $user = $this->useBcryptAuthenticationMethod($data);
-
-        // Ensure the user can access the current Filament panel
-        if ($user instanceof FilamentUser && ! $user->canAccessPanel(Filament::getCurrentOrDefaultPanel())) {
-            Auth::guard('candidato')->logout();
-            $this->throwFailureValidationException();
-        }
-
-        // Regenerate session to prevent session fixation attacks
-        session()->regenerate();
-
-        return app(LoginResponse::class);
-    }
-
     protected function throwFailureValidationException(): never
     {
         throw ValidationException::withMessages([
-            
-            'data.cpf' => __('filament-panels::pages/auth/login.messages.failed'),
+            // 'data.cpf' => __('filament-panels::auth/pages/login.messages.failed'),
+            'data.cpf' => 'Usuário não encontrado',
         ]);
-    }
-
-    private function useBcryptAuthenticationMethod(array $data)
-    {
-        // Attempt authentication with the 'candidato' guard
-        if (!Auth::guard('candidato')->attempt($data, $data['remember'] ?? false)) {
-            $this->throwFailureValidationException();
-        }
-
-        // Get the authenticated user
-        $user = Auth::guard('candidato')->user();
-
-        return $user;
     }
 }
