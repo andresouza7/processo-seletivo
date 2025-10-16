@@ -21,7 +21,7 @@ class AppealStage extends Model
         'process_id',
     ];
 
-     protected $appends = [
+    protected $appends = [
         'accepts_appeal',
         'has_result'
     ];

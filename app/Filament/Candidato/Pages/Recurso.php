@@ -66,11 +66,19 @@ class Recurso extends Page implements HasSchemas
                 $app->id => "{$app->code} - {$app->position->description}",
             ]);
 
-        $this->appeals = Appeal::query()
+        $results = Appeal::query()
             ->where('candidate_id', Auth::guard('candidato')->id())
             ->available()
             ->latest()
             ->get();
+
+        $submitted = Appeal::query()
+            ->where('candidate_id', Auth::guard('candidato')->id())
+            ->submitted()
+            ->latest()
+            ->get();
+
+        $this->appeals = $results->isNotEmpty() ? $results : $submitted;
     }
 
     public function form(Schema $form): Schema

@@ -24,7 +24,7 @@
 
         @foreach ($appeals as $appeal)
             @php
-                $result = $resultLabels[$appeal->result] ?? ['label' => 'Em análise', 'color' => 'info'];
+                $result = $appeal->hasResult() ? $resultLabels[$appeal->result] : ['label' => 'Em análise', 'color' => 'info'];
             @endphp
 
             <div class="bg-white shadow-xs border border-gray-200 rounded-xl p-6">
@@ -60,7 +60,7 @@
                 </div>
 
                 {{-- Resposta da Banca --}}
-                @if ($appeal->result && $appeal->response)
+                @if ($appeal->hasResult())
                     <div class="mt-4 text-sm">
                         <p class="font-semibold text-gray-800">Resposta da Banca:</p>
                         <div class="mt-1 text-gray-600 bg-gray-50 rounded-lg p-3">
