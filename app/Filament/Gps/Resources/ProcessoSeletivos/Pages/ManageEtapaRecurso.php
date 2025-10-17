@@ -29,7 +29,6 @@ class ManageEtapaRecurso extends ManageRelatedRecords
     protected static ?string $navigationLabel = 'Etapas de Recurso';
     protected static ?string $breadcrumb = 'Etapas de Recurso';
     protected static string $relationship = 'appeal_stage';
-    protected static bool $shouldRegisterNavigation = false;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 

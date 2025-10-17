@@ -21,6 +21,7 @@ use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageVagas;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Schemas\ProcessoSeletivoForm;
 use App\Filament\Gps\Resources\ProcessoSeletivos\Tables\ProcessoSeletivoTable;
 use App\Models\Process;
+use Filament\Navigation\NavigationGroup;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -77,15 +78,28 @@ class ProcessoSeletivoResource extends Resource
 
     public static function getRecordSubNavigation(Page $page): array
     {
-        return $page->generateNavigationItems([
-            EditProcessoSeletivo::class,
-            ManageAnexos::class,
-            ManageInscritos::class,
-            ManageVagas::class,
-            ManageRecursos::class,
-            ManageEtapaRecurso::class,
-            ManageAvaliadores::class,
-        ]);
+        return [
+            NavigationGroup::make()
+                ->label('Processo')
+                ->items([
+                    ...$page->generateNavigationItems([
+                        EditProcessoSeletivo::class,
+                        ManageAnexos::class,
+                        ManageInscritos::class,
+                        ManageVagas::class,
+                    ]),
+                ]),
+
+            // Grouped section for Recursos
+            NavigationGroup::make()
+                ->label('Recursos')
+                ->items([
+                    ...$page->generateNavigationItems([
+                        ManageEtapaRecurso::class,
+                        ManageAvaliadores::class,
+                    ]),
+                ]),
+        ];
     }
 
     public static function getPages(): array
@@ -97,7 +111,6 @@ class ProcessoSeletivoResource extends Resource
             'anexos' => ManageAnexos::route('/{record}/anexos'),
             'inscritos' => ManageInscritos::route('/{record}/inscritos'),
             'evaluators' => ManageAvaliadores::route('/{record}/evaluators'),
-            'recursos' => ManageRecursos::route('/{record}/recursos'),
             'vagas' => ManageVagas::route('/{record}/vagas'),
             'etapas_recurso' => ManageEtapaRecurso::route('/{record}/etapas_recurso'),
         ];
