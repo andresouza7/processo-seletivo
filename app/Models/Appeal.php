@@ -74,7 +74,7 @@ class Appeal extends Model implements HasMedia
         return $query->whereHas('appeal_stage', function ($q) use ($today) {
             $q->whereDate('result_start_date', '<=', $today)
                 ->whereDate('result_end_date', '>=', $today);
-        })->whereNotNull('result')->whereNotNull('response');
+        })->whereNotNull('result');
     }
 
     public function hasResult()
