@@ -24,7 +24,7 @@ class InscricaoExporter extends Exporter
                             'filament.gps.resources.processos.inscritos',
                             [
                                 $record->process->id,
-                                'tableSearch' => $record->code
+                                'search' => $record->code
                             ]
                         );
 

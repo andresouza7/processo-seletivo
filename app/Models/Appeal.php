@@ -63,7 +63,7 @@ class Appeal extends Model implements HasMedia
         $today = now()->toDateString();
 
         return $query->whereHas('appeal_stage', function ($query) use ($today) {
-            $query->whereDate('result_start_date', '>', $today);
+            $query->whereDate('result_start_date', '>=', $today);
         });
     }
 
@@ -81,6 +81,8 @@ class Appeal extends Model implements HasMedia
     {
         $today = now()->toDateString();
 
-        return $this->appeal_stage->result_start_date <= $today && $this->appeal_stage->result_end_date >= $today;
+        return $this->appeal_stage->result_start_date <= $today
+            && $this->appeal_stage->result_end_date >= $today
+            && $this->result;
     }
 }

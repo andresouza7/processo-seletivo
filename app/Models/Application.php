@@ -83,19 +83,31 @@ class Application extends Model implements HasMedia
     {
         $today = now()->toDateString();
 
-        return $query
-            // inscrição NÃO pode ter recurso na última etapa do próprio processo
-            ->whereDoesntHave('appeals', function ($q) {
+        return $query->where(function ($q) {
+            $q->whereDoesntHave('appeals', function ($q) {
+                // No appeal for the latest appeal stage
                 $q->whereIn('appeal_stage_id', function ($sub) {
                     $sub->selectRaw('MAX(id)')
                         ->from('appeal_stages as s')
-                        ->whereColumn('s.process_id', 'appeals.process_id'); // mesmo processo
+                        ->whereColumn('s.process_id', 'appeals.process_id');
                 });
             })
+                ->orWhereHas('process.appeal_stage', function ($q) {
+                    // The process has a stage that allows multiple appeals
+                    $q->whereExists(function ($sub) {
+                        $sub->selectRaw(1)
+                            ->from('appeal_stages as s')
+                            ->whereColumn('s.process_id', 'process_id')
+                            ->where('s.allow_many', true);
+                    });
+                });
+        })
             // mas o processo da inscrição deve ter uma etapa ativa aberta hoje
             ->whereHas('process.appeal_stage', function ($q) use ($today) {
-                $q->whereDate('submission_start_date', '<=', $today)
-                    ->whereDate('submission_end_date', '>=', $today);
+                $q->where(function ($q) use ($today) {
+                    $q->whereDate('submission_start_date', '<=', $today)
+                        ->whereDate('submission_end_date', '>=', $today);
+                });
             });
     }
 }
