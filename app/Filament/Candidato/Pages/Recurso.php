@@ -60,7 +60,7 @@ class Recurso extends Page implements HasSchemas
 
         $this->options = Application::query()
             ->where('candidate_id', Auth::guard('candidato')->id())
-            ->canAppeal()
+            ->appealSubmissionOpen()
             ->with('position')
             ->get()
             ->mapWithKeys(fn($app) => [
@@ -150,7 +150,7 @@ class Recurso extends Page implements HasSchemas
                         ->action(fn() => $this->create())
                 ]),
             ])
-            ->visible(fn() => $this->application && $this->application->canAppeal());
+            ->visible(fn() => $this->application);
     }
 
     public function create(): void

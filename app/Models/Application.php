@@ -79,42 +79,23 @@ class Application extends Model implements HasMedia
         return $this->process->appeal_stage()->latest()->first();
     }
 
-    public function canAppeal()
-    {
-        $stage = $this->activeAppealStage();
-        if (!$stage || !$stage->accepts_appeal) {
-            return false;
-        }
-
-        $appealExists = $this->appeals()->where('appeal_stage_id', $stage->id)->exists();
-
-        return !$appealExists || $stage->allow_many; // true se existe uma etapa com recurso aberto e o usuário não fez um recurso pra ela
-    }
-
-    public function scopeCanAppeal($query)
+    public function scopeAppealSubmissionOpen($query)
     {
         $today = now()->toDateString();
 
         return $query
-            ->whereDoesntHave('appeals')
-            ->whereHas('process.appeal_stage', function ($q) use ($today) {
-                $q->where(function ($q) use ($today) {
-                    $q->whereDate('submission_start_date', '<=', $today)
-                        ->whereDate('submission_end_date', '>=', $today);
+            // inscrição NÃO pode ter recurso na última etapa do próprio processo
+            ->whereDoesntHave('appeals', function ($q) {
+                $q->whereIn('appeal_stage_id', function ($sub) {
+                    $sub->selectRaw('MAX(id)')
+                        ->from('appeal_stages as s')
+                        ->whereColumn('s.process_id', 'appeals.process_id'); // mesmo processo
                 });
-            });
-    }
-
-    public function scopeCanViewAppeal($query)
-    {
-        $today = now()->toDateString();
-
-        return $query
+            })
+            // mas o processo da inscrição deve ter uma etapa ativa aberta hoje
             ->whereHas('process.appeal_stage', function ($q) use ($today) {
-                $q->where(function ($q) use ($today) {
-                    $q->whereDate('result_start_date', '<=', $today)
-                        ->whereDate('result_end_date', '>=', $today);
-                });
+                $q->whereDate('submission_start_date', '<=', $today)
+                    ->whereDate('submission_end_date', '>=', $today);
             });
     }
 }

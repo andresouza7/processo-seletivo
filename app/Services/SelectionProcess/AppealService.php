@@ -3,7 +3,10 @@
 namespace App\Services\SelectionProcess;
 
 use App\Models\Appeal;
+use App\Models\AppealStage;
 use App\Models\Application;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AppealService
