@@ -9,35 +9,27 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Text;
 use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
 use Filament\Auth\Events\Registered;
 use App\Models\Candidate;
-use App\Models\Pessoa;
-use Filament\Forms;
-use Filament\Pages\Page;
-use App\Models\User;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Exception;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Split;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Wizard;
-use Filament\Forms\Components\Wizard\Step;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Filament\Actions\Action;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use Canducci\Cep\Facades\Cep;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Placeholder;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Icon;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Icons\Heroicon;
 
 class Cadastro extends Register
 {
@@ -57,41 +49,81 @@ class Cadastro extends Register
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextEntry::make('status')
-                ->formatStateUsing(fn(string $state): string => new HtmlString('<p>ℹ Complete todas as etapas para finalizar o seu cadastro.</p>')),
+            Section::make()
+                ->schema([
+                    Text::make('ℹ Complete todas as seções para finalizar o seu cadastro.')
+                        ->weight(FontWeight::SemiBold),
+                ])
+                ->compact()
+                ->secondary(),
 
-            Section::make('Identificação')
-                ->columns(2)
-                ->schema($this->getIdentificacaoSection()),
-
-            Section::make('Informações Sociais')
-                ->columns(2)
-                ->schema($this->getInformacoesSociaisSection()),
-
-            Section::make('Contato')
-                ->schema($this->getContatoSection()),
+            ...self::getProfileSections(),
 
             Section::make('Acesso')
-                ->schema($this->getAcessoSection()),
+                ->schema(self::getAcessoSection()),
         ]);
     }
 
-    protected function getIdentificacaoSection(): array
+    public static function getProfileSections(?Candidate $record = null): array
     {
         return [
-            TextInput::make('name')->label('Nome')->required(),
-            TextInput::make('mother_name')->label('Nome da Mãe')->required(),
-            $this->getCpfFormComponent(),
+            Section::make('Identificação')
+                ->description(fn() => $record ? 'Entre em contato com a Divisão de Processo Seletivo (DIPS) para alterar estes dados' : null)
+                ->columns(2)
+                ->schema(self::getIdentificacaoSection($record)),
+
+            Section::make('Informações Sociais')
+                ->columns(2)
+                ->schema(self::getInformacoesSociaisSection($record))
+                ->afterHeader([
+                    Action::make('infoSocial')
+                        ->label('Ajuda')
+                        ->icon('heroicon-o-question-mark-circle')
+                        ->modalHeading('Informações adicionais')
+                        ->modalSubmitAction(false)
+                        ->modalCancelActionLabel('Fechar')
+                        ->modalContent(view('filament.candidato.partials.informacoes-sociais-ajuda')),
+                ]),
+
+            Section::make('Endereço e Contato')
+                ->schema(self::getContatoSection($record)),
+        ];
+    }
+
+    public static function getIdentificacaoSection(?Candidate $record = null): array
+    {
+        return [
+            TextInput::make('name')
+                ->label('Nome')
+                ->disabled(fn() => filled($record?->name))
+                ->required(),
+
+            TextInput::make('mother_name')
+                ->label('Nome da Mãe')
+                ->disabled(fn() => filled($record?->mother_name))
+                ->required(),
+
+            TextInput::make('cpf')
+                ->label('CPF')
+                ->unique('candidates', 'cpf', ignorable: $record)
+                ->required()
+                ->disabled(fn() => filled($record?->cpf))
+                ->rules(['cpf'])
+                ->maxLength(11),
+
             TextInput::make('rg')
                 ->label('RG')
                 ->maxLength(20)
+                ->disabled(fn() => filled($record?->rg))
                 ->required(),
+
             DatePicker::make('birth_date')
                 ->label('Data de Nascimento')
                 ->date()
                 ->minDate('1950-01-01')
                 ->maxDate(now())
                 ->rules(['before_or_equal:today', 'after_or_equal:1950-01-01'])
+                ->disabled(fn() => filled($record?->birth_date))
                 ->required(),
 
             Select::make('sex')
@@ -102,163 +134,126 @@ class Cadastro extends Register
 
                 ])
                 ->reactive()
+                ->disabled(fn() => filled($record?->sex))
                 ->required(),
         ];
     }
 
     /////////// NOVO GRUPO DE INFORMAÇÕES
-    protected function getInformacoesSociaisSection(): array
+    public static function getInformacoesSociaisSection(?Candidate $record = null): array
     {
         return [
-            /////// SELECT: DADOS DE GÊNERO
+            // Identidade de gênero
             Select::make('gender_identity')
                 ->label('Identidade de gênero')
                 ->options([
-                    'C' => 'Cisgênero',
-                    'T' => 'Transgênero',
+                    'C'  => 'Cisgênero',
+                    'T'  => 'Transgênero',
                     'NB' => 'Não-binário',
                     'TV' => 'Travesti',
-                    'NB' => 'Não-binário',
                     'O'  => 'Outro',
                 ])
-
                 ->reactive()
+                ->required()
                 ->columnSpanFull(),
 
-            //////////////// AVISO DINÂMICO GENERO
-            Placeholder::make('o que significa esta identidade de gênero')
-                ->content(fn(Get $get) => match ($get('gender_identity')) {
-                    'C' => new HtmlString('<span style="color:grey;"><em>* pessoa que se identifica com o gênero que lhe foi atribuído ao nascer</em></span>'),
-                    'T' => new HtmlString('<span style="color:grey;"><em>* pessoa que se identifica com um gênero diferente daquele que lhe foi atribuído ao nascer</em></span>'),
-                    'NB' => new HtmlString('<span style="color:grey;"><em>* pessoa que não se identifica nem como homem e nem como mulher</em></span>'),
-                    default => null,
-                })
-                ->visible(fn(Get $get) => in_array($get('gender_identity'), ['C', 'T', 'NB']))
-                ->columnSpanFull(),
-
-            //////////// INPUT ESPECIFICANDO GENERO: OUTROS    
             TextInput::make('gender_identity_description')
-                ->label('Me identifico como')
+                ->label('Especificar identidade de gênero (caso tenha selecionado "Outro")')
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => in_array($get('gender_identity'), ['O'])),
+                ->visible(fn(Get $get) => $get('gender_identity') === 'O'),
 
-            ///////// CHECKBOX PARA USO DE NOME SOCIAL (default: não usar)
-            Checkbox::make('usar_nome_social')
+            Checkbox::make('has_social_name')
                 ->label('Usar nome social')
                 ->reactive()
-                ->columnSpanFull()
-                ->visible(fn(Get $get) => in_array($get('gender_identity'), ['T', 'TV', 'NB', 'O'])),
+                ->columnSpanFull(),
+                // ->visible(fn(Get $get) => in_array($get('gender_identity'), ['T', 'TV', 'NB', 'O'])),
 
-            ///////// TEXTBOX DO NOME SOCIAL
             TextInput::make('social_name')
+                ->label('Nome social')
                 ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('usar_nome_social')),
+                ->visible(fn(Get $get) => $get('has_social_name')),
 
-
-            /////// SELECT ORIENTACAO SEXUAL  
+            // Orientação sexual
             Select::make('sexual_orientation')
-                ->label('Orientação sexual:')
+                ->label('Orientação sexual')
                 ->options([
                     'HT' => 'Heterossexual',
                     'HM' => 'Homossexual',
-                    'B' => 'Bissexual',
-                    'P' => 'Panssexual',
-                    'A' => 'Assexual',
+                    'B'  => 'Bissexual',
+                    'P'  => 'Pansexual',
+                    'A'  => 'Assexual',
                 ])
                 ->default('HT')
+                ->required()
                 ->reactive()
-                ->columnSpanFull()
-                ->required(),
-
-            //////// AVISO DINAMICO ORIENTACAO
-            Placeholder::make('o que significa esta orientaçao sexual')
-                ->content(fn(Get $get) => match ($get('sexual_orientation')) {
-                    'HT' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que se atrai ao gênero oposto</em></span>'
-                    ),
-                    'HM' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que se atrai ao mesmo gênero</em></span>'
-                    ),
-                    'B' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que se atrai a ambos os gêneros</em></span>'
-                    ),
-                    'P' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que se atrai a todos os gêneros</em></span>'
-                    ),
-                    'A' => new HtmlString(
-                        '<span style="color:grey;"><em>* pessoa que não se atrai a nenhum gênero</em></span>'
-                    ),
-                    default => null,
-                })
-                ->visible(fn(Get $get) => in_array($get('sexual_orientation'), ['HT', 'HM', 'B', 'P', 'A']))
                 ->columnSpanFull(),
 
-            ///////// CHECKBOX PARA DEFICIENCIA (default: não usar)
+            // Pessoa com deficiência
             Checkbox::make('has_disability')
-                ->label('Possui deficiência, transtorno global do desenvolvimento, altas habilidades ou superdotação?')
+                ->label('Possui deficiência, transtorno do espectro autista, altas habilidades ou superdotação')
                 ->reactive()
                 ->columnSpanFull(),
 
-            ///////// TEXTBOX DA DEFICIENCIA
             TextInput::make('disability_description')
-                ->label('Caso possuia deficiência, favor especificar qual:')
+                ->label('Especificar deficiência, transtorno ou condição')
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('has_disability')),
 
-            /////////////// SELECT: RAÇA
+            // Raça/Cor
             Select::make('race')
-                ->label('Raça/Cor')
+                ->label('Raça/Cor (conforme classificação IBGE)')
                 ->options([
-                    'NA' => 'Negro de cor preta',
-                    'NB' => 'Negro de cor parda',
-                    'B' => 'Branca',
-                    'I' => 'Indígena',
-                    'A' => 'Amarela',
-
+                    'PT' => 'Preta',
+                    'PD' => 'Parda',
+                    'B'  => 'Branca',
+                    'I'  => 'Indígena',
+                    'A'  => 'Amarela',
                 ])
-                ->reactive()
-                ->required(),
+                ->required()
+                ->reactive(),
 
-            /////////////// SELECT: ESTADO CIVIL
+            // Estado civil
             Select::make('marital_status')
-                ->label('Estado civil:')
+                ->label('Estado civil')
                 ->options([
-                    'C' => 'Casado (a)',
-                    'S' => 'Solteiro (a)',
-                    'D' => 'Divorciado (a)',
-                    'V' => 'Viúvo(a)',
-                    'U' => 'União estável',
+                    'C'  => 'Casado(a)',
+                    'S'  => 'Solteiro(a)',
+                    'D'  => 'Divorciado(a)',
+                    'V'  => 'Viúvo(a)',
+                    'U'  => 'União estável',
                     'SP' => 'Separado(a)',
-
                 ])
-                ->reactive()
-                ->required(),
+                ->required()
+                ->reactive(),
 
-            /////////////// SELECT: COMUNIDADE
+            // Comunidade
             Select::make('community')
-                ->label('Você é pertencente à comunidade:')
+                ->label('Pertence a alguma comunidade tradicional?')
                 ->options([
-                    'R' => 'Comunidade Ribeirinha',
-                    'Q' => 'Comunidade Quilombola',
-                    'I' => 'Comunidade Indígena',
-                    'T' => 'Comunidade Tradicional (extrativistas)',
+                    'R' => 'Comunidade ribeirinha',
+                    'Q' => 'Comunidade quilombola',
+                    'I' => 'Comunidade indígena',
+                    'T' => 'Comunidade tradicional (extrativista)',
                     'O' => 'Não se aplica',
-
                 ])
-                ->reactive()
-                ->required(),
-
+                ->required()
+                ->reactive(),
         ];
     }
 
-    protected function getContatoSection(): array
+    public static function getContatoSection(?Candidate $record = null): array
     {
         return [
-            $this->getEmailFormComponent(),
+            TextInput::make('email')
+                ->label('Email')
+                ->email()
+                ->required(),
+
             TextInput::make('phone')
                 ->label('Telefone')
                 ->mask('(99)99999-9999')
                 ->required(),
+
             Grid::make([
                 'default' => 1,
                 'md' => 2,
@@ -306,17 +301,6 @@ class Cadastro extends Register
                 $this->getPasswordConfirmationFormComponent(),
             ])
         ];
-    }
-
-
-    protected function getCpfFormComponent(): Component
-    {
-        return TextInput::make('cpf')
-            ->label('CPF')
-            ->unique('candidates', 'cpf')
-            ->required()
-            ->rules(['cpf'])
-            ->maxLength(11);
     }
 
     protected function handleRegistration(array $data): Model
