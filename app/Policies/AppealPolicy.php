@@ -41,7 +41,7 @@ class AppealPolicy
      */
     public function update(User $user, Appeal $appeal): bool
     {
-        return $user->hasRole('admin|gestor') && !$appeal->result;
+        return $user->hasRole('admin|gestor|avaliador') && !$appeal->result;
     }
 
     /**
