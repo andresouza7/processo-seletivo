@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\App\Resources\ProcessoSeletivos\RelationManagers;
+namespace App\Filament\App\Resources\Processes\RelationManagers;
 
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -13,22 +13,16 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AnexosRelationManager extends RelationManager
+class ProcessAttachmentRelationManager extends RelationManager
 {
     protected static string $relationship = 'attachments';
-
-    public function form(Schema $schema): Schema
-    {
-        return $schema
-            ->components([]);
-    }
 
     public function table(Table $table): Table
     {
         return $table
             ->recordTitleAttribute('description')
             ->heading('Publicações')
-            ->description('Utilize o campo de pesquisa para filtrar uma informação')
+            ->description('Use o campo de busca para filtrar uma informação')
             ->defaultSort('id', 'desc')
             ->columns([
                 Stack::make([
@@ -44,15 +38,6 @@ class AnexosRelationManager extends RelationManager
                         ->url(fn($record) => $record->file_url, shouldOpenInNewTab: true)
                         ->searchable(),
                 ])
-            ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                // 
-            ])
-            ->recordActions([
-                // 
             ]);
     }
 }

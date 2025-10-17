@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\App\Pages\Auth\Cadastro;
 use App\Filament\App\Pages\Auth\Login;
 use App\Filament\App\Pages\RequestEmailReset;
+use App\Filament\App\Resources\Processes\ProcessResource;
 use App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -60,7 +61,7 @@ class AppPanelProvider extends PanelProvider
                     'finalizados'        => ['label' => 'Finalizados',    'icon' => 'heroicon-o-check',         'sort' => 3],
                 ])->map(
                     fn($data, $key) => NavigationItem::make($data['label'])
-                        ->url(fn() => ProcessoSeletivoResource::getUrl('index', [
+                        ->url(fn() => ProcessResource::getUrl('index', [
                             'filters' => ['status' => ['value' => $key]]
                         ]))
                         ->icon($data['icon'])

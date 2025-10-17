@@ -178,7 +178,7 @@
                                         Edital nº {{ $processo->number }}
                                     </div>
 
-                                    <a href="{{ route('filament.app.resources.processo-seletivos.view', ['record' => $processo->id]) }}"
+                                    <a href="{{ \App\Filament\App\Resources\Processes\ProcessResource::getUrl('view', ['record' => $processo]) }}"
                                         class="text-primary-600 text-sm font-medium hover:underline mt-1.5"
                                         title="{{ $processo->title }}">
                                         {{ \Illuminate\Support\Str::limit($processo->title, 100) }}

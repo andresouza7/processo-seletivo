@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\App\Resources\ProcessoSeletivos\Schemas;
+namespace App\Filament\App\Resources\Processes\Schemas;
 
 use Filament\Schemas\Schema;
 
-class ProcessoSeletivoForm
+class ProcessForm
 {
     public static function configure(Schema $schema): Schema
     {

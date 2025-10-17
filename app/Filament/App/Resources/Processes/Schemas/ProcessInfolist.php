@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\App\Resources\ProcessoSeletivos\Schemas;
+namespace App\Filament\App\Resources\Processes\Schemas;
 
 use Carbon\Carbon;
 use Filament\Actions\Action;
@@ -11,7 +11,7 @@ use Filament\Schemas\Schema;
 use HtmlHelper;
 use Illuminate\Support\HtmlString;
 
-class ProcessoSeletivoInfolist
+class ProcessInfolist
 {
     public static function configure(Schema $schema): Schema
     {
@@ -19,7 +19,7 @@ class ProcessoSeletivoInfolist
             ->components([
                 Section::make([
                     TextEntry::make('title')
-                        ->label('Nome')
+                        ->label('Título')
                         ->extraAttributes(['class' => 'font-semibold text-gray-700']),
                     TextEntry::make('number')
                         ->label('Número')

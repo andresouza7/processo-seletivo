@@ -1,24 +1,23 @@
 <?php
 
-namespace App\Filament\App\Resources\ProcessoSeletivos\Tables;
+namespace App\Filament\App\Resources\Processes\Tables;
 
-use App\Models\Process;
 use Carbon\Carbon;
-use Filament\Actions\BulkActionGroup;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class ProcessoSeletivoTable
+class ProcessesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->heading('Consultar Processos Seletivos')
-            ->description('Utilize o campo de pesquisa para filtrar uma informação')
+            ->description('Use o campo de busca para filtrar uma informação')
             ->defaultSort('publication_start_date', 'desc')
             ->columns([
                 Stack::make([
@@ -38,7 +37,6 @@ class ProcessoSeletivoTable
                         ->searchable()
                         ->limit()
                 ])
-
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -57,15 +55,6 @@ class ProcessoSeletivoTable
                             default => $query->whereRaw('1 = 0'), // no results
                         };
                     }),
-            ])
-            ->recordActions([
-                // Tables\Actions\ViewAction::make(),
-                // Tables\Actions\EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    // Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

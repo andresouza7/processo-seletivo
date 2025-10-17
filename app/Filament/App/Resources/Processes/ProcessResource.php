@@ -1,27 +1,32 @@
 <?php
 
-namespace App\Filament\App\Resources\ProcessoSeletivos;
+namespace App\Filament\App\Resources\Processes;
 
-use Filament\Schemas\Schema;
-use App\Filament\App\Resources\ProcessoSeletivos\Pages\ListProcessoSeletivos;
-use App\Filament\App\Resources\ProcessoSeletivos\Pages\ViewProcessoSeletivo;
-use App\Filament\App\Resources\ProcessoSeletivoResource\Pages;
-use App\Filament\App\Resources\ProcessoSeletivos\RelationManagers\AnexosRelationManager;
-use App\Filament\App\Resources\ProcessoSeletivos\Schemas\ProcessoSeletivoForm;
-use App\Filament\App\Resources\ProcessoSeletivos\Schemas\ProcessoSeletivoInfolist;
-use App\Filament\App\Resources\ProcessoSeletivos\Tables\ProcessoSeletivoTable;
+use App\Filament\App\Resources\Processes\Pages\ListProcesses;
+use App\Filament\App\Resources\Processes\Pages\ViewProcess;
+use App\Filament\App\Resources\Processes\RelationManagers\ProcessAttachmentRelationManager;
+use App\Filament\App\Resources\Processes\Schemas\ProcessForm;
+use App\Filament\App\Resources\Processes\Schemas\ProcessInfolist;
+use App\Filament\App\Resources\Processes\Tables\ProcessesTable;
 use App\Models\Process;
 use BackedEnum;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProcessoSeletivoResource extends Resource
+class ProcessResource extends Resource
 {
-    protected static ?string $model = Process::class;
+     protected static ?string $model = Process::class;
+
+     protected static ?string $modelLabel = 'Processo Seletivo';
+
+     protected static ?string $pluralModelLabel = 'Processos Seletivos';
+
+     protected static ?string $slug = 'processos';
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::RectangleStack;
 
@@ -49,31 +54,39 @@ class ProcessoSeletivoResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return ProcessoSeletivoForm::configure($schema);
+        return ProcessForm::configure($schema);
     }
 
     public static function infolist(Schema $schema): Schema
     {
-        return ProcessoSeletivoInfolist::configure($schema);
+        return ProcessInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return ProcessoSeletivoTable::configure($table);
+        return ProcessesTable::configure($table);
     }
 
     public static function getRelations(): array
     {
         return [
-            AnexosRelationManager::class,
+            ProcessAttachmentRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListProcessoSeletivos::route('/'),
-            'view' => ViewProcessoSeletivo::route('/{record}'),
+            'index' => ListProcesses::route('/'),
+            'view' => ViewProcess::route('/{record}'),
         ];
+    }
+
+    public static function getRecordRouteBindingEloquentQuery(): Builder
+    {
+        return parent::getRecordRouteBindingEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
