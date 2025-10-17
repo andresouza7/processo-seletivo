@@ -61,7 +61,9 @@ class Candidate extends Authenticatable implements HasName, FilamentUser
 
     public function getFilamentName(): string
     {
-        return $this->name;
+        preg_match('/^\S+/', trim($this->name), $matches);
+
+        return $matches[0] ?? $this->name;
     }
 
     public function canAccessPanel(Panel $panel): bool

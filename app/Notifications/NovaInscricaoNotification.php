@@ -23,12 +23,12 @@ class NovaInscricaoNotification extends Notification implements ShouldQueue
 
     public function toMail(object $notifiable): MailMessage
     {
-        $primeiroNome = explode(' ', trim($notifiable->name))[0];
+        $name = $notifiable->getFilamentName();
 
         return (new MailMessage)
             ->subject('Recebimento de Inscrição')
-            ->greeting('Prezado(a) ' . $primeiroNome . ',')
-            ->line('Informamos que sua inscrição foi recebida pelo sistema.')
+            ->greeting('Prezado(a) Candidato(a)')
+            ->line('Confirmamos o recebimento de sua inscrição no sistema de processos seletivos da UEAP. Confira abaixo os detalhes:')
             ->line('Código da inscrição: ' . $this->application->code)
             ->line('Processo Seletivo: ' . $this->application->process->title)
             ->line('Vaga: ' . $this->application->position->description)
