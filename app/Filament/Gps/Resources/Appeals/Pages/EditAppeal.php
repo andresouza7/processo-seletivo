@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Filament\Gps\Resources\Recursos\Pages;
+namespace App\Filament\Gps\Resources\Appeals\Pages;
 
 use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
-use App\Filament\Gps\Resources\Recursos\RecursoResource;
+use App\Filament\Gps\Resources\Appeals\AppealResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditRecurso extends EditRecord
+class EditAppeal extends EditRecord
 {
-    protected static string $resource = RecursoResource::class;
+    protected static string $resource = AppealResource::class;
     protected static ?string $title = 'Responder Recurso';
     protected static ?string $breadcrumb = 'Responder';
 
@@ -18,7 +18,6 @@ class EditRecurso extends EditRecord
     {
         return [
             ViewAction::make(),
-            // DeleteAction::make(),
         ];
     }
 

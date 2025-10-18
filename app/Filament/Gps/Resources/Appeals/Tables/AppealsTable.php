@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Gps\Resources\Recursos\Tables;
+namespace App\Filament\Gps\Resources\Appeals\Tables;
 
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -11,7 +11,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class RecursosTable
+class AppealsTable
 {
     public static function configure(Table $table): Table
     {

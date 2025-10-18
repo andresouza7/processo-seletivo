@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Filament\Gps\Resources\Recursos\Schemas;
+namespace App\Filament\Gps\Resources\Appeals\Schemas;
 
 use App\Filament\Components\AttachmentUpload;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class RecursoForm
+class AppealForm
 {
     public static function configure(Schema $schema): Schema
     {

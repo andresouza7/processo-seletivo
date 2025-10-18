@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Gps\Resources\Recursos\Pages;
+namespace App\Filament\Gps\Resources\Appeals\Pages;
 
 use Filament\Actions\CreateAction;
-use App\Filament\Gps\Resources\Recursos\RecursoResource;
+use App\Filament\Gps\Resources\Appeals\AppealResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListRecursos extends ListRecords
+class ListAppeals extends ListRecords
 {
-    protected static string $resource = RecursoResource::class;
+    protected static string $resource = AppealResource::class;
 
     protected function getHeaderActions(): array
     {
