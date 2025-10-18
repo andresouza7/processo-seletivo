@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Candidato\Resources\Inscricaos\Pages;
+namespace App\Filament\Candidato\Resources\Applications\Pages;
 
-use App\Filament\Candidato\Resources\Inscricaos\InscricaoResource;
+use App\Filament\Candidato\Resources\Applications\ApplicationResource;
+use App\Models\Application;
 use App\Models\Process;
 use App\Services\SelectionProcess\ApplicationService;
 use Filament\Actions\Action;
@@ -10,9 +11,9 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
 
-class CreateInscricao extends CreateRecord
+class CreateApplication extends CreateRecord
 {
-    protected static string $resource = InscricaoResource::class;
+    protected static string $resource = ApplicationResource::class;
     protected static ?string $title = 'Nova Inscrição';
     protected static bool $canCreateAnother = false;
 
@@ -25,7 +26,11 @@ class CreateInscricao extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        return $this->service->prepareFormData($data);
+        $data['code'] = Application::generateUniqueCode();
+        $data['candidate_id'] = Auth::guard('candidato')->id();
+        $data['quota_id'] = $data['pcd'] ? 3 : 1; // defaults to Ampla Concorrencia
+
+        return $data;
     }
 
     protected function beforeCreate(): void
@@ -49,33 +54,6 @@ class CreateInscricao extends CreateRecord
             $this->halt();
             return;
         }
-
-        $data = $this->service->prepareFormData($this->form->getState());
-        $process = Process::find($data['process_id']); // supondo que você tenha um método para buscar o processo
-
-        // 🚨 Verifica se o processo restringe a inscrição para mais de um tipo de vaga
-        // if ($process->single_application) {
-        //     $existing = $this->service->checkExistingDifferentPosition($candidate->id, $data);
-
-        //     if ($existing) {
-        //         Notification::make()
-        //             ->warning()
-        //             ->title('Inscrição única por vaga')
-        //             ->body('Você já se inscreveu em outra vaga. Veja sua inscrição abaixo.')
-        //             ->persistent()
-        //             ->actions([
-        //                 Action::make('verInscricao')
-        //                     ->label('Ver Inscrição')
-        //                     ->button()
-        //                     ->color('primary')
-        //                     ->url(static::getResource()::getUrl('view', ['record' => $existing])),
-        //             ])
-        //             ->send();
-
-        //         $this->halt();
-        //         return;
-        //     }
-        // }
     }
 
     protected function afterCreate(): void

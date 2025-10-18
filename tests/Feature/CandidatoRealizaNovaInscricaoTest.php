@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Candidato\Resources\Inscricaos\Pages\CreateInscricao;
+use App\Filament\Candidato\Resources\Applications\Pages\CreateApplication;
 use App\Models\Application;
 use App\Models\Candidate;
 use App\Models\Position;
@@ -51,7 +51,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
     public function test_user_cannot_submit_form_without_accepting_terms(): void
     {
-        Livewire::test(CreateInscricao::class)
+        Livewire::test(CreateApplication::class)
             ->fillForm([
                 'process_id'   => $this->processo->id,
                 'position_id'       => $this->vaga->id,
@@ -66,7 +66,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     public function test_user_can_submit_form_when_accepting_terms(): void
     {
 
-        Livewire::test(CreateInscricao::class)
+        Livewire::test(CreateApplication::class)
             ->fillForm([
                 'process_id'   => $this->processo->id,
                 'position_id'       => $this->vaga->id,
@@ -90,7 +90,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         $qualAtendimento = 'Mesa adaptada';
 
-        Livewire::test(CreateInscricao::class)
+        Livewire::test(CreateApplication::class)
             ->fillForm([
                 'process_id'   => $this->processo->id,
                 'position_id'       => $this->vaga->id,
@@ -114,7 +114,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
     public function test_requer_selecao_de_vaga(): void
     {
-        Livewire::test(CreateInscricao::class)
+        Livewire::test(CreateApplication::class)
             ->fillForm([
                 'process_id'   => $this->processo->id,
                 'requires_assistance' => false,
@@ -129,7 +129,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
     {
         Storage::fake('media');
 
-        Livewire::test(CreateInscricao::class)
+        Livewire::test(CreateApplication::class)
             ->fillForm([
                 'process_id' => $this->processo->id,
                 'position_id'    => $this->vaga->idinscricao_vaga,
@@ -148,7 +148,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
 
         $file = UploadedFile::fake()->createWithContent('documento.pdf', '%PDF-1.4 fake content here')->size(1024);
 
-        Livewire::test(CreateInscricao::class)
+        Livewire::test(CreateApplication::class)
             ->fillForm([
                 'process_id' => $this->processo->id,
                 'position_id'    => $this->vaga->id,
@@ -188,7 +188,7 @@ class CandidatoRealizaNovaInscricaoTest extends TestCase
             'PK fake content for docx'
         )->size(3000);
 
-        Livewire::test(CreateInscricao::class)
+        Livewire::test(CreateApplication::class)
             ->fillForm([
                 'process_id' => $processo->id,
                 'position_id'    => $vaga->id,

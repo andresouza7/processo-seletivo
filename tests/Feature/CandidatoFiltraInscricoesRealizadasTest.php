@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Candidato\Resources\Inscricaos\Pages\ListInscricaos;
+use App\Filament\Candidato\Resources\Applications\Pages\ListApplications;
 use App\Models\Candidate;
 use App\Models\Process;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,7 +27,7 @@ class CandidatoFiltraInscricoesRealizadasTest extends TestCase
         $application = $process->applications()->first();
 
         // Permite filtrar pelo código da inscrição
-        Livewire::test(ListInscricaos::class)
+        Livewire::test(ListApplications::class)
             ->searchTable($application->code)
             ->assertCanSeeTableRecords($process->applications->where('code', $application->code));
     }

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Candidato\Resources\Inscricaos\Tables;
+namespace App\Filament\Candidato\Resources\Applications\Tables;
 
 use App\Models\Application;
+use App\Services\SelectionProcess\ApplicationService;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\Layout\Grid;
 use Filament\Tables\Columns\Layout\Stack;
@@ -11,24 +12,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class InscricaosTable
+class ApplicationsTable
 {
     public static function configure(Table $table): Table
     {
-        // Use a safe query closure which will not blow up if the kandidat is not logged in.
         return $table
-            ->query(function (): Builder {
-                $guardId = Auth::guard('candidato')->id();
-                $query = Application::query()->orderBy('id', 'desc');
-
-                // If there's no logged candidate, return an empty result set (don't throw)
-                if (! $guardId) {
-                    // This forces no results but keeps a valid Builder instance
-                    return $query->whereRaw('0 = 1');
-                }
-
-                return $query->where('candidate_id', $guardId);
-            })
+            ->modifyQueryUsing(
+                fn(Builder $query) =>
+                $query->where('candidate_id', Auth::guard('candidato')->id())
+            )
             ->heading('Inscrições realizadas')
             ->description('Use o filtro para localizar uma inscrição.')
             ->columns([

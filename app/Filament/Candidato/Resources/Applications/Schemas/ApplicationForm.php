@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Candidato\Resources\Inscricaos\Schemas;
+namespace App\Filament\Candidato\Resources\Applications\Schemas;
 
 use App\Filament\Components\AttachmentUpload;
 use App\Models\Position;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
-class InscricaoForm
+class ApplicationForm
 {
     public static function configure(Schema $schema): Schema
     {

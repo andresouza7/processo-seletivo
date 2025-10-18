@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Candidato\Resources\Inscricaos\Schemas;
+namespace App\Filament\Candidato\Resources\Applications\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class InscricaoInfolist
+class ApplicationInfolist
 {
     public static function configure(Schema $schema): Schema
     {

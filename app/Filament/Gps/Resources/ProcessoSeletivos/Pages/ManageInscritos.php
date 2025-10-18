@@ -107,7 +107,7 @@ class ManageInscritos extends ManageRelatedRecords
             ->heading('Inscrições')
             ->query(
                 fn(ApplicationService $service) =>
-                $service->fetchLatestApplicationsForProcess($this->getOwnerRecord())
+                $service->fetchValidApplicationsForProcess($this->getOwnerRecord())
             )
             ->columns([
                 TextColumn::make('code')

@@ -34,7 +34,7 @@ class ProcessInfolist
                         ))
                         ->extraAttributes(['class' => 'font-semibold text-gray-700']),
                     Actions::make([
-                        Action::make('createInscricao')
+                        Action::make('CreateApplication')
                             ->visible(fn($record) => $record->can_apply)
                             ->label('Realizar Inscrição')
                             ->url(fn() => route('filament.candidato.resources.inscricoes.create'))

@@ -11,32 +11,22 @@ use Illuminate\Support\Facades\Auth;
 
 class ApplicationService
 {
-
-    public function prepareFormData(array $data): array
-    {
-        $data['code'] = Application::generateUniqueCode();
-        $data['candidate_id'] = Auth::guard('candidato')->id();
-        $data['quota_id'] = $data['pcd'] ? 3 : 1; // defaults to Ampla Concorrencia
-
-        return $data;
-    }
-
-    public function checkExistingDifferentPosition(int $candidateId, array $data): ?Application
-    {
-        return Application::query()
-            ->where('candidate_id', $candidateId)
-            ->where('process_id', $data['process_id'])
-            ->where('position_id', '!=', $data['position_id'])
-            ->orderBy('created_at', 'desc')
-            ->first();
-    }
+    // public function checkExistingDifferentPosition(int $candidateId, array $data): ?Application
+    // {
+    //     return Application::query()
+    //         ->where('candidate_id', $candidateId)
+    //         ->where('process_id', $data['process_id'])
+    //         ->where('position_id', '!=', $data['position_id'])
+    //         ->orderBy('created_at', 'desc')
+    //         ->first();
+    // }
 
     public function notifyApplicationCreated(Application $record): void
     {
         $record->candidate->notify(new NovaInscricaoNotification($record));
     }
 
-    public function fetchLatestApplicationsForProcess(Process $process): Builder
+    public function fetchValidApplicationsForProcess(Process $process): Builder
     {
         $query = Application::where('process_id', $process->id);
 

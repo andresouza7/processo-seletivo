@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Candidato\Resources\Inscricaos\Pages\ListInscricaos;
+use App\Filament\Candidato\Resources\Applications\Pages\ListApplications;
 use App\Models\Application;
 use App\Models\Candidate;
 use App\Models\Process;
@@ -28,6 +28,6 @@ class CandidatoConsultaInscricoesRealizadasTest extends TestCase
         ]);
 
         // dd($process->applications);
-        Livewire::test(ListInscricaos::class)->assertCanSeeTableRecords([$application]);
+        Livewire::test(ListApplications::class)->assertCanSeeTableRecords([$application]);
     }
 }
