@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageAnexos;
+use App\Filament\Gps\Resources\Processes\Pages\ManageAttachments;
 use App\Models\Candidate;
 use App\Models\Process;
 use App\Models\ProcessAttachment;
@@ -50,7 +50,7 @@ class GestorConfiguraAnexosTest extends TestCase
         $file = UploadedFile::fake()->createWithContent('documento.pdf', '%PDF-1.4 fake content here')->size(1024);
 
         // Valida campos obrigatórios
-        Livewire::test(ManageAnexos::class, [
+        Livewire::test(ManageAttachments::class, [
             'record' => $this->processo->id
         ])
             ->assertActionExists(TestAction::make('create')->table())
@@ -80,7 +80,7 @@ class GestorConfiguraAnexosTest extends TestCase
             'description' => 'um anexo'
         ]);
 
-        Livewire::test(ManageAnexos::class, [
+        Livewire::test(ManageAttachments::class, [
             'record' => $this->processo->id
         ])
             ->assertCanSeeTableRecords($attachments)

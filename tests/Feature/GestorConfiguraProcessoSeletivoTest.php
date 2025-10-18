@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\CreateProcessoSeletivo;
+use App\Filament\Gps\Resources\Processes\Pages\CreateProcess;
 use App\Models\Process;
 use App\Models\ProcessType;
 use App\Models\User;
@@ -43,7 +43,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
 
     public function test_valida_campos_processo_seletivo(): void
     {
-        Livewire::test(CreateProcessoSeletivo::class)
+        Livewire::test(CreateProcess::class)
             ->assertSchemaExists('form')
             ->fillForm([])
             ->call('create')
@@ -68,7 +68,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             ],
         ];
 
-        Livewire::test(CreateProcessoSeletivo::class)
+        Livewire::test(CreateProcess::class)
             ->assertSchemaExists('form')
             ->fillForm($formData)
             ->call('create')
@@ -120,7 +120,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
         ];
 
         // 3️⃣ Simula o componente de edição (Filament Edit Page)
-        Livewire::test(\App\Filament\Gps\Resources\ProcessoSeletivos\Pages\EditProcessoSeletivo::class, [
+        Livewire::test(\App\Filament\Gps\Resources\Processes\Pages\EditProcess::class, [
             'record' => $processo->getKey(),
         ])
             ->fillForm($novosDados)

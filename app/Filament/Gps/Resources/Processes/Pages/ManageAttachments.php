@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Gps\Resources\ProcessoSeletivos\Pages;
+namespace App\Filament\Gps\Resources\Processes\Pages;
 
 use App\Filament\Components\AttachmentUpload;
 use Filament\Schemas\Schema;
@@ -10,28 +10,19 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\Action;
-use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
-use App\Models\ProcessAttachment;
-use Filament\Actions;
-use Filament\Forms;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use App\Filament\Gps\Resources\Processes\ProcessResource;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
-class ManageAnexos extends ManageRelatedRecords
+class ManageAttachments extends ManageRelatedRecords
 {
-    protected static string $resource = ProcessoSeletivoResource::class;
+    protected static string $resource = ProcessResource::class;
     protected static ?string $title = 'Gerenciar Anexos';
+    protected static ?string $navigationLabel = 'Anexos';
     protected static string $relationship = 'attachments';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-paper-clip';
-
-    public static function getNavigationLabel(): string
-    {
-        return 'Anexos';
-    }
 
     public function form(Schema $schema): Schema
     {

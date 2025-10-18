@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Gps\Resources\ProcessoSeletivos\Pages;
+namespace App\Filament\Gps\Resources\Processes\Pages;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\ViewAction;
-use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
+use App\Filament\Gps\Resources\Processes\ProcessResource;
 use App\Models\Appeal;
 use App\Models\User;
 use Filament\Actions;
@@ -19,17 +19,13 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class ManageAvaliadores extends ManageRelatedRecords
+class ManageEvaluators extends ManageRelatedRecords
 {
-    protected static string $resource = ProcessoSeletivoResource::class;
+    protected static string $resource = ProcessResource::class;
     protected static ?string $title = 'Gerenciar Avaliadores';
+    protected static ?string $navigationLabel = 'Avaliadores';
     protected static string $relationship = 'appeals';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
-
-    public static function getNavigationLabel(): string
-    {
-        return 'Avaliadores';
-    }
 
     public function infolist(Schema $schema): Schema
     {

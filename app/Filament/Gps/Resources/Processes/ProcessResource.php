@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Gps\Resources\ProcessoSeletivos;
+namespace App\Filament\Gps\Resources\Processes;
 
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -8,18 +8,20 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ListProcessoSeletivos;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\CreateProcessoSeletivo;
-use App\Filament\Gps\Resources\ProcessoSeletivoResource\Pages;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\EditProcessoSeletivo;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageAnexos;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageAvaliadores;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageEtapaRecurso;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageInscritos;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageRecursos;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageVagas;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Schemas\ProcessoSeletivoForm;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Tables\ProcessoSeletivoTable;
+use App\Filament\Gps\Resources\Processes\Pages\ListProcesses;
+use App\Filament\Gps\Resources\Processes\Pages\CreateProcess;
+use App\Filament\Gps\Resources\ProcessResource\Pages;
+use App\Filament\Gps\Resources\Processes\Pages\EditProcess;
+use App\Filament\Gps\Resources\Processes\Pages\ManageAttachments;
+use App\Filament\Gps\Resources\Processes\Pages\ManageEvaluators;
+use App\Filament\Gps\Resources\Processes\Pages\ManageAppealStage;
+use App\Filament\Gps\Resources\Processes\Pages\ManageApplications;
+use App\Filament\Gps\Resources\Processes\Pages\ManageRecursos;
+use App\Filament\Gps\Resources\Processes\Pages\ManagePositions;
+use App\Filament\Gps\Resources\Processes\Pages\ViewProcess;
+use App\Filament\Gps\Resources\Processes\Schemas\ProcessForm;
+use App\Filament\Gps\Resources\Processes\Schemas\ProcessInfolist;
+use App\Filament\Gps\Resources\Processes\Tables\ProcessesTable;
 use App\Models\Process;
 use Filament\Navigation\NavigationGroup;
 use Filament\Resources\Pages\Page;
@@ -30,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
-class ProcessoSeletivoResource extends Resource
+class ProcessResource extends Resource
 {
     protected static ?string $model = Process::class;
     protected static ?string $modelLabel = 'Processo Seletivo';
@@ -44,7 +46,7 @@ class ProcessoSeletivoResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::user()->hasAnyRole('gestor|admin');
+        return Auth::user()->hasRole('gestor|admin');
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
@@ -61,12 +63,17 @@ class ProcessoSeletivoResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return ProcessoSeletivoForm::configure($schema);
+        return ProcessForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return ProcessInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return ProcessoSeletivoTable::configure($table);
+        return ProcessesTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -83,10 +90,11 @@ class ProcessoSeletivoResource extends Resource
                 ->label('Processo')
                 ->items([
                     ...$page->generateNavigationItems([
-                        EditProcessoSeletivo::class,
-                        ManageAnexos::class,
-                        ManageInscritos::class,
-                        ManageVagas::class,
+                        ViewProcess::class,
+                        EditProcess::class,
+                        ManageAttachments::class,
+                        ManageApplications::class,
+                        ManagePositions::class,
                     ]),
                 ]),
 
@@ -95,8 +103,8 @@ class ProcessoSeletivoResource extends Resource
                 ->label('Recursos')
                 ->items([
                     ...$page->generateNavigationItems([
-                        ManageEtapaRecurso::class,
-                        ManageAvaliadores::class,
+                        ManageAppealStage::class,
+                        ManageEvaluators::class,
                     ]),
                 ]),
         ];
@@ -105,14 +113,15 @@ class ProcessoSeletivoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListProcessoSeletivos::route('/'),
-            'create' => CreateProcessoSeletivo::route('/create'),
-            'edit' => EditProcessoSeletivo::route('/{record}/edit'),
-            'anexos' => ManageAnexos::route('/{record}/anexos'),
-            'inscritos' => ManageInscritos::route('/{record}/inscritos'),
-            'evaluators' => ManageAvaliadores::route('/{record}/evaluators'),
-            'vagas' => ManageVagas::route('/{record}/vagas'),
-            'etapas_recurso' => ManageEtapaRecurso::route('/{record}/etapas_recurso'),
+            'index' => ListProcesses::route('/'),
+            'create' => CreateProcess::route('/create'),
+            'edit' => EditProcess::route('/{record}/edit'),
+            'view' => ViewProcess::route('/{record}'),
+            'anexos' => ManageAttachments::route('/{record}/anexos'),
+            'inscritos' => ManageApplications::route('/{record}/inscritos'),
+            'evaluators' => ManageEvaluators::route('/{record}/evaluators'),
+            'vagas' => ManagePositions::route('/{record}/vagas'),
+            'etapas_recurso' => ManageAppealStage::route('/{record}/etapas_recurso'),
         ];
     }
 }

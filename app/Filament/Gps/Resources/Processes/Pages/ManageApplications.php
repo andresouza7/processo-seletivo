@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Gps\Resources\ProcessoSeletivos\Pages;
+namespace App\Filament\Gps\Resources\Processes\Pages;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
@@ -9,7 +9,7 @@ use Filament\Actions\ExportAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Exports\ApplicationExporter;
-use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
+use App\Filament\Gps\Resources\Processes\ProcessResource;
 use App\Services\SelectionProcess\ApplicationService;
 use Filament\Actions;
 use Filament\Forms;
@@ -21,9 +21,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
-class ManageInscritos extends ManageRelatedRecords
+class ManageApplications extends ManageRelatedRecords
 {
-    protected static string $resource = ProcessoSeletivoResource::class;
+    protected static string $resource = ProcessResource::class;
     protected static ?string $title = 'Gerenciar Inscrições';
     protected static string $relationship = 'applications';
     protected static ?string $navigationLabel = 'Inscrições';

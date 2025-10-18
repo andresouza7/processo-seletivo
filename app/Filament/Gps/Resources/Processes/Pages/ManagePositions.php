@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Gps\Resources\ProcessoSeletivos\Pages;
+namespace App\Filament\Gps\Resources\Processes\Pages;
 
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
-use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
+use App\Filament\Gps\Resources\Processes\ProcessResource;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Pages\ManageRelatedRecords;
@@ -17,18 +17,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ManageVagas extends ManageRelatedRecords
+class ManagePositions extends ManageRelatedRecords
 {
-    protected static string $resource = ProcessoSeletivoResource::class;
+    protected static string $resource = ProcessResource::class;
     protected static ?string $title = 'Gerenciar Vagas';
+    protected static ?string $navigationLabel = 'Vagas';
     protected static string $relationship = 'position';
-
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedBriefcase;
-
-    public static function getNavigationLabel(): string
-    {
-        return 'Vagas';
-    }
 
     public function form(Schema $schema): Schema
     {

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\App\Resources\ProcessoSeletivos\Pages\ListProcessoSeletivos;
+use App\Filament\App\Resources\Processes\Pages\ListProcesses;
 use App\Models\Process;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -54,17 +54,17 @@ class PortalConsultaProcessosSeletivosTest extends TestCase
                 'title' => 'Finalizado - ' . fake()->word(),
             ]);
 
-        Livewire::test(ListProcessoSeletivos::class, [
+        Livewire::test(ListProcesses::class, [
             'tableFilters' => ['status' => ['value' => 'inscricoes_abertas']]
         ])
             ->assertCanSeeTableRecords($abertos);
 
-        Livewire::test(ListProcessoSeletivos::class, [
+        Livewire::test(ListProcesses::class, [
             'tableFilters' => ['status' => ['value' => 'em_andamento']]
         ])
             ->assertCanSeeTableRecords($abertos);
 
-        Livewire::test(ListProcessoSeletivos::class, [
+        Livewire::test(ListProcesses::class, [
             'tableFilters' => ['status' => ['value' => 'finalizados']]
         ])
             ->assertCanSeeTableRecords($finalizados);

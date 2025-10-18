@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageEtapaRecurso;
+use App\Filament\Gps\Resources\Processes\Pages\ManageAppealStage;
 use App\Models\AppealStage;
 use App\Models\Process;
 use App\Models\User;
@@ -52,7 +52,7 @@ class GestorConfiguraEtapaRecursoTest extends TestCase
             'result_end_date' => $endDate,
         ];
 
-        Livewire::test(ManageEtapaRecurso::class, [
+        Livewire::test(ManageAppealStage::class, [
             'record' => $this->processo->id
         ])
             ->callAction(TestAction::make('create')->table(), $data)
@@ -62,7 +62,7 @@ class GestorConfiguraEtapaRecursoTest extends TestCase
 
         $etapa = AppealStage::latest()->first();
 
-        Livewire::test(ManageEtapaRecurso::class, [
+        Livewire::test(ManageAppealStage::class, [
             'record' => $this->processo->id
         ])
             ->assertCanSeeTableRecords($this->processo->appeal_stage)

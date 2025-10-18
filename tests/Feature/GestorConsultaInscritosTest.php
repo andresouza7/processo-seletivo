@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageInscritos;
+use App\Filament\Gps\Resources\Processes\Pages\ManageApplications;
 use App\Models\Application;
 use App\Models\Process;
 use App\Models\User;
@@ -47,7 +47,7 @@ class GestorConsultaInscritosTest extends TestCase
             'code' => '123456'
         ]);
 
-        Livewire::test(ManageInscritos::class, [
+        Livewire::test(ManageApplications::class, [
             'record' => $this->processo->id
         ])
             ->assertCanSeeTableRecords($this->processo->applications)

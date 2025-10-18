@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Gps\Resources\ProcessoSeletivos\Pages;
+namespace App\Filament\Gps\Resources\Processes\Pages;
 
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
@@ -11,20 +11,16 @@ use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
-use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
-use App\Models\AppealStage;
-use Filament\Actions;
-use Filament\Forms;
+use App\Filament\Gps\Resources\Processes\ProcessResource;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Schemas\Components\Fieldset;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ManageEtapaRecurso extends ManageRelatedRecords
+class ManageAppealStage extends ManageRelatedRecords
 {
-    protected static string $resource = ProcessoSeletivoResource::class;
+    protected static string $resource = ProcessResource::class;
     protected static ?string $title = 'Gerenciar Etapas de Appeal';
     protected static ?string $navigationLabel = 'Etapas de Recurso';
     protected static ?string $breadcrumb = 'Etapas de Recurso';

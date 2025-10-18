@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Gps\Resources\ProcessoSeletivos\Schemas;
+namespace App\Filament\Gps\Resources\Processes\Schemas;
 
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -16,7 +16,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Validation\Rules\Unique;
 
-class ProcessoSeletivoForm
+class ProcessForm
 {
     public static function configure(Schema $schema): Schema
     {
@@ -27,6 +27,22 @@ class ProcessoSeletivoForm
                         TextInput::make('title')
                             ->label('Título')
                             ->columnSpan(2)
+                            ->required(),
+                        Select::make('is_published')
+                            ->label('Status')
+                            ->required()
+                            ->options([
+                                true => 'Publicado',
+                                false => 'Despublicado'
+                            ]),
+
+                    ])->columns(3),
+                    Group::make([
+                        Select::make('process_type_id')
+                            ->label('Tipo')
+                            ->columnSpan(2)
+                            ->relationship('type', 'description')
+                            ->disabledOn('edit')
                             ->required(),
                         TextInput::make('number')
                             ->label('Número')
@@ -39,21 +55,6 @@ class ProcessoSeletivoForm
                                 modifyRuleUsing: fn(Unique $rule, Get $get) => $rule->where('process_type_id', $get('process_type_id') ?? null)
                             )
                             ->required(),
-
-                    ])->columns(3),
-                    Group::make([
-                        Select::make('process_type_id')
-                            ->label('Tipo')
-                            ->columnSpan(2)
-                            ->relationship('type', 'description')
-                            ->required(),
-                        Select::make('is_published')
-                            ->label('Status')
-                            ->required()
-                            ->options([
-                                true => 'Publicado',
-                                false => 'Despublicado'
-                            ]),
                     ])->columns(3),
 
                     RichEditor::make('description')

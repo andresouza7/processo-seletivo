@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Filament\Gps\Resources\ProcessoSeletivos\Pages;
+namespace App\Filament\Gps\Resources\Processes\Pages;
 
 use Throwable;
-use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
+use App\Filament\Gps\Resources\Processes\ProcessResource;
 use App\Models\Process;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-class CreateProcessoSeletivo extends CreateRecord
+class CreateProcess extends CreateRecord
 {
-    protected static string $resource = ProcessoSeletivoResource::class;
+    protected static string $resource = ProcessResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
