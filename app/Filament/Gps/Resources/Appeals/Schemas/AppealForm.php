@@ -21,7 +21,10 @@ class AppealForm
 
                     TextEntry::make('text')
                         ->label('Justificativa do Candidato')
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
+                        ->extraAttributes([
+                            'class' => 'bg-gray-100 text-gray-900 p-2 rounded-lg dark:bg-gray-800 dark:text-gray-100',
+                        ]),
 
                     TextEntry::make('text')
                         ->visible(fn($record) => $record->hasMedia('anexo_candidato'))

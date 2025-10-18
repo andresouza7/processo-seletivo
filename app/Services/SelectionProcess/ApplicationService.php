@@ -11,22 +11,21 @@ use Illuminate\Support\Facades\Auth;
 
 class ApplicationService
 {
-    // public function checkExistingDifferentPosition(int $candidateId, array $data): ?Application
-    // {
-    //     return Application::query()
-    //         ->where('candidate_id', $candidateId)
-    //         ->where('process_id', $data['process_id'])
-    //         ->where('position_id', '!=', $data['position_id'])
-    //         ->orderBy('created_at', 'desc')
-    //         ->first();
-    // }
+    public function canApplyForProcess(Process $process)
+    {
+        $today = now()->toDateString(); // Get current date in 'Y-m-d' format
+
+        return $process->position->count() > 0 &&
+            $process->application_start_date <= $today &&
+            $process->application_end_date >= $today;
+    }
 
     public function notifyApplicationCreated(Application $record): void
     {
         $record->candidate->notify(new NovaInscricaoNotification($record));
     }
 
-    public function fetchValidApplicationsForProcess(Process $process): Builder
+    public function fetchFinalApplicationsForProcess(Process $process): Builder
     {
         $query = Application::where('process_id', $process->id);
 

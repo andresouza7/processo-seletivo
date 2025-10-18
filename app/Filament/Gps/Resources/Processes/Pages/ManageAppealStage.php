@@ -12,6 +12,7 @@ use Filament\Notifications\Notification;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Gps\Resources\Processes\ProcessResource;
+use App\Services\SelectionProcess\AppealService;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Tables\Table;
@@ -83,13 +84,10 @@ class ManageAppealStage extends ManageRelatedRecords
             ->headerActions([
                 CreateAction::make()
                     ->createAnother(false)
-                    ->before(function (CreateAction $action) {
-                        $processo = $this->getRecord();
+                    ->before(function (CreateAction $action, AppealService $service) {
+                        $process = $this->getRecord();
 
-                        $exists = $processo->appeal_stage()
-                            ->whereDate('submission_end_date', '>=', now())->exists();
-
-                        if ($exists) {
+                        if (!$service->canCreateAppealStage($process)) {
                             Notification::make()
                                 ->title('Já existe uma etapa em andamento.')
                                 ->body('Você só pode criar outra após esta ser finalizada.')

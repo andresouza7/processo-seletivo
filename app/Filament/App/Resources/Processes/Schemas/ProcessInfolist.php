@@ -2,6 +2,8 @@
 
 namespace App\Filament\App\Resources\Processes\Schemas;
 
+use App\Services\SelectionProcess\AppealService;
+use App\Services\SelectionProcess\ApplicationService;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\TextEntry;
@@ -35,13 +37,13 @@ class ProcessInfolist
                         ->extraAttributes(['class' => 'font-semibold text-gray-700']),
                     Actions::make([
                         Action::make('CreateApplication')
-                            ->visible(fn($record) => $record->can_apply)
+                            ->visible(fn($record, ApplicationService $service) => $service->canApplyForProcess($record))
                             ->label('Realizar Inscrição')
                             ->url(fn() => route('filament.candidato.resources.inscricoes.create'))
                             ->button()
                             ->color('primary'),
                         Action::make('createRecurso')
-                            ->visible(fn($record) => $record->can_appeal)
+                            ->visible(fn($record, AppealService $service) => $service->canSubmitAppealForProcess($record))
                             ->label('Recursos')
                             ->url(fn() => route('filament.candidato.pages.recurso'))
                             ->button()

@@ -21,6 +21,7 @@ class ApplicationsTable
                 fn(Builder $query) =>
                 $query->where('candidate_id', Auth::guard('candidato')->id())
             )
+            ->defaultSort('id', 'desc')
             ->heading('Inscrições realizadas')
             ->description('Use o filtro para localizar uma inscrição.')
             ->columns([

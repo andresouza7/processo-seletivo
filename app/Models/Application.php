@@ -73,41 +73,4 @@ class Application extends Model implements HasMedia
 
         return $uniqueId;
     }
-
-    public function activeAppealStage(): ?AppealStage
-    {
-        return $this->process->appeal_stage()->latest()->first();
-    }
-
-    public function scopeAppealSubmissionOpen($query)
-    {
-        $today = now()->toDateString();
-
-        return $query->where(function ($q) {
-            $q->whereDoesntHave('appeals', function ($q) {
-                // No appeal for the latest appeal stage
-                $q->whereIn('appeal_stage_id', function ($sub) {
-                    $sub->selectRaw('MAX(id)')
-                        ->from('appeal_stages as s')
-                        ->whereColumn('s.process_id', 'appeals.process_id');
-                });
-            })
-                ->orWhereHas('process.appeal_stage', function ($q) {
-                    // The process has a stage that allows multiple appeals
-                    $q->whereExists(function ($sub) {
-                        $sub->selectRaw(1)
-                            ->from('appeal_stages as s')
-                            ->whereColumn('s.process_id', 'process_id')
-                            ->where('s.allow_many', true);
-                    });
-                });
-        })
-            // mas o processo da inscrição deve ter uma etapa ativa aberta hoje
-            ->whereHas('process.appeal_stage', function ($q) use ($today) {
-                $q->where(function ($q) use ($today) {
-                    $q->whereDate('submission_start_date', '<=', $today)
-                        ->whereDate('submission_end_date', '>=', $today);
-                });
-            });
-    }
 }
