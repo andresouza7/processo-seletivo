@@ -8,7 +8,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
-use App\Filament\Exports\InscricaoExporter;
+use App\Filament\Exports\ApplicationExporter;
 use App\Filament\Gps\Resources\ProcessoSeletivos\ProcessoSeletivoResource;
 use App\Services\SelectionProcess\ApplicationService;
 use Filament\Actions;
@@ -128,7 +128,7 @@ class ManageInscritos extends ManageRelatedRecords
                 ExportAction::make()
                     ->label('Exportar para planilha')
                     ->color('primary')
-                    ->exporter(InscricaoExporter::class)
+                    ->exporter(ApplicationExporter::class)
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -8,7 +8,7 @@ use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
 
-class InscricaoExporter extends Exporter
+class ApplicationExporter extends Exporter
 {
     protected static ?string $model = Application::class;
 
