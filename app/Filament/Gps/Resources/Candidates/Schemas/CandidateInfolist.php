@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Gps\Resources\InscricaoPessoas\Schemas;
+namespace App\Filament\Gps\Resources\Candidates\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class InscricaoPessoaInfolist
+class CandidateInfolist
 {
     public static function configure(Schema $schema): Schema
     {

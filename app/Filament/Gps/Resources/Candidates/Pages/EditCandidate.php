@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Gps\Resources\InscricaoPessoas\Pages;
+namespace App\Filament\Gps\Resources\Candidates\Pages;
 
+use App\Filament\Gps\Resources\Candidates\CandidateResource;
 use App\Actions\ResetCandidatoEmailAction;
-use App\Filament\Gps\Resources\InscricaoPessoas\InscricaoPessoaResource;
 use App\Models\Candidate;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
@@ -11,9 +11,9 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Actions\DeleteAction;
 
-class EditInscricaoPessoa extends EditRecord
+class EditCandidate extends EditRecord
 {
-    protected static string $resource = InscricaoPessoaResource::class;
+    protected static string $resource = CandidateResource::class;
 
     protected function getHeaderActions(): array
     {

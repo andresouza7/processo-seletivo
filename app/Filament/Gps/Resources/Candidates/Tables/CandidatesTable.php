@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Filament\Gps\Resources\InscricaoPessoas\Tables;
+namespace App\Filament\Gps\Resources\Candidates\Tables;
 
+use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class InscricaoPessoasTable
+class CandidatesTable
 {
     public static function configure(Table $table): Table
     {
@@ -36,6 +37,7 @@ class InscricaoPessoasTable
             ])
             ->recordActions([
                 ViewAction::make(),
+                // EditAction::make(),
             ]);
     }
 }

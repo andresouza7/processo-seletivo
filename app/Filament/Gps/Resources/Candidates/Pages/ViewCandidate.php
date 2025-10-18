@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Gps\Resources\InscricaoPessoas\Pages;
+namespace App\Filament\Gps\Resources\Candidates\Pages;
 
-use App\Filament\Gps\Resources\InscricaoPessoas\InscricaoPessoaResource;
+use App\Filament\Gps\Resources\Candidates\CandidateResource;
 use Filament\Resources\Pages\ViewRecord;
 use App\Actions\ResetCandidatoEmailAction;
 use App\Actions\ResetCandidatoPasswordAction;
@@ -12,9 +12,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Actions\DeleteAction;
 
-class ViewInscricaoPessoa extends ViewRecord
+class ViewCandidate extends ViewRecord
 {
-    protected static string $resource = InscricaoPessoaResource::class;
+    protected static string $resource = CandidateResource::class;
 
     protected function getHeaderActions(): array
     {

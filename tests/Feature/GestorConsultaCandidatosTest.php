@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
-use App\Filament\Gps\Resources\InscricaoPessoas\Pages\ListInscricaoPessoas;
+use App\Filament\Gps\Resources\Candidates\Pages\ListCandidates;
 
 class GestorConsultaCandidatosTest extends TestCase
 {
@@ -85,19 +85,19 @@ class GestorConsultaCandidatosTest extends TestCase
             ->create(['email' => 'qwerty@uol.com.br']);
 
         // 🔹 Testa filtro de masculino
-        Livewire::test(ListInscricaoPessoas::class, [
+        Livewire::test(ListCandidates::class, [
             'tableFilters' => ['sex' => ['value' => 'M']]
         ])
         ->assertCanSeeTableRecords($masculino);
 
         // 🔹 Testa filtro de José da Silva
-        Livewire::test(ListInscricaoPessoas::class, [
+        Livewire::test(ListCandidates::class, [
             'tableFilters' => ['name' => ['value' => 'José da Silva']]
         ])
         ->assertCanSeeTableRecords($nome_jose);
        
         // 🔹 Testa filtro de email
-        Livewire::test(ListInscricaoPessoas::class, [
+        Livewire::test(ListCandidates::class, [
             'tableFilters' => ['email' => ['value' => 'qwerty@uol.com.br']]
         ])
         ->assertCanSeeTableRecords($email_registrado);
