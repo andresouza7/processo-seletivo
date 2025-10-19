@@ -47,8 +47,8 @@ class ProcessForm
                         TextInput::make('number')
                             ->label('Número')
                             ->disabledOn('edit')
-                            ->mask('99/9999')
-                            ->placeholder('Ex: 01/2025')
+                            ->mask('999/9999')
+                            ->placeholder('Ex: 001/2025')
                             ->unique(
                                 table: 'processes',
                                 column: 'number',

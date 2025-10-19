@@ -7,6 +7,7 @@ use App\Filament\Candidato\Resources\Applications\Pages\ListApplications;
 use App\Filament\Candidato\Resources\Applications\Pages\CreateApplication;
 use App\Filament\Candidato\Resources\Applications\Pages\ViewApplication;
 use App\Filament\Candidato\Resources\ApplicationResource\Pages;
+use App\Filament\Candidato\Resources\Applications\Pages\PrintApplication;
 use App\Filament\Candidato\Resources\Applications\Schemas\ApplicationForm;
 use App\Filament\Candidato\Resources\Applications\Schemas\ApplicationInfolist;
 use App\Filament\Candidato\Resources\Applications\Tables\ApplicationsTable;
@@ -51,7 +52,8 @@ class ApplicationResource extends Resource
         return [
             'index' => ListApplications::route('/'),
             'create' => CreateApplication::route('/create'),
-            'view' => ViewApplication::route('/{record}'),
+            'view' => PrintApplication::route('/{record}'),
+            // 'print' => PrintApplication::route('/{record}/print'),
         ];
     }
 
