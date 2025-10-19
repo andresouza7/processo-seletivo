@@ -10,6 +10,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -19,6 +20,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\Contracts\View\View;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -31,6 +33,10 @@ class AppPanelProvider extends PanelProvider
             ->path('')
             ->login()
             ->viteTheme('resources/css/filament/app/theme.css')
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn(): View => view('filament.custom-footer'),
+            )
             ->navigationItems([
                 NavigationItem::make('Login')
                     ->url('/candidato/login')

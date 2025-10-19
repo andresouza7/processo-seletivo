@@ -108,7 +108,7 @@ class Cadastro extends Register
                 ->unique('candidates', 'cpf', ignorable: $record)
                 ->required()
                 ->disabled(fn() => filled($record?->cpf))
-                ->rules(['cpf'])
+                // ->rules(['cpf'])
                 ->maxLength(11),
 
             TextInput::make('rg')
