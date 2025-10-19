@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('process_id')->constrained();
-            $table->string('code')->unique();
+            $table->string('code');
             $table->string('description');
             $table->timestamps();
             $table->softDeletes();
