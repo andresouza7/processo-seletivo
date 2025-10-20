@@ -14,6 +14,7 @@ class AttachmentUpload extends SpatieMediaLibraryFileUpload
         $instance
             ->maxFiles(1)
             ->required()
+            ->hint('(máx. 2MB)')
             ->rules(['file', 'mimes:pdf', 'max:2048'])
             ->acceptedFileTypes(['application/pdf']);
 
