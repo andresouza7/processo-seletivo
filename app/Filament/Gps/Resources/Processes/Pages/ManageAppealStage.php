@@ -33,7 +33,7 @@ class ManageAppealStage extends ManageRelatedRecords
     {
         return $schema
             ->components([
-                TextInput::make('description')
+                TextInput::make('title')
                     ->label('Descrição')
                     ->required()
                     ->placeholder('Ex: Resultado preliminar')

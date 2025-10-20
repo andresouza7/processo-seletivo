@@ -45,7 +45,7 @@ class GestorConfiguraEtapaRecursoTest extends TestCase
         $endDate = now()->addDay()->toDateString();
 
         $data = [
-            'description' => 'Resultado Preliminar',
+            'title' => 'Resultado Preliminar',
             'submission_start_date' => $startDate,
             'submission_end_date' => $endDate,
             'result_start_date' => $startDate,

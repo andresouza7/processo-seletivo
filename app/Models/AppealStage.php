@@ -11,7 +11,7 @@ class AppealStage extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'description',
+        'title',
         'submission_start_date',
         'submission_end_date',
         'result_start_date',

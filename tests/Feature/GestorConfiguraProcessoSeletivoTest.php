@@ -64,7 +64,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'application_end_date' => $this->date,
             'has_fee_exemption' => false,
             'attachment_fields' => [
-                ['item' => 'identidade']
+                ['item' => 'identidade', 'description' => 'carteira de identidade frente e verso']
             ],
         ];
 
@@ -108,7 +108,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'is_published' => false,
             'has_fee_exemption' => false,
             'attachment_fields' => [
-                ['item' => 'identidade']
+               ['item' => 'identidade', 'description' => 'carteira de identidade frente e verso']
             ],
         ]);
 

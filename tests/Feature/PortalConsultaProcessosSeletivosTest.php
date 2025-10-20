@@ -25,7 +25,7 @@ class PortalConsultaProcessosSeletivosTest extends TestCase
         ]);
 
         $response = $this
-            ->get(route('filament.app.resources.processo-seletivos.index', ['status' => 'em_andamento']));
+            ->get(route('filament.app.resources.processos.index', ['status' => 'em_andamento']));
 
         $response->assertStatus(200);
         $response->assertSeeText('Consultar Processos Seletivos');

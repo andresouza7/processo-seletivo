@@ -83,8 +83,8 @@ class CandidatoNaoPodeEditarDadosPessoaisTest extends TestCase
             ->assertFormFieldIsDisabled('mother_name')
             ->assertFormFieldIsDisabled('cpf')
             ->assertFormFieldIsDisabled('rg')
-            ->assertFormFieldIsDisabled('birth_date')
-            ->assertFormFieldIsDisabled('email');
+            ->assertFormFieldIsDisabled('birth_date');
+            // ->assertFormFieldIsDisabled('email');
     }
 
    

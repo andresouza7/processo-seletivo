@@ -24,7 +24,7 @@ class CandidatoFiltraInscricoesRealizadasTest extends TestCase
 
         $process = Process::factory()->withApplications()->create();
 
-        $application = $process->applications()->first();
+        $application = $process->applications()->latest()->first();
 
         // Permite filtrar pelo código da inscrição
         Livewire::test(ListApplications::class)
