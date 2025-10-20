@@ -40,11 +40,6 @@ class Process extends Model
         'attachment_fields'
     ];
 
-    protected $appends = [
-        'can_apply',
-        'can_appeal'
-    ];
-
     protected $casts = [
         'attachment_fields' => 'array'
     ];
@@ -64,25 +59,6 @@ class Process extends Model
         static::deleted(function () {
             Cache::forget('processos_inscricoes_abertas_options');
         });
-    }
-
-    public function getCanApplyAttribute()
-    {
-        $today = now()->toDateString(); // Get current date in 'Y-m-d' format
-
-        return $this->position->count() > 0 &&
-            $this->application_start_date <= $today &&
-            $this->application_end_date >= $today;
-    }
-
-    public function getCanAppealAttribute()
-    {
-        $today = now()->toDateString(); // 'Y-m-d'
-
-        return $this->appeal_stage()
-            ->whereDate('submission_start_date', '<=', $today)
-            ->whereDate('submission_end_date', '>=', $today)
-            ->exists();
     }
 
     public function type()
@@ -135,5 +111,12 @@ class Process extends Model
     {
         $query->where('is_published', true)
             ->whereDate('publication_end_date', '<=', now());
+    }
+
+    public function activeAppealStage(): ?AppealStage
+    {
+        return $this->appeal_stage()
+            ->whereDate('submission_end_date', '>=', now())
+            ->first();
     }
 }

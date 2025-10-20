@@ -46,7 +46,7 @@
                         'label' => 'Área do Candidato',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl(
+                        'url' => \App\Filament\App\Resources\Processes\ProcessResource::getUrl(
                             'index',
                             [
                                 'status' => 'inscricoes_abertas',
@@ -56,7 +56,7 @@
                         'label' => 'Inscrições Abertas',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl(
+                        'url' => \App\Filament\App\Resources\Processes\ProcessResource::getUrl(
                             'index',
                             [
                                 'status' => 'em_andamento',
@@ -66,7 +66,7 @@
                         'label' => 'Editais em Andamento',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivos\ProcessoSeletivoResource::getUrl(
+                        'url' => \App\Filament\App\Resources\Processes\ProcessResource::getUrl(
                             'index',
                             [
                                 'status' => 'finalizados',
@@ -178,7 +178,7 @@
                                         Edital nº {{ $processo->number }}
                                     </div>
 
-                                    <a href="{{ route('filament.app.resources.processo-seletivos.view', ['record' => $processo->id]) }}"
+                                    <a href="{{ \App\Filament\App\Resources\Processes\ProcessResource::getUrl('view', ['record' => $processo]) }}"
                                         class="text-primary-600 text-sm font-medium hover:underline mt-1.5"
                                         title="{{ $processo->title }}">
                                         {{ \Illuminate\Support\Str::limit($processo->title, 100) }}

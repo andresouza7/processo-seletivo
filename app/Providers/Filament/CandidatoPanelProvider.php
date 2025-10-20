@@ -56,7 +56,7 @@ class CandidatoPanelProvider extends PanelProvider
                     ->sort(2)
                     ->isActiveWhen(fn(): bool => request()->routeIs('filament.candidato.resources.inscricoes.create')),
                 NavigationItem::make('Alterar Senha')
-                    ->url('/candidato/profile')
+                    ->url(fn() => EditPassword::getUrl())
                     ->icon('heroicon-o-lock-closed')
                     ->group('Área do Candidato')
                     ->sort(4)

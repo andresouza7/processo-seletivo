@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageInscritos;
+use App\Filament\Gps\Resources\Processes\Pages\ManageApplications;
 use App\Models\Application;
 use App\Models\Process;
 use App\Models\User;
+use App\Services\SelectionProcess\ApplicationService;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -47,10 +48,13 @@ class GestorConsultaInscritosTest extends TestCase
             'code' => '123456'
         ]);
 
-        Livewire::test(ManageInscritos::class, [
+        $service = app(ApplicationService::class);
+        $finalApplications = $service->fetchFinalApplicationsForProcess($this->processo)->get();
+
+        Livewire::test(ManageApplications::class, [
             'record' => $this->processo->id
         ])
-            ->assertCanSeeTableRecords($this->processo->applications)
+            ->assertCanSeeTableRecords($finalApplications)
             ->searchTable('123456')
             ->assertCanSeeTableRecords([$application]);
     }

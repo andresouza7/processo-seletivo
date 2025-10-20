@@ -58,26 +58,14 @@ class Recurso extends Page implements HasSchemas
 
         $this->form->fill();
 
-        $this->options = Application::query()
-            ->where('candidate_id', Auth::guard('candidato')->id())
-            ->appealSubmissionOpen()
-            ->with('position')
-            ->get()
+        $this->options = $this->service->listAppealableApplications()
             ->mapWithKeys(fn($app) => [
                 $app->id => "{$app->code} - {$app->position->description}",
-            ]);
+            ]);;
 
-        $results = Appeal::query()
-            ->where('candidate_id', Auth::guard('candidato')->id())
-            ->available()
-            ->latest()
-            ->get();
+        $results = $this->service->listAppealsWithResults();
 
-        $submitted = Appeal::query()
-            ->where('candidate_id', Auth::guard('candidato')->id())
-            ->submitted()
-            ->latest()
-            ->get();
+        $submitted = $this->service->listSubmittedAppeals();
 
         $this->appeals = $results->isNotEmpty() ? $results : $submitted;
     }
@@ -88,7 +76,7 @@ class Recurso extends Page implements HasSchemas
             ->statePath('data')
             ->components([
                 Section::make('Efetuar Recurso')
-                    ->description('Selecione sua inscrição para abrir um recurso.')
+                    ->description('Selecione sua inscrição para enviar um recurso.')
                     ->schema([
                         $this->getSelectApplicationSection(),
                         $this->getAppealFormSection()
@@ -115,7 +103,7 @@ class Recurso extends Page implements HasSchemas
 
                 // pega a etapa de recurso ativa do processo pro qual o usuário se inscreveu
                 // sabe-se que a última é a ativa pois no GPS a regra só deixa criar uma etapa por vez
-                $stage = $this->application->activeAppealStage();
+                $stage = $this->application->process->activeAppealStage();
                 if ($stage) {
                     $set('process', $this->application->process->title);
                     $set('stage', $stage->description);

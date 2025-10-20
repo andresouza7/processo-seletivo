@@ -18,42 +18,42 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('social_name')->nullable();
-            $table->string('mother_name');
-            $table->date('birth_date');
+            $table->string('mother_name')->nullable();
+            $table->date('birth_date')->nullable();
             $table->string('sexual_orientation')->nullable();
-            $table->boolean('has_disability')->default(false);
+            $table->boolean('has_disability')->default(false)->nullable();
             $table->string('disability_description')->nullable();
-            $table->string('race');
-            $table->string('marital_status', 2);
-            $table->string('community');
+            $table->string('race')->nullable();
+            $table->string('marital_status')->nullable();
+            $table->string('community')->nullable();
             $table->string('gender_identity')->nullable();
             $table->string('gender_identity_description')->nullable();
-            $table->string('sex', 2);
-            $table->string('rg', 20)->unique();
+            $table->string('sex')->nullable();
+            $table->string('rg')->nullable();
             $table->char('cpf', 11)->unique();
-            $table->string('postal_code', 20);
-            $table->string('district');
-            $table->string('address');
-            $table->string('address_number');
+            $table->string('postal_code', 20)->nullable();
+            $table->string('district')->nullable();
+            $table->string('address')->nullable();
+            $table->string('address_number')->nullable();
             $table->string('address_complement')->nullable();
-            $table->string('city');
-            $table->string('phone');
-            $table->string('email')->unique();
+            $table->string('city')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->rememberToken();
-            $table->boolean('must_change_password')->default(false);
+            $table->boolean('must_change_password')->default(false)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
         Schema::enableForeignKeyConstraints();
 
-        Candidate::factory()->create([
-            'name' => 'Candidato',
-            'cpf' => '12345678910',
-            'password' => bcrypt('123456')
-        ]);
+        // Candidate::factory()->create([
+        //     'name' => 'Candidato',
+        //     'cpf' => '12345678910',
+        //     'password' => bcrypt('123456')
+        // ]);
     }
 
     /**

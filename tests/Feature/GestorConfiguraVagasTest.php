@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageAnexos;
-use App\Filament\Gps\Resources\ProcessoSeletivos\Pages\ManageVagas;
+use App\Filament\Gps\Resources\Processes\Pages\ManageAttachments;
+use App\Filament\Gps\Resources\Processes\Pages\ManagePositions;
 use App\Models\Position;
 use App\Models\Process;
 use App\Models\User;
@@ -42,7 +42,7 @@ class GestorConfiguraVagasTest extends TestCase
 
     public function test_gestor_cadastra_vaga()
     {
-        Livewire::test(ManageVagas::class, [
+        Livewire::test(ManagePositions::class, [
             'record' => $this->processo->id
         ])
             ->callAction(TestAction::make('create')->table(), [
@@ -62,7 +62,7 @@ class GestorConfiguraVagasTest extends TestCase
             'description' => 'bolsista'
         ]);
 
-        Livewire::test(ManageVagas::class, [
+        Livewire::test(ManagePositions::class, [
             'record' => $this->processo->id
         ])
             ->assertCanSeeTableRecords($vagas)

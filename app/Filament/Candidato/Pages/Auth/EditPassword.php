@@ -2,12 +2,15 @@
 
 namespace App\Filament\Candidato\Pages\Auth;
 
+use App\Filament\Candidato\Pages\Dashboard;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
 class EditPassword extends \Filament\Auth\Pages\EditProfile
 {
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
+     protected static ?string $title = 'Alterar Senha';
+     protected static ?string $slug = 'senha';
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
@@ -21,7 +24,6 @@ class EditPassword extends \Filament\Auth\Pages\EditProfile
     {
         return $schema
             ->components([
-                $this->getEmailFormComponent()->disabled(),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent()->visible(),
             ]);
@@ -34,6 +36,6 @@ class EditPassword extends \Filament\Auth\Pages\EditProfile
 
     protected function getRedirectUrl(): ?string
     {
-        return route("filament.candidato.pages.dashboard");
+        return Dashboard::getUrl();
     }
 }

@@ -17,22 +17,22 @@ return new class extends Migration
             $table->text('title');
             $table->text('description');
             $table->string('number', 20);
-            $table->string('directory', 20);
+            $table->string('directory', 30);
             $table->unsignedBigInteger('views')->default(0);
             $table->boolean('is_published');
             $table->date('publication_start_date');
             $table->date('publication_end_date');
             $table->date('application_start_date');
             $table->date('application_end_date');
-            $table->boolean('has_fee_exemption')->default(false);
+            $table->boolean('has_fee_exemption')->default(false)->nullable();
             $table->jsonb('attachment_fields')->nullable();
-            $table->boolean('multiple_applications')->default(false);
+            $table->boolean('multiple_applications')->default(false)->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             // Composite unique key
-            $table->unique(['number', 'process_type_id']);
-            $table->unique(['directory', 'process_type_id']);
+            // $table->unique(['number', 'process_type_id']);
+            // $table->unique(['directory', 'process_type_id']);
         });
     }
 

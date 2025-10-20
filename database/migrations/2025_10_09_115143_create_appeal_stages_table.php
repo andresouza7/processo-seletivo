@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('appeal_stages', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
+            $table->string('title');
             $table->foreignId('process_id')->constrained();
             $table->date('submission_start_date');
             $table->date('submission_end_date');

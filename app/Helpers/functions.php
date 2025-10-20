@@ -6,8 +6,6 @@ use Filament\Support\Enums\Platform;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\URL;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 function applyFilamentPanelStyles(Panel $panel): Panel
 {
@@ -23,10 +21,6 @@ function applyFilamentPanelStyles(Panel $panel): Panel
             // Inclui o plugin do vlibras
             PanelsRenderHook::PAGE_START,
             fn(): View => view('filament.vlibras'),
-        )
-        ->renderHook(
-            PanelsRenderHook::BODY_END,
-            fn() => view('filament.custom-footer'),
         )
         ->assets([
             Css::make('filament-stylesheet', resource_path('css/filament.css'))

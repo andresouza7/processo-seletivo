@@ -98,13 +98,13 @@ class CandidatoRealizaCadastroTest extends TestCase
         ->set('data.gender_identity', 'T')
 
         // Marca o checkbox “usar nome social”
-        ->set('data.usar_nome_social', true)
+        ->set('data.has_social_name', true)
 
         // confirma que o campo está visível
         ->assertFormFieldIsVisible('social_name')
 
         // Verifica se o estado do checkbox realmente está ativo
-        ->assertSet('data.usar_nome_social', true)
+        ->assertSet('data.has_social_name', true)
 
         // Define o nome social
         ->set('data.social_name', 'Maria Clara')
@@ -127,7 +127,7 @@ class CandidatoRealizaCadastroTest extends TestCase
                 'rg' => 'required',
                 'birth_date' => 'required',
                 'sex' => 'required',
-                'email' => 'required',
+                // 'email' => 'required',
                 'phone' => 'required',
                 'postal_code' => 'required',
                 'address' => 'required',

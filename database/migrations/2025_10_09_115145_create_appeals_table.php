@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('candidate_id')->constrained();
             $table->foreignId('application_id')->constrained();
             $table->foreignId('process_id')->constrained();
-            $table->foreignId('appeal_stage_id')->constrained();
+            $table->foreignId('appeal_stage_id')->nullable()->constrained();
             $table->text('text');
             $table->text('response')->nullable();
-            $table->char('result', 1)->nullable();
+            $table->string('result', 2)->nullable();
             $table->foreignId('evaluator_id')->nullable()->constrained('users');
             $table->timestamp('evaluated_at')->nullable();
             $table->timestamps();
