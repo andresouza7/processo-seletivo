@@ -94,7 +94,7 @@ class Cadastro extends Register
     {
         return [
             TextInput::make('name')
-                ->label('Nome')
+                ->label('Nome Completo')
                 ->disabled(fn() => filled($record?->name))
                 ->required(),
 
@@ -106,6 +106,8 @@ class Cadastro extends Register
             TextInput::make('cpf')
                 ->label('CPF')
                 ->unique('candidates', 'cpf', ignorable: $record)
+                ->mask('99999999999')
+                ->placeholder('apenas números')
                 ->required()
                 ->disabled(fn() => filled($record?->cpf))
                 // ->rules(['cpf'])

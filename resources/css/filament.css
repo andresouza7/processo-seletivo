@@ -21,7 +21,7 @@ html {
 .mobile-title {
     display: none;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 17px;
     margin-left: 10px;
     color: #fff; /* cinza bem escuro */
 }
@@ -34,6 +34,6 @@ html {
 
     /* reduz a largura da busca global */
     .fi-global-search {
-        max-width: 160px; /* ajuste conforme ficar melhor */
+        max-width: 150px; /* ajuste conforme ficar melhor */
     }
 }
