@@ -22,6 +22,7 @@ use App\Filament\Gps\Resources\Processes\Pages\ViewProcess;
 use App\Filament\Gps\Resources\Processes\Schemas\ProcessForm;
 use App\Filament\Gps\Resources\Processes\Schemas\ProcessInfolist;
 use App\Filament\Gps\Resources\Processes\Tables\ProcessesTable;
+use App\Http\Middleware\CheckProcessRole;
 use App\Models\Process;
 use Filament\Navigation\NavigationGroup;
 use Filament\Resources\Pages\Page;
@@ -46,7 +47,7 @@ class ProcessResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::user()->hasRole('gestor|admin');
+        return Auth::user()->hasAnyRole(['ascom', 'admin', 'gestor']);
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array

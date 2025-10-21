@@ -14,6 +14,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ProcessesTable
 {
@@ -22,6 +23,21 @@ class ProcessesTable
         return $table
             ->heading('Consultar Processos Seletivos')
             ->description('Pesquise, edite ou crie um novo registro.')
+            ->modifyQueryUsing(function (Builder $query) {
+                $user = Auth::user();
+
+                // Admin ou Gestor veem tudo
+                if ($user->hasAnyRole(['admin', 'gestor'])) {
+                    return $query;
+                }
+
+                // Usuário ascom vê apenas processos com role 'ascom'
+                if ($user->hasRole('ascom')) {
+                    return $query->whereHas('roles', function (Builder $sub) {
+                        $sub->where('name', 'ascom');
+                    });
+                }
+            })
             ->defaultSort('id', 'desc')
             ->columns([
                 TextColumn::make('id')

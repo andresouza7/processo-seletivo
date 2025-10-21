@@ -6,14 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\Traits\HasRoles;
 
 class Process extends Model
 {
-    use SoftDeletes, HasFactory, LogsActivity;
+    use SoftDeletes, HasFactory, LogsActivity, HasRoles;
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -44,12 +46,22 @@ class Process extends Model
         'attachment_fields' => 'array'
     ];
 
+    protected $guard_name = 'web';
+
     protected static function booted()
     {
         static::deleting(function ($processo) {
             $processo->applications()->each(function ($application) {
                 $application->clearMedia();
             });
+        });
+
+        static::created(function ($record) {
+            $user = Auth::user();
+
+            if ($user && $user->hasRole('ascom')) {
+                $record->assignRole('ascom');
+            }
         });
 
         static::saved(function () {
