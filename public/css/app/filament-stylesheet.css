@@ -23,7 +23,7 @@ html {
     font-weight: bold;
     font-size: 18px;
     margin-left: 10px;
-    color: #fff; /* cinza bem escuro */
+    color: #fff;
 }
 
 /* Mobile: até 768px mostra o texto e ajusta a busca */
@@ -34,6 +34,6 @@ html {
 
     /* reduz a largura da busca global */
     .fi-global-search {
-        max-width: 160px; /* ajuste conforme ficar melhor */
+        max-width: 150px; /* ajuste conforme ficar melhor */
     }
 }

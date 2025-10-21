@@ -12,6 +12,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -29,7 +30,7 @@ class GpsPanelProvider extends PanelProvider
             ->id('gps')
             ->path('gps')
             ->viteTheme('resources/css/filament/gps/theme.css')
-            ->maxContentWidth('full')
+            // ->maxContentWidth(Width::Full)
             ->login()
             ->brandName('GPS - UEAP')
             ->profile()

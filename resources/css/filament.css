@@ -21,9 +21,9 @@ html {
 .mobile-title {
     display: none;
     font-weight: bold;
-    font-size: 17px;
+    font-size: 18px;
     margin-left: 10px;
-    color: #fff; /* cinza bem escuro */
+    color: #fff;
 }
 
 /* Mobile: até 768px mostra o texto e ajusta a busca */

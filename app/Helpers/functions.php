@@ -7,6 +7,7 @@ use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
+// Estilização customizada para painéis app e candidato
 function applyFilamentPanelStyles(Panel $panel): Panel
 {
     return $panel
@@ -14,8 +15,6 @@ function applyFilamentPanelStyles(Panel $panel): Panel
             'primary' => '#017840',
         ])
         ->font('Montserrat')
-        // ->brandLogo(asset('img/logo.png'))
-        // ->brandLogoHeight('40px')
         ->darkMode(false)
         ->renderHook(
             // Inclui o plugin do vlibras
@@ -27,6 +26,7 @@ function applyFilamentPanelStyles(Panel $panel): Panel
         ]);
 }
 
+// simplifica pegar a mídia do anexo em uma única linha
 function tempMediaUrl(Model $record, $collection = 'default')
 {
     if (!$record->HasMedia($collection)) return;
@@ -34,6 +34,7 @@ function tempMediaUrl(Model $record, $collection = 'default')
     return route('media.temp', $record->getFirstMedia($collection)?->uuid);
 }
 
+// adequa conteúdo do richtext editor do sistema antigo para o atual
 class HtmlHelper
 {
     public static function sliceBodyContent(string $html): string
