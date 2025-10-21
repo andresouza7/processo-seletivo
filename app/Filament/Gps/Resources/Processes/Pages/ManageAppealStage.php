@@ -76,7 +76,7 @@ class ManageAppealStage extends ManageRelatedRecords
             ->modelLabel('Etapa de Recurso')
             ->defaultSort('id', 'desc')
             ->columns([
-                TextColumn::make('description')->label('Descrição'),
+                TextColumn::make('title')->label('Descrição'),
                 TextColumn::make('submission_start_date')->label('Início')->date('d/m/Y'),
                 TextColumn::make('submission_end_date')->label('Fim')->date('d/m/Y'),
             ])

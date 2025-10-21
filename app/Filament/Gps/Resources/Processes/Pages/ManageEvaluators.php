@@ -50,7 +50,7 @@ class ManageEvaluators extends ManageRelatedRecords
             ->columns([
                 TextColumn::make('id')
                     ->label('ID Recurso'),
-                TextColumn::make('appeal_stage.description')
+                TextColumn::make('appeal_stage.title')
                     ->label('Etapa')
                     ->searchable(),
                 TextColumn::make('application.position.description')
@@ -79,6 +79,12 @@ class ManageEvaluators extends ManageRelatedRecords
                         ]);
                         $this->sendAssociateNotification();
                     }),
+                Actions\Action::make('linkInscricao')
+                    ->label('Inscrição')
+                    ->url(fn($record) => ManageApplications::getUrl([
+                        'record' => $record->process,
+                        'search' => $record->application->code
+                        ]))
             ])
             ->toolbarActions([
                 // Bulk Assign Evaluator

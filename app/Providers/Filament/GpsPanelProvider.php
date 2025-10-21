@@ -29,6 +29,7 @@ class GpsPanelProvider extends PanelProvider
             ->id('gps')
             ->path('gps')
             ->viteTheme('resources/css/filament/gps/theme.css')
+            ->maxContentWidth('full')
             ->login()
             ->brandName('GPS - UEAP')
             ->profile()
