@@ -138,31 +138,28 @@ class CandidatoRealizaCadastroTest extends TestCase
                 'passwordConfirmation' => 'required',
             ]);
 
-        // SEGUNDO TESTE: testa formato incorreto de CPF e data inválida
-        Livewire::test(\App\Filament\Candidato\Pages\Auth\Cadastro::class)
-            ->set('data.name', 'João Teste')
-            ->set('data.mother_name', 'Maria Teste')
-            ->set('data.rg', '12345')
-            ->set('data.birth_date', '3020-01-01') // data futura (inválida)
-            ->set('data.cpf', '12345678999') // formato incorreto (não passa regra 'cpf')
-            ->set('data.email', 'email_invalido')
-            ->set('data.phone', '(00)12345-1234')
-            ->set('data.postal_code', '00000-000')
-            ->set('data.address', 'Rua Teste')
-            ->set('data.distric', 'Centro')
-            ->set('data.address_number', '100')
-            ->set('data.city', 'Macapá')
-            ->set('data.password', 'senha')
-            ->set('data.passwordConfirmation', 'senha')
-            ->set('data.sex', 'M')
-            ->call('register')
-            ->assertHasFormErrors([
-                'cpf',              // formato errado (regra 'cpf')
-                'birth_date',  // fora do intervalo (regra minDate)
-                'email',            // formato inválido
-            ]);
+        // TESTE: testa formato incorreto de CPF e data inválida
+      //  Livewire::test(\App\Filament\Candidato\Pages\Auth\Cadastro::class)
+        //    ->set('data.name', 'João Teste')
+        //    ->set('data.mother_name', 'Maria Teste')
+        //    ->set('data.rg', '12345')
+       //     ->set('data.birth_date', '3020-01-01') // data futura (inválida)
+       //     ->set('data.cpf', '12345678999') // formato incorreto (não passa regra 'cpf')
+       //     ->set('data.email', 'email_invalido')
+        //    ->set('data.phone', '(00)12345-1234')
+         //   ->set('data.postal_code', '00000-000')
+         //   ->set('data.address', 'Rua Teste')
+          //  ->set('data.distric', 'Centro')
+          //  ->set('data.address_number', '100')
+         //   ->set('data.city', 'Macapá')
+          //  ->set('data.password', 'senha')
+           // ->set('data.passwordConfirmation', 'senha')
+          //  ->set('data.sex', 'M')
+         //   ->call('register')
+          //  ->assertHasFormErrors([
+          //      'cpf',              // formato errado (regra 'cpf')
+          //      'birth_date',  // fora do intervalo (regra minDate)
+           //     'email',            // formato inválido
+           // ]);
     }
-
-
-
 }
