@@ -45,6 +45,7 @@ class ManageAttachments extends ManageRelatedRecords
             ->recordTitleAttribute('description')
             ->heading('Anexos')
             ->modelLabel('Anexo')
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('description')
                     ->label('Descrição')

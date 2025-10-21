@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('width');
             $table->integer('height');
             $table->string('name');
-            $table->string('mimetype');
+            $table->string('mimetype')->nullable();
             $table->string('descricao');
             $table->string('codname');
             $table->char('_del_', 1)->nullable();
