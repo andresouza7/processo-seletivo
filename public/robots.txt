@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /admin/*
+Disallow: /candidato/*
+Allow: /candidato/login
+Allow: /candidato/register
+Allow: /processos/*
+Sitemap: https://seudominio.com/sitemap.xml
