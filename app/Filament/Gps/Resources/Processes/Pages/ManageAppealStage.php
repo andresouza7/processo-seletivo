@@ -107,10 +107,12 @@ class ManageAppealStage extends ManageRelatedRecords
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Fechar')
                     ->modalHeading('Link de acesso')
+                    ->modalDescription('Endereço web para o candidato acessar esta etapa')
                     ->icon(Heroicon::OutlinedGlobeAlt)
                     ->schema([
                         TextInput::make('url')
                             ->copyable()
+                            ->readOnly()
                             ->formatStateUsing(fn($record) => Recurso::getUrl(['record' => $record], panel: 'candidato'))
                     ]),
                 EditAction::make(),
