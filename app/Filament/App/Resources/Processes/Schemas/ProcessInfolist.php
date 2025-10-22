@@ -45,7 +45,7 @@ class ProcessInfolist
                         Action::make('createRecurso')
                             ->visible(fn($record, AppealService $service) => $service->canSubmitAppealForProcess($record))
                             ->label('Recursos')
-                            ->url(fn() => route('filament.candidato.pages.recurso'))
+                            ->url(fn($record) => route('filament.candidato.pages.recurso.{record}', ['record' => $record->activeAppealStage()]))
                             ->button()
                             ->color('primary')
                     ]),

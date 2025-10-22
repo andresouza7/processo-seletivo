@@ -30,11 +30,15 @@ class AppealService
     }
 
     // Lista inscrições que podem efetuar um recurso
-    public function listAppealableApplications(): Collection
+    public function listAppealableApplications(Process $process): Collection
     {
         $today = now()->toDateString();
 
-        $query = Application::where('candidate_id', Auth::guard('candidato')->id())
+        $service = app(ApplicationService::class);
+
+        $query = $service->fetchFinalApplicationsForProcess($process);
+
+        $query->where('candidate_id', Auth::guard('candidato')->id())
             ->where(function ($q) {
                 $q->whereDoesntHave('appeals', function ($q) {
                     // No appeal for the latest appeal stage

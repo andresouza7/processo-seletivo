@@ -1,11 +1,45 @@
 <x-filament-panels::page>
     <div class="space-y-4">
+        <div class="bg-amber-50 border-l-4 border-amber-400 rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex items-center gap-4 mb-4">
+                {{-- Ícone integrado ao título --}}
+                {{-- Ícone informativo --}}
+                <div class="flex-shrink-0 bg-amber-200 p-3 rounded-xl">
+                    <x-heroicon-o-information-circle class="w-10 h-10 text-amber-700" />
+                </div>
+                <div class="flex flex-col">
+                    <h2 class="text-xl font-bold text-amber-900">
+                        {{ $stage->process->title }}
+                    </h2>
+                    <p class="text-base text-amber-700 font-medium mt-1">
+                        {{ $stage->title }}
+                    </p>
+                </div>
+            </div>
+
+            {{-- Texto de instrução --}}
+            <div class="text-sm text-amber-900 leading-relaxed space-y-2">
+                <p>
+                    Envie seu <strong>recurso</strong> revisando atentamente todas as informações e anexos.
+                </p>
+
+                @php
+                    $start = Carbon\Carbon::parse($stage->submission_start_date)->format('d/m/Y');
+                    $end = Carbon\Carbon::parse($stage->submission_end_date)->format('d/m/Y');
+                @endphp
+
+                <p class="text-xs italic text-amber-800">
+                    Prazo de envio: de <strong>{{ $start }}</strong> até <strong>{{ $end }}</strong>.
+                </p>
+            </div>
+        </div>
+
         @if (count($this->options))
             {{ $this->form }}
-        @else
+            {{-- @else
             <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md text-yellow-700 text-sm shadow-sm">
                 Você não possui inscrições elegíveis para abrir um recurso.
-            </div>
+            </div> --}}
         @endif
 
         @php
@@ -16,6 +50,7 @@
             ];
         @endphp
 
+        {{-- Seção de recursos enviados --}}
         @if (count($appeals))
             <div class="bg-white border-l-4 border-gray-400 p-4 rounded-md text-gray-700 text-sm shadow-sm">
                 Consulte abaixo os seus recursos em andamento
@@ -24,7 +59,9 @@
 
         @foreach ($appeals as $appeal)
             @php
-                $result = $appeal->hasResult() ? $resultLabels[$appeal->result] : ['label' => 'Em análise', 'color' => 'info'];
+                $result = $appeal->hasResult()
+                    ? $resultLabels[$appeal->result]
+                    : ['label' => 'Em análise', 'color' => 'info'];
             @endphp
 
             <div class="bg-white shadow-xs border border-gray-200 rounded-xl p-6">

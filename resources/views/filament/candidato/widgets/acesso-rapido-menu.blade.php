@@ -14,11 +14,11 @@
                     'icon' => 'heroicon-o-plus',
                     'label' => 'Nova Inscrição',
                 ],
-                [
-                    'url' => route('filament.candidato.pages.recurso'),
-                    'icon' => 'heroicon-o-chat-bubble-left-right',
-                    'label' => 'Recursos',
-                ],
+                // [
+                //     'url' => route('filament.candidato.pages.recurso'),
+                //     'icon' => 'heroicon-o-chat-bubble-left-right',
+                //     'label' => 'Recursos',
+                // ],
                 [
                     'url' => route('filament.candidato.pages.meus-dados'),
                     'icon' => 'heroicon-o-user',
