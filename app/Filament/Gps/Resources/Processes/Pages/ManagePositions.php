@@ -45,6 +45,7 @@ class ManagePositions extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('description')
             ->heading('Vagas')
+            ->modelLabel('Vaga')
             ->paginated(false)
             ->columns([
                 TextColumn::make('code')

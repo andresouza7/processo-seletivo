@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ManageAppealStage extends ManageRelatedRecords
 {
     protected static string $resource = ProcessResource::class;
-    protected static ?string $title = 'Gerenciar Etapas de Appeal';
+    protected static ?string $title = 'Gerenciar Etapas de Recurso';
     protected static ?string $navigationLabel = 'Etapas de Recurso';
     protected static ?string $breadcrumb = 'Etapas de Recurso';
     protected static string $relationship = 'appeal_stage';
