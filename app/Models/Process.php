@@ -125,6 +125,14 @@ class Process extends Model
             ->whereDate('publication_end_date', '<=', now());
     }
 
+    public function scopeRecursoAberto(Builder $query): void
+    {
+        $query->whereHas('appeal_stage', function ($sub) {
+            $sub->whereDate('submission_start_date', '<=', now())
+                ->whereDate('submission_end_date', '>=', now());
+        });
+    }
+
     public function activeAppealStage(): ?AppealStage
     {
         return $this->appeal_stage()

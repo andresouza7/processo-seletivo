@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\Processes\Pages;
 
+use App\Filament\Candidato\Pages\Recurso;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -13,8 +14,10 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Gps\Resources\Processes\ProcessResource;
 use App\Services\SelectionProcess\AppealService;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -100,6 +103,18 @@ class ManageAppealStage extends ManageRelatedRecords
 
             ])
             ->recordActions([
+                Action::make('link')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Fechar')
+                    ->modalHeading('Link de acesso')
+                    ->modalDescription('Endereço web para o candidato acessar esta etapa')
+                    ->icon(Heroicon::OutlinedGlobeAlt)
+                    ->schema([
+                        TextInput::make('url')
+                            ->copyable()
+                            ->readOnly()
+                            ->formatStateUsing(fn($record) => Recurso::getUrl(['record' => $record], panel: 'candidato'))
+                    ]),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

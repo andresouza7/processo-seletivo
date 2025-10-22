@@ -1,10 +1,48 @@
 <x-filament-panels::page>
     <div class="space-y-4">
+
+        <div class="bg-white rounded-xl shadow-sm mb-6">
+            {{-- Cabeçalho: maior altura --}}
+            <div class="flex items-center gap-4 bg-white rounded-t-xl px-5 py-6 border-b border-gray-100">
+                <div class="flex-shrink-0 bg-amber-200 p-3 rounded-xl">
+                    <x-heroicon-o-information-circle class="w-8 h-8 text-amber-800" />
+                </div>
+
+                <div class="flex flex-col">
+                    <h2 class="text-lg font-semibold text-gray-900">
+                        {{ $stage->process->title }}
+                    </h2>
+                    <p class="text-sm text-gray-700 font-medium mt-1">
+                        {{ $stage->title }}
+                    </p>
+                </div>
+            </div>
+
+            {{-- Corpo: padding reduzido acima da linha, ocupação menor --}}
+            <div class="px-6 py-4 text-sm text-gray-800 leading-relaxed space-y-2">
+                <p class="mb-1">
+                    Envie seu <strong class="font-semibold text-gray-900">recurso</strong> revisando atentamente todas
+                    as informações e anexos.
+                </p>
+
+                @php
+                    $start = Carbon\Carbon::parse($stage->submission_start_date)->format('d/m/Y');
+                    $end = Carbon\Carbon::parse($stage->submission_end_date)->format('d/m/Y');
+                @endphp
+
+                <p class="text-xs italic text-gray-600 mt-1">
+                    Prazo de envio: de <strong class="text-gray-800">{{ $start }}</strong> até <strong
+                        class="text-gray-800">{{ $end }}</strong>.
+                </p>
+            </div>
+        </div>
+
+
         @if (count($this->options))
             {{ $this->form }}
         @else
             <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md text-yellow-700 text-sm shadow-sm">
-                Você não possui inscrições elegíveis para abrir um recurso.
+                Você não possui inscrições para solicitar recurso nesta etapa.
             </div>
         @endif
 
@@ -16,6 +54,7 @@
             ];
         @endphp
 
+        {{-- Seção de recursos enviados --}}
         @if (count($appeals))
             <div class="bg-white border-l-4 border-gray-400 p-4 rounded-md text-gray-700 text-sm shadow-sm">
                 Consulte abaixo os seus recursos em andamento
@@ -24,7 +63,9 @@
 
         @foreach ($appeals as $appeal)
             @php
-                $result = $appeal->hasResult() ? $resultLabels[$appeal->result] : ['label' => 'Em análise', 'color' => 'info'];
+                $result = $appeal->hasResult()
+                    ? $resultLabels[$appeal->result]
+                    : ['label' => 'Em análise', 'color' => 'info'];
             @endphp
 
             <div class="bg-white shadow-xs border border-gray-200 rounded-xl p-6">

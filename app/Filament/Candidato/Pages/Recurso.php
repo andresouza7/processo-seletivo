@@ -4,7 +4,9 @@ namespace App\Filament\Candidato\Pages;
 
 use App\Filament\Components\AttachmentUpload;
 use App\Models\Appeal;
+use App\Models\AppealStage;
 use App\Models\Application;
+use App\Models\Process;
 use App\Services\SelectionProcess\AppealService;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -28,19 +30,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use UnitEnum;
+use Filament\Schemas\Components\Text;
 
 class Recurso extends Page implements HasSchemas
 {
     use InteractsWithSchemas, InteractsWithActions, InteractsWithFormActions;
 
     protected string $view = 'filament.candidato.pages.recurso';
-    protected static ?string $slug = 'recurso';
-    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
-    protected static string | UnitEnum | null $navigationGroup = 'Área do Candidato';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $slug = 'recurso/{record}';
+    // protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
+    // protected static string | UnitEnum | null $navigationGroup = 'Área do Candidato';
+    // protected static ?int $navigationSort = 2;
+    protected static bool $shouldRegisterNavigation = false;
 
     public ?array $data = [];
     public ?Application $application = null;
+    public ?AppealStage $stage = null;
 
     public $options = [];
     public $appeals = [];
@@ -52,16 +57,20 @@ class Recurso extends Page implements HasSchemas
         $this->service = app(AppealService::class);
     }
 
-    public function mount(): void
+    public function mount(AppealStage $record): void
     {
-        abort_unless(Auth::guard('candidato')->check(), 403);
+        $canAccess = $record->accepts_appeal || $record->has_result;
+        
+        abort_unless($canAccess, 403);
 
         $this->form->fill();
 
-        $this->options = $this->service->listAppealableApplications()
+        $this->stage = $record;
+
+        $this->options = $this->service->listAppealableApplications($record->process)
             ->mapWithKeys(fn($app) => [
                 $app->id => "{$app->code} - {$app->position->description}",
-            ]);;
+            ]);
 
         $results = $this->service->listAppealsWithResults();
 
@@ -93,21 +102,10 @@ class Recurso extends Page implements HasSchemas
             ->afterStateUpdated(function (callable $set, $state) {
                 // Reset everything when deselecting
                 $this->application = null;
-                $set('process', null);
-                $set('stage', null);
                 $set('text', null);
 
                 // pega a inscrição selecionada pelo usuário
                 $this->application = Application::with('process.appeal_stage')->find($state);
-                if (!$this->application) return;
-
-                // pega a etapa de recurso ativa do processo pro qual o usuário se inscreveu
-                // sabe-se que a última é a ativa pois no GPS a regra só deixa criar uma etapa por vez
-                $stage = $this->application->process->activeAppealStage();
-                if ($stage) {
-                    $set('process', $this->application->process->title);
-                    $set('stage', $stage->description);
-                }
             });
     }
 
@@ -116,8 +114,6 @@ class Recurso extends Page implements HasSchemas
         return Group::make()
             ->columns(2)
             ->schema([
-                TextInput::make('process')->label('Processo Seletivo')->disabled(),
-                TextInput::make('stage')->label('Etapa')->disabled(),
                 Textarea::make('text')
                     ->label('Justificativa')
                     ->required()
@@ -158,7 +154,7 @@ class Recurso extends Page implements HasSchemas
                 ->success()
                 ->send();
 
-            redirect()->route('filament.candidato.pages.recurso');
+            redirect(static::getUrl(['record' => $this->stage]));
         } catch (\Throwable $th) {
             throw $th;
         }
