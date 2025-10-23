@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('idarquivo')->nullable()->comment('referência a arquivos do sistema legado');
             $table->string('description');
             $table->unsignedBigInteger('views')->default(0);
+            $table->date('publication_date');
             $table->timestamps();
             $table->softDeletes();
         });
