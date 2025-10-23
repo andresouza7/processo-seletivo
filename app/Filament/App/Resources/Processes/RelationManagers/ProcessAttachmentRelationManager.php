@@ -19,11 +19,15 @@ class ProcessAttachmentRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+
+        $today = now()->toDateString();
+
         return $table
             ->recordTitleAttribute('description')
             ->heading('Publicações')
             ->description('Use o campo de busca para filtrar uma informação')
             ->defaultSort('id', 'desc')
+            ->modifyQueryUsing(fn($query) => $query->where('publication_date','<=',$today))
             ->columns([
                 Stack::make([
                     TextColumn::make('created_at')

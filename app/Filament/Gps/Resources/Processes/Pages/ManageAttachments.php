@@ -11,6 +11,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\Action;
 use App\Filament\Gps\Resources\Processes\ProcessResource;
+use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -33,6 +34,9 @@ class ManageAttachments extends ManageRelatedRecords
                     ->label('Descrição')
                     ->required()
                     ->maxLength(255),
+                DatePicker::make('publication_date')
+                    ->label('Data de publicação')
+                    ->default(fn()=>now()->toDateString()),
                 AttachmentUpload::make('arquivo')
                     ->label('Arquivo')
                     ->helperText('* É necessário salvar as alterações após a inclusão do arquivo.')

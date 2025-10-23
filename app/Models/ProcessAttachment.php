@@ -27,7 +27,8 @@ class ProcessAttachment extends Model implements HasMedia
         'process_id',
         'idarquivo',
         'description',
-        'views'
+        'views',
+        'publication_date'
     ];
 
     protected $appends = [
