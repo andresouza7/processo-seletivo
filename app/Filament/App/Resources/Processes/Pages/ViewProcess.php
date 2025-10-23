@@ -31,6 +31,8 @@ class ViewProcess extends ViewRecord
             <meta name=\"keywords\" content=\"processos, seletivo\">
             "
         );
+
+        $this->record->increment('views');
     }
 
 

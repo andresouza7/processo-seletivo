@@ -15,6 +15,9 @@ Route::get('/media/temp/{media}', [MediaController::class, 'getTemporaryUrl'])
     ->name('media.temp')
     ->middleware('auth'); // só usuários logados
 
+Route::get('/media/view/{attachment}', [MediaController::class, 'showProcessAttachment'])
+    ->name('media.view');
+
 Route::get('/sitemap.xml', function () {
     $processes = Process::where('is_published', true)->limit(15)->get();
 

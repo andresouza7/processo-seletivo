@@ -36,20 +36,7 @@ class ProcessAttachment extends Model implements HasMedia
 
     public function getFileUrlAttribute()
     {
-        $systemMigrationReferenceDate = Carbon::parse('2024-11-01');
-
-        // Check if `data_publicacao` is older than the reference date
-        if (Carbon::parse($this->created_at)->lt($systemMigrationReferenceDate)) {
-            
-            $oldFilePath = $this->process->type->slug . '/' .
-                $this->process->directory . '/' .
-                optional($this->arquivo)->codname . '.pdf';
-
-            return Storage::url($oldFilePath);
-        }
-
-        // Otherwise, return the URL from Spatie Media Library
-        return $this->getFirstMediaUrl();
+        return route('media.view', $this->id);
     }
 
     public function process()
