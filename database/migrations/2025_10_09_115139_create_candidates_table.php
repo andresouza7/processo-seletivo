@@ -49,11 +49,11 @@ return new class extends Migration
 
         Schema::enableForeignKeyConstraints();
 
-        // Candidate::factory()->create([
-        //     'name' => 'Candidato',
-        //     'cpf' => '12345678910',
-        //     'password' => bcrypt('123456')
-        // ]);
+        Candidate::factory()->create([
+            'name' => 'Candidato',
+            'cpf' => '12345678910',
+            'password' => bcrypt('123456')
+        ]);
     }
 
     /**

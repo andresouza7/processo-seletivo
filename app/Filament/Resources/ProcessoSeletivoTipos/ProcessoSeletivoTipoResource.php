@@ -12,6 +12,7 @@ use App\Filament\Resources\ProcessoSeletivoTipos\Pages\EditProcessoSeletivoTipo;
 use App\Filament\Resources\ProcessoSeletivoTipoResource\Pages;
 use App\Models\ProcessType;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -36,6 +37,11 @@ class ProcessoSeletivoTipoResource extends Resource
                 //
                 TextInput::make('description')->label('Descrição'),
                 TextInput::make('slug'),
+                Select::make('quota_id')
+                    ->label('Tipos da vaga')
+                    ->multiple()
+                    ->preload()
+                    ->relationship('quotas', 'description')
             ]);
     }
 

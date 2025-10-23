@@ -26,4 +26,8 @@ class Quota extends Model
     {
         return $this->hasMany(Application::class);
     }
+
+    public function process_types() {
+        return $this->belongsToMany(ProcessType::class);
+    }
 }
