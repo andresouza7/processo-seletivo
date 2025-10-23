@@ -27,7 +27,7 @@ class ProcessAttachmentRelationManager extends RelationManager
             ->heading('Publicações')
             ->description('Use o campo de busca para filtrar uma informação')
             ->defaultSort('id', 'desc')
-            ->modifyQueryUsing(fn($query) => $query->where('publication_date','<=',$today))
+            ->modifyQueryUsing(fn($query) => $query->published())
             ->columns([
                 Stack::make([
                     TextColumn::make('created_at')

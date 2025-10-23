@@ -192,9 +192,7 @@
 
                 <div x-show="tab === 'tab2'">
                     @php
-                        $today = now()->toDateString();
-                        $anexos = \App\Models\ProcessAttachment::latest('created_at')->limit(10)->where('publication_date','<=',$today)
-                        ->get();
+                        $anexos = \App\Models\ProcessAttachment::published()->latest('created_at')->limit(10)->get();
                     @endphp
 
                     <div class="divide-y divide-gray-200">

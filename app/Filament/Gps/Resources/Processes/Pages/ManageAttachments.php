@@ -36,7 +36,8 @@ class ManageAttachments extends ManageRelatedRecords
                     ->maxLength(255),
                 DatePicker::make('publication_date')
                     ->label('Data de publicação')
-                    ->default(fn()=>now()->toDateString()),
+                    ->required()
+                    ->default(fn() => now()->toDateString()),
                 AttachmentUpload::make('arquivo')
                     ->label('Arquivo')
                     ->helperText('* É necessário salvar as alterações após a inclusão do arquivo.')
@@ -55,6 +56,9 @@ class ManageAttachments extends ManageRelatedRecords
                     ->label('Descrição')
                     ->searchable()
                     ->limit(70),
+                TextColumn::make('publication_date')
+                    ->label('Data de Publicação')
+                    ->date('d/m/y')
             ])
             ->headerActions([
                 CreateAction::make()

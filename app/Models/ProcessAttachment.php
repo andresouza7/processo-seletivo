@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -48,5 +49,12 @@ class ProcessAttachment extends Model implements HasMedia
     public function arquivo()
     {
         return $this->belongsTo(Arquivo::class, 'idarquivo', 'idarquivo');
+    }
+
+    public function scopePublished(Builder $query): void
+    {
+        $today = now()->toDateString();
+
+        $query->whereDate('publication_date', '<=', $today);
     }
 }
