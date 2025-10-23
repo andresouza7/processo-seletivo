@@ -38,9 +38,6 @@ class Recurso extends Page implements HasSchemas
 
     protected string $view = 'filament.candidato.pages.recurso';
     protected static ?string $slug = 'recurso/{record}';
-    // protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
-    // protected static string | UnitEnum | null $navigationGroup = 'Área do Candidato';
-    // protected static ?int $navigationSort = 2;
     protected static bool $shouldRegisterNavigation = false;
 
     public ?array $data = [];
@@ -60,7 +57,7 @@ class Recurso extends Page implements HasSchemas
     public function mount(AppealStage $record): void
     {
         $canAccess = $record->accepts_appeal || $record->has_result;
-        
+
         abort_unless($canAccess, 403);
 
         $this->form->fill();
@@ -72,9 +69,9 @@ class Recurso extends Page implements HasSchemas
                 $app->id => "{$app->code} - {$app->position->description}",
             ]);
 
-        $results = $this->service->listAppealsWithResults();
-
         $submitted = $this->service->listSubmittedAppeals();
+
+        $results = $this->service->listAppealsWithResults();
 
         $this->appeals = $results->isNotEmpty() ? $results : $submitted;
     }

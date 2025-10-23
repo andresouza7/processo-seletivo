@@ -62,7 +62,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'publication_end_date' => $this->date,
             'application_start_date' => $this->date,
             'application_end_date' => $this->date,
-            'has_fee_exemption' => false,
+            'has_fee' => false,
             'attachment_fields' => [
                 ['item' => 'identidade', 'description' => 'carteira de identidade frente e verso']
             ],
@@ -87,7 +87,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'publication_end_date' => $this->date,
             'application_start_date' => $this->date,
             'application_end_date' => $this->date,
-            'has_fee_exemption' => 0,
+            'has_fee' => 0,
         ]);
 
         // Valida anexos
@@ -106,7 +106,7 @@ class GestorConfiguraProcessoSeletivoTest extends TestCase
             'process_type_id' => $this->type->id,
             'number' => '02/2025',
             'is_published' => false,
-            'has_fee_exemption' => false,
+            'has_fee' => false,
             'attachment_fields' => [
                ['item' => 'identidade', 'description' => 'carteira de identidade frente e verso']
             ],

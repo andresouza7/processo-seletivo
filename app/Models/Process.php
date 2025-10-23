@@ -37,7 +37,7 @@ class Process extends Model
         'publication_end_date',
         'application_start_date',
         'application_end_date',
-        'has_fee_exemption',
+        'has_fee',
         'multiple_applications',
         'attachment_fields'
     ];

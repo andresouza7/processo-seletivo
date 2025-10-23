@@ -70,7 +70,7 @@ class ApplicationForm
                 ->afterStateUpdated(function (callable $set, $state) {
                     $processo = Process::find($state);
                     // dd($processo);
-                    $set('has_fee_exemption', $processo?->has_fee_exemption);
+                    $set('has_fee', $processo?->has_fee);
                     $set('attachment_fields', (array) ($processo?->attachment_fields ?? []));
                 }),
         ];
@@ -182,7 +182,7 @@ class ApplicationForm
         return [
             Checkbox::make('pedir_isencao')
                 ->label('Solicitar isenção da taxa de inscrição')
-                ->visible(fn(Get $get): bool => (bool) $get('has_fee_exemption'))
+                ->visible(fn(Get $get): bool => (bool) $get('has_fee'))
                 ->columnSpanFull()
                 ->live()
                 ->default(false),

@@ -102,7 +102,7 @@ class ManageEvaluators extends ManageRelatedRecords
                     ->action(function (array $data, $records) {
                         Appeal::whereIn('id', $records->pluck('id'))
                             ->update(['evaluator_id' => $data['evaluator_id']]);
-                        $this->sendAssociateNotification();
+                        $this->sendSuccessfulNotification('Avaliador vinculado com sucesso.');
                     }),
 
                 // Bulk Remove Evaluator
@@ -114,25 +114,16 @@ class ManageEvaluators extends ManageRelatedRecords
                     ->action(function ($records) {
                         Appeal::whereIn('id', $records->pluck('id'))
                             ->update(['evaluator_id' => null]);
-                        $this->sendDissociateNotification();
+                        $this->sendSuccessfulNotification('Avaliador desvinculado com sucesso.');
                     }),
             ]);
     }
 
-    private function sendAssociateNotification()
+    private function sendSuccessfulNotification(string $message)
     {
         Notification::make()
             ->title('Salvo')
-            ->body('Avaliador vinculado com sucesso.')
-            ->success()
-            ->send();
-    }
-
-    private function sendDissociateNotification()
-    {
-        Notification::make()
-            ->title('Salvo')
-            ->body('Avaliador desvinculado com sucesso.')
+            ->body($message)
             ->success()
             ->send();
     }

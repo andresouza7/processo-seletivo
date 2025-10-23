@@ -82,8 +82,8 @@ class ProcessForm
                             ])->columnSpan(1),
                     ])->columns(2),
 
-                    Checkbox::make('has_fee_exemption')
-                        ->label('Possui isenção da taxa de inscrição'),
+                    Checkbox::make('has_fee')
+                        ->label('Permitir isenção da taxa de inscrição'),
 
                     Checkbox::make('multiple_applications')
                         ->label('Permitir inscrição em mais de uma vaga'),
@@ -106,6 +106,7 @@ class ProcessForm
                         ->collapsed()
                         ->columnSpanFull()
                         // ->minItems(1)
+                        ->maxItems(15)
                         ->addActionLabel('Adicionar Documento')
                         ->defaultItems(function ($record) {
                             return $record->attachment_fields ?? [];

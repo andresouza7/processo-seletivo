@@ -22,7 +22,7 @@ class ProcessesTable
     {
         return $table
             ->heading('Consultar Processos Seletivos')
-            ->description('Pesquise, edite ou crie um novo registro.')
+            ->description('Pesquise, edite ou crie um novo processo.')
             ->modifyQueryUsing(function (Builder $query) {
                 $user = Auth::user();
 

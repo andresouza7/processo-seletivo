@@ -38,7 +38,7 @@ class ProcessFactory extends Factory
             'publication_end_date' => $oneMonthLater,
             'application_start_date' => $today,
             'application_end_date' => $oneMonthLater,
-            'has_fee_exemption' => false,
+            'has_fee' => false,
             'attachment_fields' => null,
 
             'created_at' => now(),

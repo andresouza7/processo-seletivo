@@ -65,7 +65,7 @@ class ManagePositions extends ManageRelatedRecords
                         $parentRecord = $this->getOwnerRecord();
 
                         // Set the ID of the parent resource on the form data
-                        $data['id'] = $parentRecord->id;
+                        // $data['process_id'] = $parentRecord->id;
 
                         return $data;
                     }),
