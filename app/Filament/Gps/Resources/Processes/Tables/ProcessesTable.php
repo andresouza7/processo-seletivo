@@ -26,17 +26,17 @@ class ProcessesTable
             ->modifyQueryUsing(function (Builder $query) {
                 $user = Auth::user();
 
-                // Admin ou Gestor veem tudo
-                if ($user->hasAnyRole(['admin', 'gestor'])) {
+                if ($user->hasRole('admin')) {
                     return $query;
                 }
 
-                // Usuário ascom vê apenas processos com role 'ascom'
-                if ($user->hasRole('ascom')) {
-                    return $query->whereHas('roles', function (Builder $sub) {
-                        $sub->where('name', 'ascom');
-                    });
-                }
+                // Get the IDs (or names) of the user's roles
+                $userRoleIds = $user->roles->pluck('id');
+
+                // Only include processes that have at least one of these roles
+                $query->whereHas('roles', function ($subQuery) use ($userRoleIds) {
+                    $subQuery->whereIn('roles.id', $userRoleIds);
+                });
             })
             ->defaultSort('id', 'desc')
             ->columns([

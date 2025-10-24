@@ -56,14 +56,6 @@ class Process extends Model
             });
         });
 
-        static::created(function ($record) {
-            $user = Auth::user();
-
-            if ($user && $user->hasRole('ascom')) {
-                $record->assignRole('ascom');
-            }
-        });
-
         static::saved(function () {
             Cache::forget('processos_inscricoes_abertas_options');
         });

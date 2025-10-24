@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class ProcessResource extends Resource
 {
@@ -47,7 +48,35 @@ class ProcessResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::user()->hasAnyRole(['ascom', 'admin', 'gestor']);
+        return Auth::user()->hasAnyRole(Role::all());
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        $user = Auth::user();
+
+        // Make sure we have a user and roles are loaded
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Get IDs of roles assigned to the user and to the process
+        $userRoleIds = $user->roles->pluck('id')->toArray();
+        $processRoleIds = $record->roles->pluck('id')->toArray();
+
+        // Allow edit if they share at least one role
+        return count(array_intersect($userRoleIds, $processRoleIds)) > 0;
+    }
+
+    // optional: also restrict view or delete actions similarly
+    public static function canView(Model $record): bool
+    {
+        return self::canEdit($record);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return self::canEdit($record);
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array

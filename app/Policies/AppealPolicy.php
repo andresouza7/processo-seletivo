@@ -17,7 +17,7 @@ class AppealPolicy
      */
     public function viewAny(AuthUser $user): bool
     {
-        return true;
+        return $user->hasAnyPermission(['view appeal', 'assign evaluator']);
     }
 
     /**
@@ -25,7 +25,7 @@ class AppealPolicy
      */
     public function view(AuthUser $user, Appeal $appeal): bool
     {
-        return true;
+        return $user->hasAnyPermission(['view appeal', 'assign evaluator']);
     }
 
     /**
