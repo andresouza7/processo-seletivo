@@ -2,26 +2,30 @@
 
 namespace App\Policies;
 
-use App\Models\Position;
+use App\Models\Candidate;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class PositionPolicy
+class CandidatePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyPermission(['consultar vaga', 'gerenciar vaga']);
+        return $user->hasPermissionTo('consultar candidato');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Position $position): bool
+    public function view(User $user, Candidate $candidate): bool
     {
-        return $user->hasAnyPermission(['consultar vaga', 'gerenciar vaga']);
+        if ($user instanceof Candidate) {
+            return true;
+        }
+
+        return $user->hasPermissionTo('consultar candidato');
     }
 
     /**
@@ -29,38 +33,38 @@ class PositionPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('gerenciar vaga');
+        return $user instanceof Candidate;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Position $position): bool
+    public function update(User $user, Candidate $candidate): bool
     {
-        return $user->hasPermissionTo('gerenciar vaga');
+        return $user instanceof Candidate;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Position $position): bool
+    public function delete(User $user, Candidate $candidate): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Position $position): bool
+    public function restore(User $user, Candidate $candidate): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Position $position): bool
+    public function forceDelete(User $user, Candidate $candidate): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 }

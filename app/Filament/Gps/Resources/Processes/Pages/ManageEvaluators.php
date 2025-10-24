@@ -44,7 +44,7 @@ class ManageEvaluators extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('id')
             ->inverseRelationship('evaluator')
-            ->heading('Avaliadores')
+            ->heading('Avaliadores Externos')
             ->description('Atribua os recursos aos seus respectivos avaliadores')
             ->modelLabel('Avaliador')
             ->columns([
@@ -59,7 +59,9 @@ class ManageEvaluators extends ManageRelatedRecords
             ->filters([
                 Tables\Filters\Filter::make('pendentes')
                     ->label('Sem Avaliador')
-                    ->query(fn(Builder $query) => $query->whereNull('evaluator_id'))
+                    ->query(fn(Builder $query) =>
+                    $query->whereNull('evaluator_id')
+                        ->orWhereNull('result'))
                     ->default(),
             ])
             ->recordActions([
@@ -84,7 +86,7 @@ class ManageEvaluators extends ManageRelatedRecords
                     ->url(fn($record) => ManageApplications::getUrl([
                         'record' => $record->process,
                         'search' => $record->application->code
-                        ]))
+                    ]))
             ])
             ->toolbarActions([
                 // Bulk Assign Evaluator

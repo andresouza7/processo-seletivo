@@ -2,26 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\Position;
+use App\Models\AppealStage;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class PositionPolicy
+class AppealStagePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyPermission(['consultar vaga', 'gerenciar vaga']);
+        return $user->hasPermissionTo('gerenciar etapa de recurso');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Position $position): bool
+    public function view(User $user, AppealStage $appealStage): bool
     {
-        return $user->hasAnyPermission(['consultar vaga', 'gerenciar vaga']);
+        return $user->hasPermissionTo('gerenciar etapa de recurso');
     }
 
     /**
@@ -29,21 +29,21 @@ class PositionPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('gerenciar vaga');
+        return $user->hasPermissionTo('gerenciar etapa de recurso');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Position $position): bool
+    public function update(User $user, AppealStage $appealStage): bool
     {
-        return $user->hasPermissionTo('gerenciar vaga');
+        return $user->hasPermissionTo('gerenciar etapa de recurso');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Position $position): bool
+    public function delete(User $user, AppealStage $appealStage): bool
     {
         return $user->hasRole('admin');
     }
@@ -51,7 +51,7 @@ class PositionPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Position $position): bool
+    public function restore(User $user, AppealStage $appealStage): bool
     {
         return $user->hasRole('admin');
     }
@@ -59,7 +59,7 @@ class PositionPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Position $position): bool
+    public function forceDelete(User $user, AppealStage $appealStage): bool
     {
         return $user->hasRole('admin');
     }

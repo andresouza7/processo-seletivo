@@ -17,8 +17,12 @@ use Spatie\Permission\Models\Role;
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
+    protected static ?string $modelLabel = 'Perfil';
+    protected static ?string $pluralModelLabel = 'Perfis';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShieldCheck;
+    protected static string | \UnitEnum | null $navigationGroup = 'Administrador';
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
 

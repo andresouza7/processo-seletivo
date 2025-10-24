@@ -26,13 +26,6 @@ class AppealResource extends Resource
     protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 3;
 
-    // Acesso restrito a usuários com perfil de avaliador
-    
-    public static function canAccess(): bool
-    {
-        return Auth::user()->hasRole('admin|avaliador');
-    }
-
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()
@@ -40,9 +33,11 @@ class AppealResource extends Resource
                 SoftDeletingScope::class,
             ]);
 
-        $userId = auth()->id();
+        $user = auth()->user();
 
-        $query->where('evaluator_id', $userId);
+        if ($user->hasRole('avaliador')) {
+            return  $query->where('evaluator_id', $user->id);;
+        }
 
         return $query;
     }

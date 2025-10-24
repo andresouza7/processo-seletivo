@@ -14,7 +14,7 @@ class ProcessAttachmentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view attachment');
+        return $user->hasAnyPermission(['consultar anexo', 'gerenciar anexo']);
     }
 
     /**
@@ -22,7 +22,7 @@ class ProcessAttachmentPolicy
      */
     public function view(User $user, ProcessAttachment $processAttachment): bool
     {
-        return $user->hasPermissionTo('view attachment');
+        return $user->hasAnyPermission(['consultar anexo', 'gerenciar anexo']);
     }
 
     /**
@@ -30,7 +30,7 @@ class ProcessAttachmentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create attachment');
+        return $user->hasPermissionTo('gerenciar anexo');
     }
 
     /**
@@ -38,7 +38,7 @@ class ProcessAttachmentPolicy
      */
     public function update(User $user, ProcessAttachment $processAttachment): bool
     {
-        return $user->hasPermissionTo('edit attachment');
+        return $user->hasPermissionTo('gerenciar anexo');
     }
 
     /**

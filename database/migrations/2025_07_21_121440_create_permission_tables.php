@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -124,20 +125,6 @@ return new class extends Migration
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
-
-        DB::table('roles')->insert([
-            ['name' => 'gestor', 'guard_name' => 'web'],
-            ['name' => 'avaliador', 'guard_name' => 'web'],
-            ['name' => 'admin', 'guard_name' => 'web'],
-            ['name' => 'usuario', 'guard_name' => 'web'],
-        ]);
-
-        $user = User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@localhost',
-            'password' => bcrypt('admin')
-        ]);
-        $user->assignRole('admin');
     }
 
     /**

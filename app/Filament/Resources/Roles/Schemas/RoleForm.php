@@ -14,13 +14,17 @@ class RoleForm
         return $schema
             ->components([
                 Section::make([
-                    TextInput::make('name'),
+                    TextInput::make('name')
+                        ->label('Nome')
+                        ->required(),
                     Select::make('permission_id')
+                        ->label('Permissões')
+                        ->required()
                         ->relationship('permissions', 'name')
                         ->multiple()
                         ->preload()
                 ])
-                ->heading('Configurar Perfil')
+                    ->heading('Configurar Perfil')
             ]);
     }
 }

@@ -15,6 +15,11 @@ class RolesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nome'),
+                TextColumn::make('permissions.name')
+                    ->label('Permissões')
+                    ->getStateUsing(fn($record) => $record->permissions->pluck('name')->implode(', '))
+                    ->wrap(), // Quebra linha se ficar muito grande
             ])
             ->filters([
                 //

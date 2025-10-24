@@ -19,7 +19,7 @@ class ApplicationPolicy
             return true; // Adjust based on the applicant's permissions
         }
 
-        return $user->hasPermissionTo('view application');
+        return $user->hasPermissionTo('consultar inscrição');
     }
 
     /**
@@ -32,7 +32,7 @@ class ApplicationPolicy
             return $user->id === $application->candidate_id;
         }
 
-        return $user->hasPermissionTo('view application');
+        return $user->hasPermissionTo('consultar inscrição');
     }
 
     /**
