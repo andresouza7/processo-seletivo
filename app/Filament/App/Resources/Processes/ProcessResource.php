@@ -32,6 +32,8 @@ class ProcessResource extends Resource
 
     protected static bool $shouldRegisterNavigation = false;
 
+    protected static bool $shouldSkipAuthorization = true;
+
     protected static ?string $recordTitleAttribute = 'title';
 
     protected static int $globalSearchResultsLimit = 20;

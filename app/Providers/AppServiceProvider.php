@@ -16,6 +16,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\CauserResolver;
 
@@ -39,8 +40,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
-        // User::observe(UserObserver::class);
+        // bypasses authorization for admin role
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('admin') ? true : null;
+        });
 
         Event::listen(Login::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Logout::class, [LogAuthEvent::class, 'handle']);

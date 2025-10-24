@@ -14,6 +14,7 @@ use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -32,15 +33,17 @@ class UserResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->label('Nome'),
-                TextInput::make('email'),
-                Select::make('roles')
-                    ->label('Perfil')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->searchable()
-                    ->preload(),
+                Section::make([
+                    TextInput::make('name')
+                        ->label('Nome'),
+                    TextInput::make('email'),
+                    Select::make('roles')
+                        ->label('Perfil')
+                        ->relationship('roles', 'name')
+                        ->multiple()
+                        ->searchable()
+                        ->preload(),
+                ])->columns(2)
             ]);
     }
 

@@ -7,24 +7,19 @@ use App\Models\User;
 use App\Models\Candidate; // Add this import if you need to check Candidate
 use Illuminate\Auth\Access\Response;
 
-class InscricaoPolicy
+class ApplicationPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny($user): bool
     {
-        // If the user is an admin (web guard)
-        if ($user instanceof User) {
-            return true;
-        }
-
         // If the user is an applicant (candidato guard)
         if ($user instanceof Candidate) {
             return true; // Adjust based on the applicant's permissions
         }
 
-        return false;
+        return $user->hasPermissionTo('consultar inscrição');
     }
 
     /**
@@ -32,16 +27,12 @@ class InscricaoPolicy
      */
     public function view($user, Application $application): bool
     {
-        if ($user instanceof User) {
-            return true; // Admin can view any application
-        }
-
         if ($user instanceof Candidate) {
             // Only allow viewing if the applicant is related to the Application
-            return $user->id === $application->idinscricao_pessoa;
+            return $user->id === $application->candidate_id;
         }
 
-        return false;
+        return $user->hasPermissionTo('consultar inscrição');
     }
 
     /**
@@ -49,7 +40,7 @@ class InscricaoPolicy
      */
     public function create($user): bool
     {
-        // Applicants can create their own inscrição (or adjust accordingly)
+        // Applicants can create their own application 
         return $user instanceof Candidate;
     }
 
@@ -58,7 +49,7 @@ class InscricaoPolicy
      */
     public function update($user, Application $application): bool
     {
-        return $user instanceof User;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -66,7 +57,7 @@ class InscricaoPolicy
      */
     public function delete($user, Application $application): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -74,11 +65,7 @@ class InscricaoPolicy
      */
     public function restore($user, Application $application): bool
     {
-        if ($user instanceof User) {
-            return true; // Admin can restore any Application
-        }
-
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -86,10 +73,6 @@ class InscricaoPolicy
      */
     public function forceDelete($user, Application $application): bool
     {
-        if ($user instanceof User) {
-            return true; // Admin can permanently delete any Application
-        }
-
-        return false;
+        return $user->hasRole('admin');
     }
 }

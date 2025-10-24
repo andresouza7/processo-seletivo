@@ -14,6 +14,7 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules\Unique;
 
 class ProcessForm
@@ -60,6 +61,14 @@ class ProcessForm
                     RichEditor::make('description')
                         ->required()
                         ->label('Descrição'),
+
+                    Select::make('roles')
+                        ->label('Administradores do PS')
+                        ->relationship('roles', 'name', modifyQueryUsing: fn(Builder $query) => $query->whereNotIn('name', ['admin', 'avaliador']))
+                        ->multiple()
+                        ->searchable()
+                        ->preload()
+                        ->required(),
 
                     Group::make([
                         Fieldset::make('Período de Publicação')

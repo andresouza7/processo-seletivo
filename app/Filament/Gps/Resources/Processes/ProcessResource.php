@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class ProcessResource extends Resource
 {
@@ -44,11 +45,6 @@ class ProcessResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'title';
     protected static int $globalSearchResultsLimit = 20;
-
-    public static function canAccess(): bool
-    {
-        return Auth::user()->hasAnyRole(['ascom', 'admin', 'gestor']);
-    }
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {

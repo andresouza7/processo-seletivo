@@ -17,7 +17,7 @@ class AppealPolicy
      */
     public function viewAny(AuthUser $user): bool
     {
-        return true;
+        return $user->hasAnyPermission(['consultar recurso', 'avaliar recurso', 'atribuir avaliador']);
     }
 
     /**
@@ -25,7 +25,7 @@ class AppealPolicy
      */
     public function view(AuthUser $user, Appeal $appeal): bool
     {
-        return true;
+        return $user->hasAnyPermission(['consultar recurso', 'avaliar recurso', 'atribuir avaliador']);
     }
 
     /**
@@ -41,7 +41,7 @@ class AppealPolicy
      */
     public function update(User $user, Appeal $appeal): bool
     {
-        return $user->hasRole('admin|gestor|avaliador') && !$appeal->result;
+        return $user->hasPermissionTo('avaliar recurso') && !$appeal->result;
     }
 
     /**
@@ -49,7 +49,7 @@ class AppealPolicy
      */
     public function delete(User $user, Appeal $appeal): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -57,7 +57,7 @@ class AppealPolicy
      */
     public function restore(User $user, Appeal $appeal): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -65,6 +65,6 @@ class AppealPolicy
      */
     public function forceDelete(User $user, Appeal $appeal): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 }
