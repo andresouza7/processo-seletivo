@@ -26,7 +26,7 @@ class ProcessesTable
             ->modifyQueryUsing(function (Builder $query) {
                 $user = Auth::user();
 
-                if ($user->hasRole('admin')) {
+                if ($user->hasRole(['admin', 'dips'])) {
                     return $query;
                 }
 

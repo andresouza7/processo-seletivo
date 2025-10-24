@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class Candidate extends Authenticatable implements HasName, FilamentUser
 {
-    use SoftDeletes, HasFactory, Notifiable, CanResetPassword;
+    use SoftDeletes, HasFactory, Notifiable, CanResetPassword, HasRoles;
 
     protected $fillable = [
         'name',

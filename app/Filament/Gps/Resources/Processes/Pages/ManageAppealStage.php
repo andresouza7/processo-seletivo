@@ -30,7 +30,7 @@ class ManageAppealStage extends ManageRelatedRecords
     protected static ?string $breadcrumb = 'Etapas de Recurso';
     protected static string $relationship = 'appeal_stage';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     public function form(Schema $schema): Schema
     {

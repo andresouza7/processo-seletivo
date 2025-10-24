@@ -26,6 +26,12 @@ class AppealResource extends Resource
     protected static string | \UnitEnum | null $navigationGroup = 'Gerenciar';
     protected static ?int $navigationSort = 3;
 
+    // Resource exclusivo para avaliadores externos
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasRole('avaliador');
+    }
+
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()
@@ -35,11 +41,7 @@ class AppealResource extends Resource
 
         $user = auth()->user();
 
-        if ($user->hasRole('avaliador')) {
-            return  $query->where('evaluator_id', $user->id);;
-        }
-
-        return $query;
+        return  $query->where('evaluator_id', $user->id);
     }
 
     public static function form(Schema $schema): Schema

@@ -41,7 +41,7 @@ class AppealPolicy
      */
     public function update(User $user, Appeal $appeal): bool
     {
-        return $user->hasPermissionTo('avaliar recurso') && !$appeal->result;
+        return $user->hasPermissionTo('avaliar recurso') && is_null($appeal->result);
     }
 
     /**

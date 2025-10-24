@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\Processes\Pages;
 
+use App\Filament\Gps\Resources\Appeals\Schemas\AppealForm;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Tables\Columns\TextColumn;
@@ -11,10 +12,12 @@ use App\Models\Appeal;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Actions\BulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,10 +25,10 @@ use Illuminate\Database\Eloquent\Builder;
 class ManageEvaluators extends ManageRelatedRecords
 {
     protected static string $resource = ProcessResource::class;
-    protected static ?string $title = 'Gerenciar Avaliadores';
-    protected static ?string $navigationLabel = 'Avaliadores';
+    protected static ?string $title = 'Gerenciar Recursos';
+    protected static ?string $navigationLabel = 'Recursos';
     protected static string $relationship = 'appeals';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
 
     public function infolist(Schema $schema): Schema
     {
@@ -44,7 +47,7 @@ class ManageEvaluators extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('id')
             ->inverseRelationship('evaluator')
-            ->heading('Avaliadores Externos')
+            ->heading('Avaliadores')
             ->description('Atribua os recursos aos seus respectivos avaliadores')
             ->modelLabel('Avaliador')
             ->columns([
@@ -58,16 +61,17 @@ class ManageEvaluators extends ManageRelatedRecords
             ])
             ->filters([
                 Tables\Filters\Filter::make('pendentes')
-                    ->label('Sem Avaliador')
+                    ->label('Pendentes')
                     ->query(fn(Builder $query) =>
                     $query->whereNull('evaluator_id')
-                        ->orWhereNull('result'))
+                        ->whereNull('result'))
                     ->default(),
             ])
             ->recordActions([
                 // ViewAction::make(),
                 Actions\Action::make('atribuirAvaliador')
                     ->label('Atribuir Avaliador')
+                    ->visible(fn($record) => auth()->user()->can('update', $record))
                     ->schema([
                         Forms\Components\Select::make('evaluator_id')
                             ->label('Usuário')
@@ -81,12 +85,22 @@ class ManageEvaluators extends ManageRelatedRecords
                         ]);
                         $this->sendAssociateNotification();
                     }),
+                EditAction::make()
+                    ->label('Responder')
+                    ->schema(fn($schema) => AppealForm::configure($schema))
+                    ->mutateDataUsing(function(array $data) {
+                        $data['evaluator_id'] = auth()->id();
+                        $data['evaluated_at'] = now();
+
+                        return $data;
+                    }),
                 Actions\Action::make('linkInscricao')
                     ->label('Inscrição')
                     ->url(fn($record) => ManageApplications::getUrl([
                         'record' => $record->process,
                         'search' => $record->application->code
                     ]))
+                    ->openUrlInNewTab()
             ])
             ->toolbarActions([
                 // Bulk Assign Evaluator
