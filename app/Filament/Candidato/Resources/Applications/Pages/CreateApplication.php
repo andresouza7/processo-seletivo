@@ -28,7 +28,6 @@ class CreateApplication extends CreateRecord
     {
         $data['code'] = Application::generateUniqueCode();
         $data['candidate_id'] = Auth::guard('candidato')->id();
-        $data['quota_id'] = $data['pcd'] ? 3 : 1; // defaults to Ampla Concorrencia
 
         return $data;
     }

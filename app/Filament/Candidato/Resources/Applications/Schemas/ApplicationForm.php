@@ -31,8 +31,8 @@ class ApplicationForm
                             ...self::getProcessoSeletivoSection(),
                             ...self::getDocumentosSection(),
                             ...self::getVagaSection(),
+                            ...self::getTipoVagaSection(),
                             ...self::getAtendimentoSection(),
-                            ...self::getPcdSection(),
                             ...self::getIsencaoSection(),
                             ...self::getTermosSection(),
                         ]),
@@ -69,6 +69,7 @@ class ApplicationForm
                 ->live()
                 ->afterStateUpdated(function (callable $set, $state) {
                     $processo = Process::find($state);
+
                     // dd($processo);
                     $set('has_fee', $processo?->has_fee);
                     $set('attachment_fields', (array) ($processo?->attachment_fields ?? []));
@@ -133,6 +134,33 @@ class ApplicationForm
     }
 
     // --------------------------
+    // SECTION: Tipo de Vaga
+    // --------------------------
+    private static function getTipoVagaSection(): array
+    {
+        return [
+            Select::make('quota_id')
+                ->label('Tipo da vaga')
+                ->disabled(fn($get) => blank($get('process_id')))
+                ->required()
+                ->columnSpanFull()
+                ->live()
+                ->options(function (callable $get) {
+                    $process = Process::find($get('process_id'));
+                    return $process?->type->quotas()->get()
+                        ->mapWithKeys(fn($p) => [$p->id => "{$p->description}"])
+                        ->toArray();
+                }),
+            AttachmentUpload::make('laudo_medico')
+                ->label('Anexar laudo médico')
+                ->visible(fn(Get $get): bool => $get('quota_id') === 3)
+                ->disk('local')
+                ->collection('laudo_medico')
+                ->columnSpanFull(),
+        ];
+    }
+
+    // --------------------------
     // SECTION: Atendimento Especial
     // --------------------------
     private static function getAtendimentoSection(): array
@@ -149,27 +177,6 @@ class ApplicationForm
                 ->label('Qual Atendimento')
                 ->visible(fn(Get $get): bool => $get('requires_assistance'))
                 ->required(fn(Get $get) => $get('requires_assistance'))
-                ->columnSpanFull(),
-        ];
-    }
-
-    // --------------------------
-    // SECTION: PCD
-    // --------------------------
-    private static function getPcdSection(): array
-    {
-        return [
-            Checkbox::make('pcd')
-                ->label('Concorrer nas vagas reservadas a Pessoas com Deficiência (PCD)')
-                ->columnSpanFull()
-                ->live()
-                ->default(false),
-
-            AttachmentUpload::make('laudo_medico')
-                ->label('Anexar laudo médico')
-                ->visible(fn(Get $get): bool => (bool) $get('pcd'))
-                ->disk('local')
-                ->collection('laudo_medico')
                 ->columnSpanFull(),
         ];
     }
