@@ -82,12 +82,6 @@ class ProcessForm
                             ])->columnSpan(1),
                     ])->columns(2),
 
-                    Select::make('quota_id')
-                        ->label('Tipos de vaga')
-                        ->relationship('quotas', 'description')
-                        ->multiple()
-                        ->preload(),
-
                     Checkbox::make('has_fee')
                         ->label('Permitir isenção da taxa de inscrição'),
 
