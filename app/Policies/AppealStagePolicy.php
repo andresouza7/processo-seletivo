@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\AppealStage;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -13,7 +15,7 @@ class AppealStagePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('gerenciar etapa de recurso');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_ETAPA_RECURSO);
     }
 
     /**
@@ -21,7 +23,7 @@ class AppealStagePolicy
      */
     public function view(User $user, AppealStage $appealStage): bool
     {
-        return $user->hasPermissionTo('gerenciar etapa de recurso');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_ETAPA_RECURSO);
     }
 
     /**
@@ -29,7 +31,7 @@ class AppealStagePolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('gerenciar etapa de recurso');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_ETAPA_RECURSO);
     }
 
     /**
@@ -37,7 +39,7 @@ class AppealStagePolicy
      */
     public function update(User $user, AppealStage $appealStage): bool
     {
-        return $user->hasPermissionTo('gerenciar etapa de recurso');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_ETAPA_RECURSO);
     }
 
     /**
@@ -45,7 +47,7 @@ class AppealStagePolicy
      */
     public function delete(User $user, AppealStage $appealStage): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -53,7 +55,7 @@ class AppealStagePolicy
      */
     public function restore(User $user, AppealStage $appealStage): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -61,6 +63,6 @@ class AppealStagePolicy
      */
     public function forceDelete(User $user, AppealStage $appealStage): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 }

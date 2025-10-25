@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionsEnum;
 use App\Models\Candidate;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -13,7 +14,7 @@ class CandidatePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('consultar candidato');
+        return $user->hasPermissionTo(PermissionsEnum::CONSULTAR_CANDIDATO);
     }
 
     /**
@@ -25,7 +26,7 @@ class CandidatePolicy
             return true;
         }
 
-        return $user->hasPermissionTo('consultar candidato');
+        return $user->hasPermissionTo(PermissionsEnum::CONSULTAR_CANDIDATO);
     }
 
     /**

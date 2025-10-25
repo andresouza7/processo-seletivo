@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -13,48 +15,19 @@ return new class extends Migration
     public function up(): void
     {
         // 1️⃣ Criar roles
-        DB::table('roles')->insert([
-            ['name' => 'admin', 'guard_name' => 'web'],
-            ['name' => 'avaliador', 'guard_name' => 'web'],
-            ['name' => 'dips', 'guard_name' => 'web'],
-            ['name' => 'ascom', 'guard_name' => 'web'],
-            ['name' => 'prograd', 'guard_name' => 'web'],
-        ]);
+        DB::table('roles')->insert(
+            collect(RolesEnum::cases())->map(fn($role) => [
+                'name' => $role->value,
+                'guard_name' => 'web',
+            ])->toArray()
+        );
 
         // 2️⃣ Criar permissões
-        $permissions = [
-            // PROCESSO SELETIVO
-            'consultar processo',
-            'gerenciar processo',
-
-            // ANEXOS
-            'consultar anexo',
-            'gerenciar anexo',
-
-            // INSCRIÇÕES
-            'consultar inscrição',
-
-            // VAGAS
-            'gerenciar vaga',
-            'consultar vaga',
-
-            // ETAPA RECURSO
-            'gerenciar etapa de recurso',
-
-            // RECURSO
-            'consultar recurso',
-            'avaliar recurso',
-            'atribuir avaliador',
-
-            // CANDIDATOS
-            'consultar candidato',
-        ];
-
         $now = Carbon::now();
 
         DB::table('permissions')->insert(
-            collect($permissions)->map(fn($p) => [
-                'name' => $p,
+            collect(PermissionsEnum::cases())->map(fn($perm) => [
+                'name' => $perm->value,
                 'guard_name' => 'web',
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -62,106 +35,71 @@ return new class extends Migration
         );
 
         // 3️⃣ Atribuir permissões aos papéis
-        $avaliador = Role::where('name', 'avaliador')->first();
-        $avaliador->givePermissionTo([
-            'consultar recurso',
-            'avaliar recurso'
+        Role::where('name', RolesEnum::AVALIADOR)->first()?->givePermissionTo([
+            PermissionsEnum::CONSULTAR_RECURSO,
+            PermissionsEnum::AVALIAR_RECURSO,
         ]);
 
-        $dips = Role::where('name', 'dips')->first();
-        $dips->givePermissionTo([
-            'gerenciar processo',
-            'gerenciar anexo',
-            'gerenciar etapa de recurso',
-            'gerenciar vaga',
-            'atribuir avaliador',
-            'avaliar recurso',
-            'consultar inscrição',
-            'consultar candidato',
+        Role::where('name', RolesEnum::DIPS)->first()?->givePermissionTo([
+            PermissionsEnum::GERENCIAR_PROCESSO,
+            PermissionsEnum::GERENCIAR_ANEXO,
+            PermissionsEnum::GERENCIAR_ETAPA_RECURSO,
+            PermissionsEnum::GERENCIAR_VAGA,
+            PermissionsEnum::ATRIBUIR_AVALIADOR,
+            PermissionsEnum::AVALIAR_RECURSO,
+            PermissionsEnum::CONSULTAR_INSCRICAO,
+            PermissionsEnum::CONSULTAR_CANDIDATO,
         ]);
 
-        $ascom = Role::where('name', 'ascom')->first();
-        $ascom->givePermissionTo([
-            'gerenciar processo',
-            'gerenciar anexo',
-            'gerenciar etapa de recurso',
+        Role::where('name', RolesEnum::ASCOM)->first()?->givePermissionTo([
+            PermissionsEnum::GERENCIAR_PROCESSO,
+            PermissionsEnum::GERENCIAR_ANEXO,
+            PermissionsEnum::GERENCIAR_ETAPA_RECURSO,
         ]);
 
-        $prograd = Role::where('name', 'prograd')->first();
-        $prograd->givePermissionTo([
-            'gerenciar processo',
-            'gerenciar anexo',
-            'gerenciar etapa de recurso',
-            'gerenciar vaga',
-            'atribuir avaliador',
-            'consultar inscrição',
-            'consultar candidato',
+        Role::where('name', RolesEnum::PROGRAD)->first()?->givePermissionTo([
+            PermissionsEnum::GERENCIAR_PROCESSO,
+            PermissionsEnum::GERENCIAR_ANEXO,
+            PermissionsEnum::GERENCIAR_ETAPA_RECURSO,
+            PermissionsEnum::GERENCIAR_VAGA,
+            PermissionsEnum::ATRIBUIR_AVALIADOR,
+            PermissionsEnum::CONSULTAR_INSCRICAO,
+            PermissionsEnum::CONSULTAR_CANDIDATO,
         ]);
 
         // 4️⃣ Criar usuários e atribuir roles
-        $user = User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@ueap.edu.br',
-            'password' => Hash::make('123456'),
-        ]);
-        $user->assignRole('admin');
+        $users = [
+            ['name' => 'admin', 'email' => 'admin@ueap.edu.br', 'role' => RolesEnum::ADMIN],
+            ['name' => 'dips', 'email' => 'dips@ueap.edu.br', 'role' => RolesEnum::DIPS],
+            ['name' => 'ascom', 'email' => 'ascom@ueap.edu.br', 'role' => RolesEnum::ASCOM],
+            ['name' => 'prograd', 'email' => 'prograd@ueap.edu.br', 'role' => RolesEnum::PROGRAD],
+            ['name' => 'avaliador', 'email' => 'avaliador@ueap.edu.br', 'role' => RolesEnum::AVALIADOR],
+        ];
 
-        $dipsUser = User::factory()->create([
-            'name' => 'dips',
-            'email' => 'dips@ueap.edu.br',
-            'password' => Hash::make('123456'),
-        ]);
-        $dipsUser->assignRole('dips');
+        foreach ($users as $data) {
+            $user = User::factory()->create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make('123456'),
+            ]);
 
-        $ascomUser = User::factory()->create([
-            'name' => 'ascom',
-            'email' => 'ascom@ueap.edu.br',
-            'password' => Hash::make('123456'),
-        ]);
-        $ascomUser->assignRole('ascom');
-
-        $progradUser = User::factory()->create([
-            'name' => 'prograd',
-            'email' => 'prograd@ueap.edu.br',
-            'password' => Hash::make('123456'),
-        ]);
-        $progradUser->assignRole('prograd');
-
-        $avaliadorUser = User::factory()->create([
-            'name' => 'avaliador',
-            'email' => 'avaliador@ueap.edu.br',
-            'password' => Hash::make('123456'),
-        ]);
-        $avaliadorUser->assignRole('avaliador');
+            $user->assignRole($data['role']);
+        }
     }
 
     public function down(): void
     {
-        // Remover usuários
+        // 1️⃣ Remover usuários criados
         User::whereIn('email', [
             'admin@ueap.edu.br',
+            'dips@ueap.edu.br',
             'ascom@ueap.edu.br',
             'prograd@ueap.edu.br',
+            'avaliador@ueap.edu.br',
         ])->delete();
 
-        // Remover roles
-        Role::whereIn('name', ['admin', 'avaliador', 'ascom', 'prograd'])->delete();
-
-        // Remover permissões
-        Permission::whereIn('name', [
-            'consultar processo',
-            'gerenciar processo',
-            'consultar anexo',
-            'gerenciar anexo',
-            'gerenciar inscrição',
-            'consultar inscrição',
-            'gerenciar vaga',
-            'consultar vaga',
-            'gerenciar etapa de recurso',
-            'consultar recurso',
-            'avaliar recurso',
-            'atribuir avaliador',
-            'consultar candidato',
-        ])->delete();
+        // 2️⃣ Limpar roles e permissões
+        DB::statement('TRUNCATE TABLE roles RESTART IDENTITY CASCADE');
+        DB::statement('TRUNCATE TABLE permissions RESTART IDENTITY CASCADE');
     }
 };

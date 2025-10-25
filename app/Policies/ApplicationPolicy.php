@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\Application;
 use App\Models\User;
 use App\Models\Candidate; // Add this import if you need to check Candidate
@@ -19,7 +21,7 @@ class ApplicationPolicy
             return true; // Adjust based on the applicant's permissions
         }
 
-        return $user->hasPermissionTo('consultar inscrição');
+        return $user->hasPermissionTo(PermissionsEnum::CONSULTAR_INSCRICAO);
     }
 
     /**
@@ -32,7 +34,7 @@ class ApplicationPolicy
             return $user->id === $application->candidate_id;
         }
 
-        return $user->hasPermissionTo('consultar inscrição');
+        return $user->hasPermissionTo(PermissionsEnum::CONSULTAR_INSCRICAO);
     }
 
     /**
@@ -40,7 +42,6 @@ class ApplicationPolicy
      */
     public function create($user): bool
     {
-        // Applicants can create their own application 
         return $user instanceof Candidate;
     }
 
@@ -49,7 +50,7 @@ class ApplicationPolicy
      */
     public function update($user, Application $application): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -57,7 +58,7 @@ class ApplicationPolicy
      */
     public function delete($user, Application $application): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -65,7 +66,7 @@ class ApplicationPolicy
      */
     public function restore($user, Application $application): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -73,6 +74,6 @@ class ApplicationPolicy
      */
     public function forceDelete($user, Application $application): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\ProcessAttachment;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -14,7 +16,7 @@ class ProcessAttachmentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyPermission(['consultar anexo', 'gerenciar anexo']);
+        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_ANEXO, PermissionsEnum::GERENCIAR_ANEXO]);
     }
 
     /**
@@ -22,7 +24,7 @@ class ProcessAttachmentPolicy
      */
     public function view(User $user, ProcessAttachment $processAttachment): bool
     {
-        return $user->hasAnyPermission(['consultar anexo', 'gerenciar anexo']);
+        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_ANEXO, PermissionsEnum::GERENCIAR_ANEXO]);
     }
 
     /**
@@ -30,7 +32,7 @@ class ProcessAttachmentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('gerenciar anexo');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_ANEXO);
     }
 
     /**
@@ -38,7 +40,7 @@ class ProcessAttachmentPolicy
      */
     public function update(User $user, ProcessAttachment $processAttachment): bool
     {
-        return $user->hasPermissionTo('gerenciar anexo');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_ANEXO);
     }
 
     /**
@@ -46,7 +48,7 @@ class ProcessAttachmentPolicy
      */
     public function delete(User $user, ProcessAttachment $processAttachment): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -54,7 +56,7 @@ class ProcessAttachmentPolicy
      */
     public function restore(User $user, ProcessAttachment $processAttachment): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -62,6 +64,6 @@ class ProcessAttachmentPolicy
      */
     public function forceDelete(User $user, ProcessAttachment $processAttachment): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 }

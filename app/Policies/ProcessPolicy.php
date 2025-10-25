@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\Process;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -13,7 +15,7 @@ class ProcessPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyPermission(['consultar processo', 'gerenciar processo']);
+        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_PROCESSO, PermissionsEnum::GERENCIAR_PROCESSO]);
     }
 
     /**
@@ -21,7 +23,7 @@ class ProcessPolicy
      */
     public function view(User $user, Process $process): bool
     {
-        return $user->hasAnyPermission(['consultar processo', 'gerenciar processo']);
+        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_PROCESSO, PermissionsEnum::GERENCIAR_PROCESSO]);
     }
 
     /**
@@ -29,7 +31,7 @@ class ProcessPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('gerenciar processo');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_PROCESSO);
     }
 
     /**
@@ -37,7 +39,7 @@ class ProcessPolicy
      */
     public function update(User $user, Process $process): bool
     {
-        return $user->hasPermissionTo('gerenciar processo');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_PROCESSO);
     }
 
     /**
@@ -45,7 +47,7 @@ class ProcessPolicy
      */
     public function delete(User $user, Process $process): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -53,7 +55,7 @@ class ProcessPolicy
      */
     public function restore(User $user, Process $process): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -61,6 +63,6 @@ class ProcessPolicy
      */
     public function forceDelete(User $user, Process $process): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 }

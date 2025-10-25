@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use App\ActivityLog\ActivityLogger;
+use App\Enums\RolesEnum;
 use App\Listeners\LogAuthEvent;
 use App\Services\ActivityLog\CustomCauserResolver;
 use Filament\Facades\Filament;
@@ -42,14 +43,16 @@ class AppServiceProvider extends ServiceProvider
     {
         // bypasses authorization for admin role
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('admin') ? true : null;
+            return $user->hasRole(RolesEnum::ADMIN) ? true : null;
         });
 
+        // logs user logins and registration attempts
         Event::listen(Login::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Logout::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Registered::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Failed::class, [LogAuthEvent::class, 'handle']);
 
+        // sets some filament components default behavior
         Fieldset::configureUsing(fn(Fieldset $fieldset) => $fieldset
             ->columnSpanFull());
 

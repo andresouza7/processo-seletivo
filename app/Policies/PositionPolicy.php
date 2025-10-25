@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -13,7 +15,7 @@ class PositionPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyPermission(['consultar vaga', 'gerenciar vaga']);
+        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_VAGA, PermissionsEnum::GERENCIAR_VAGA]);
     }
 
     /**
@@ -21,7 +23,7 @@ class PositionPolicy
      */
     public function view(User $user, Position $position): bool
     {
-        return $user->hasAnyPermission(['consultar vaga', 'gerenciar vaga']);
+        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_VAGA, PermissionsEnum::GERENCIAR_VAGA]);
     }
 
     /**
@@ -29,7 +31,7 @@ class PositionPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('gerenciar vaga');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_VAGA);
     }
 
     /**
@@ -37,7 +39,7 @@ class PositionPolicy
      */
     public function update(User $user, Position $position): bool
     {
-        return $user->hasPermissionTo('gerenciar vaga');
+        return $user->hasPermissionTo(PermissionsEnum::GERENCIAR_VAGA);
     }
 
     /**
@@ -45,7 +47,7 @@ class PositionPolicy
      */
     public function delete(User $user, Position $position): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -53,7 +55,7 @@ class PositionPolicy
      */
     public function restore(User $user, Position $position): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 
     /**
@@ -61,6 +63,6 @@ class PositionPolicy
      */
     public function forceDelete(User $user, Position $position): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(RolesEnum::ADMIN);
     }
 }

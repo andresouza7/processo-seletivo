@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionsEnum;
 use App\Models\Appeal;
 use App\Models\Candidate;
 use App\Models\User;
@@ -17,7 +18,7 @@ class AppealPolicy
      */
     public function viewAny(AuthUser $user): bool
     {
-        return $user->hasAnyPermission(['consultar recurso', 'avaliar recurso', 'atribuir avaliador']);
+        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_RECURSO, PermissionsEnum::AVALIAR_RECURSO, PermissionsEnum::ATRIBUIR_AVALIADOR]);
     }
 
     /**
@@ -25,7 +26,7 @@ class AppealPolicy
      */
     public function view(AuthUser $user, Appeal $appeal): bool
     {
-        return $user->hasAnyPermission(['consultar recurso', 'avaliar recurso', 'atribuir avaliador']);
+        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_RECURSO, PermissionsEnum::AVALIAR_RECURSO, PermissionsEnum::ATRIBUIR_AVALIADOR]);
     }
 
     /**
@@ -41,7 +42,7 @@ class AppealPolicy
      */
     public function update(User $user, Appeal $appeal): bool
     {
-        return $user->hasPermissionTo('avaliar recurso') && is_null($appeal->result);
+        return $user->hasPermissionTo(PermissionsEnum::AVALIAR_RECURSO) && is_null($appeal->result);
     }
 
     /**
@@ -49,7 +50,7 @@ class AppealPolicy
      */
     public function delete(User $user, Appeal $appeal): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 
     /**
@@ -57,7 +58,7 @@ class AppealPolicy
      */
     public function restore(User $user, Appeal $appeal): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 
     /**
@@ -65,6 +66,6 @@ class AppealPolicy
      */
     public function forceDelete(User $user, Appeal $appeal): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 }
