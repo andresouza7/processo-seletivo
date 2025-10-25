@@ -10,11 +10,18 @@ use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Resources\Users\RelationManagers\UserRolesRelationManager;
 use App\Models\User;
+use App\Models\UserRole;
+use App\Services\SelectionProcess\PermissionService;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -33,17 +40,52 @@ class UserResource extends Resource
     {
         return $schema
             ->components([
-                Section::make([
-                    TextInput::make('name')
-                        ->label('Nome'),
-                    TextInput::make('email'),
-                    Select::make('roles')
-                        ->label('Perfil')
-                        ->relationship('roles', 'name')
-                        ->multiple()
-                        ->searchable()
-                        ->preload(),
-                ])->columns(2)
+                Section::make()
+                    ->heading('Configurar conta')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nome'),
+                        TextInput::make('email'),
+                        TextInput::make('role')
+                            ->formatStateUsing(
+                                fn($record, PermissionService $service) =>
+                                $service->getUserRole($record)?->name ?? 'nenhum'
+                            )
+                            ->label('Perfil')
+                            ->readOnly()
+                            ->helperText('Configure o perfil de acesso do usuário')
+                            ->suffixAction(
+                                fn() => Action::make('atribuirPerfil')
+                                    ->label('Atribuir Perfil')
+                                    ->modalSubmitActionLabel('Atribuir')
+                                    ->icon(Heroicon::PencilSquare)
+                                    ->schema([
+                                        Select::make('role_id')
+                                            ->label('Perfil')
+                                            ->options(\Spatie\Permission\Models\Role::pluck('name', 'id'))
+                                            ->required()
+                                            ->preload()
+                                            ->searchable(),
+                                        TextInput::make('create_doc')
+                                            ->label('Documento')
+                                            ->required(),
+                                    ])
+                                    ->action(function (array $data, $record, PermissionService $service) {
+                                        $service->assignUserRole(
+                                            $record,
+                                            $data['role_id'],
+                                            $data['create_doc']
+                                        );
+                                    })
+                                    ->successNotification(
+                                        Notification::make()
+                                            ->title('Tudo certo')
+                                            ->body('Perfil atribuído com sucesso')
+                                    )
+                                    ->successRedirectUrl(fn($record) => static::getUrl('edit', ['record' => $record]))
+                            )
+
+                    ])->columns(2)
             ]);
     }
 
@@ -60,6 +102,13 @@ class UserResource extends Resource
             ->recordActions([
                 EditAction::make(),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            UserRolesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

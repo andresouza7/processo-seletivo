@@ -6,8 +6,13 @@ use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use App\ActivityLog\ActivityLogger;
 use App\Enums\RolesEnum;
 use App\Listeners\LogAuthEvent;
+use App\Models\Candidate;
+use App\Models\User;
 use App\Services\ActivityLog\CustomCauserResolver;
+use App\Services\SelectionProcess\PermissionService;
+use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -16,6 +21,7 @@ use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -51,6 +57,13 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(Logout::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Registered::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Failed::class, [LogAuthEvent::class, 'handle']);
+
+        // expires user permission if expiry date is due
+        Event::listen(Login::class, function ($event, PermissionService $service) {
+            $user = $event->user;
+
+            $service->revokeExpiredUserRoles($user);
+        });
 
         // sets some filament components default behavior
         Fieldset::configureUsing(fn(Fieldset $fieldset) => $fieldset
