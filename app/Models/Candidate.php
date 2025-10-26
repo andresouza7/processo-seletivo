@@ -12,11 +12,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class Candidate extends Authenticatable implements HasName, FilamentUser
 {
-    use SoftDeletes, HasFactory, Notifiable, CanResetPassword, HasRoles;
+    use SoftDeletes, HasFactory, Notifiable, CanResetPassword, HasRoles, LogsActivity;
 
     protected $fillable = [
         'name',
@@ -58,6 +60,13 @@ class Candidate extends Authenticatable implements HasName, FilamentUser
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     public function getFilamentName(): string

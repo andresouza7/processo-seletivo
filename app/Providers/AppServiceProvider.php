@@ -59,8 +59,10 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(Failed::class, [LogAuthEvent::class, 'handle']);
 
         // expires user permission if expiry date is due
-        Event::listen(Login::class, function ($event, PermissionService $service) {
+        Event::listen(Login::class, function ($event) {
             $user = $event->user;
+
+            $service = app(PermissionService::class);
 
             $service->revokeExpiredUserRoles($user);
         });
