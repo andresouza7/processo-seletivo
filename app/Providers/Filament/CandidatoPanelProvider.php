@@ -22,7 +22,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Candidato\Pages\Auth\RequestPasswordReset;
-use App\Filament\Pages\ResetPassword;
+use App\Filament\Admin\Pages\ResetPassword;
 use App\Http\Middleware\MustChangePassword;
 use Filament\Actions\Action;
 
