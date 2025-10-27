@@ -13,13 +13,14 @@ use App\Filament\Admin\Resources\UserResource\RelationManagers;
 use App\Filament\Admin\Resources\Users\RelationManagers\UserRolesRelationManager;
 use App\Models\User;
 use App\Models\UserRole;
-use App\Services\SelectionProcess\PermissionService;
+use App\Services\SelectionProcess\RoleService;
 use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
@@ -48,7 +49,7 @@ class UserResource extends Resource
                         TextInput::make('email'),
                         TextInput::make('role')
                             ->formatStateUsing(
-                                fn($record, PermissionService $service) =>
+                                fn($record, RoleService $service) =>
                                 $service->getUserRole($record)?->name ?? 'nenhum'
                             )
                             ->label('Perfil')
@@ -60,21 +61,31 @@ class UserResource extends Resource
                                     ->modalSubmitActionLabel('Atribuir')
                                     ->icon(Heroicon::PencilSquare)
                                     ->schema([
-                                        Select::make('role_id')
-                                            ->label('Perfil')
-                                            ->options(\Spatie\Permission\Models\Role::pluck('name', 'id'))
-                                            ->required()
-                                            ->preload()
-                                            ->searchable(),
+                                        Group::make([
+                                            Select::make('role_id')
+                                                ->label('Perfil')
+                                                ->options(\Spatie\Permission\Models\Role::pluck('name', 'id'))
+                                                ->required()
+                                                ->preload()
+                                                ->searchable()
+                                                ->columnSpan(3),
+                                            TextInput::make('duration')
+                                                ->label('Validade (dias)')
+                                                ->integer()
+                                                ->default(180)
+                                                ->required()
+                                                ->columnSpan(1),
+                                        ])->columns(4),
                                         TextInput::make('create_doc')
                                             ->label('Documento')
                                             ->required(),
                                     ])
-                                    ->action(function (array $data, $record, PermissionService $service) {
+                                    ->action(function (array $data, $record, RoleService $service) {
                                         $service->assignUserRole(
                                             $record,
                                             $data['role_id'],
-                                            $data['create_doc']
+                                            $data['create_doc'],
+                                            $data['duration']
                                         );
                                     })
                                     ->successNotification(

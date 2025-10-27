@@ -9,7 +9,7 @@ use App\Listeners\LogAuthEvent;
 use App\Models\Candidate;
 use App\Models\User;
 use App\Services\ActivityLog\CustomCauserResolver;
-use App\Services\SelectionProcess\PermissionService;
+use App\Services\SelectionProcess\RoleService;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
@@ -62,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(Login::class, function ($event) {
             $user = $event->user;
 
-            $service = app(PermissionService::class);
+            $service = app(RoleService::class);
 
             $service->revokeExpiredUserRoles($user);
         });

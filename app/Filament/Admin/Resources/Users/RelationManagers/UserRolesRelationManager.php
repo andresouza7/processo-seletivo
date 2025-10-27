@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\Users\RelationManagers;
 
 use App\Filament\Admin\Resources\Users\UserResource;
-use App\Services\SelectionProcess\PermissionService;
+use App\Services\SelectionProcess\RoleService;
 use Filament\Actions\Action;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
@@ -55,15 +55,23 @@ class UserRolesRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->label('Data de Atribuição')
+                    ->badge()
+                    ->color('gray')
                     ->date('d/m/Y h:i'),
                 TextColumn::make('create_doc')
                     ->label('Documento de Origem')
                     ->searchable(),
-                TextColumn::make('revoked_at')
-                    ->label('Data de Revogação')
+                TextColumn::make('expires_at')
+                    ->label('Validade')
+                    ->badge()
+                    ->color(fn($record) => match ($record->isExpired()) {
+                        true => 'danger',
+                        false => 'success',
+                    })
                     ->date('d/m/Y h:i'),
                 TextColumn::make('revoke_doc')
                     ->label('Motivo da Revogação')
+                    ->size('xs')
                     ->searchable(),
             ])
             ->filters([
@@ -73,14 +81,14 @@ class UserRolesRelationManager extends RelationManager
                 Action::make('revoke')
                     ->label('Remover')
                     ->modalSubmitActionLabel('Confirmar')
-                    ->visible(fn($record) => is_null($record->revoked_at))
+                    ->visible(fn($record) => is_null($record->expires_at))
                     ->color('danger')
                     ->schema([
                         TextInput::make('revoke_doc')
                             ->label('Motivo da revogação')
                     ])
                     ->action(
-                        fn($record, array $data, PermissionService $service) =>
+                        fn($record, array $data, RoleService $service) =>
                         $service->revokeUserRole($record, $data['revoke_doc'])
                     )
             ]);

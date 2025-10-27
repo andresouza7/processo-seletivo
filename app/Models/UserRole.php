@@ -11,9 +11,13 @@ class UserRole extends Model
         'user_id',
         'role_id',
         'created_at',
-        'revoked_at',
+        'expires_at',
         'create_doc',
         'revoke_doc'
+    ];
+
+    protected $casts = [
+        'expires_at' => 'datetime'
     ];
 
     public function user()
@@ -28,10 +32,6 @@ class UserRole extends Model
 
     public function isExpired(int $days = 30): bool
     {
-        if ($this->revoked_at) {
-            return true;
-        }
-
-        return $this->created_at->addMinute()->isPast();
+        return $this->expires_at->isPast();
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('role_id')->constrained();
             $table->timestamps();
-            $table->timestamp('revoked_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
             $table->string('create_doc')->nullable();
             $table->string('revoke_doc')->nullable();
         });
