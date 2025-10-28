@@ -14,7 +14,8 @@ class StrictTextInput extends TextInput
         $instance->rule('regex:/^[\p{L}\p{N}\p{P}\p{Zs}]+$/u')
                  ->validationMessages([
                      'regex' => 'Caracteres especiais não permitidos.',
-                 ]);
+                 ])
+                 ->maxLength(60);
 
         return $instance;
     }

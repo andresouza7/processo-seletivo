@@ -173,37 +173,40 @@ class Cadastro extends Register
             Select::make('sexual_orientation')
                 ->label('Orientação sexual')
                 ->options([
-                    'HT' => 'Heterossexual',
-                    'HM' => 'Homossexual',
-                    'B'  => 'Bissexual',
-                    'P'  => 'Pansexual',
-                    'A'  => 'Assexual',
+                    'Heterossexual' => 'Heterossexual',
+                    'Homossexual' => 'Homossexual',
+                    'Bissexual'  => 'Bissexual',
+                    'Pansexual'  => 'Pansexual',
+                    'Assexual'  => 'Assexual'
                 ])
-                ->default('HT')
                 ->required()
                 ->reactive()
                 ->columnSpanFull(),
 
-            // Pessoa com deficiência
-            Checkbox::make('has_disability')
-                ->label('Possui deficiência, transtorno do espectro autista, altas habilidades ou superdotação')
-                ->reactive()
+            Select::make('disability')
+                ->label('Possui deficiência, transtorno do espectro autista, altas habilidades ou superdotação?')
+                ->options([
+                    ''          => 'Não possui',
+                    'Física'      => 'Deficiência física',
+                    'Visual'        => 'Deficiência visual',
+                    'Auditiva'       => 'Deficiência auditiva',
+                    'Intelectual'  => 'Deficiência intelectual',
+                    'Autismo'        => 'Transtorno do espectro autista (TEA)',
+                    'Superdotação'        => 'Altas habilidades / superdotação',
+                ])
+                ->required()
+                ->native(false)
                 ->columnSpanFull(),
-
-            StrictTextInput::make('disability_description')
-                ->label('Especificar deficiência, transtorno ou condição')
-                ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('has_disability')),
 
             // Raça/Cor
             Select::make('race')
                 ->label('Raça/Cor (conforme classificação IBGE)')
                 ->options([
-                    'PT' => 'Preta',
-                    'PD' => 'Parda',
-                    'B'  => 'Branca',
-                    'I'  => 'Indígena',
-                    'A'  => 'Amarela',
+                    'Preta' => 'Preta',
+                    'Parda' => 'Parda',
+                    'Branca'  => 'Branca',
+                    'Indígena'  => 'Indígena',
+                    'Amarela'  => 'Amarela',
                 ])
                 ->required()
                 ->reactive(),
@@ -212,12 +215,12 @@ class Cadastro extends Register
             Select::make('marital_status')
                 ->label('Estado civil')
                 ->options([
-                    'C'  => 'Casado(a)',
-                    'S'  => 'Solteiro(a)',
-                    'D'  => 'Divorciado(a)',
-                    'V'  => 'Viúvo(a)',
-                    'U'  => 'União estável',
-                    'SP' => 'Separado(a)',
+                    'Casado'  => 'Casado(a)',
+                    'Solteiro'  => 'Solteiro(a)',
+                    'Divorciado'  => 'Divorciado(a)',
+                    'Viúvo'  => 'Viúvo(a)',
+                    'União estável'  => 'União estável',
+                    'Separado' => 'Separado(a)',
                 ])
                 ->required()
                 ->reactive(),
@@ -226,11 +229,11 @@ class Cadastro extends Register
             Select::make('community')
                 ->label('Pertence a alguma comunidade tradicional?')
                 ->options([
-                    'R' => 'Comunidade ribeirinha',
-                    'Q' => 'Comunidade quilombola',
-                    'I' => 'Comunidade indígena',
-                    'T' => 'Comunidade tradicional (extrativista)',
-                    'O' => 'Não se aplica',
+                    '' => 'Não se aplica',
+                    'Comunidade ribeirinha' => 'Comunidade ribeirinha',
+                    'Comunidade quilombola' => 'Comunidade quilombola',
+                    'Comunidade indígena' => 'Comunidade indígena',
+                    'Comunidade tradicional' => 'Comunidade tradicional (extrativista)',
                 ])
                 ->required()
                 ->reactive(),

@@ -21,8 +21,7 @@ return new class extends Migration
             $table->string('mother_name')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('sexual_orientation')->nullable();
-            $table->boolean('has_disability')->default(false)->nullable();
-            $table->string('disability_description')->nullable();
+            $table->string('disability')->nullable();
             $table->string('race')->nullable();
             $table->string('marital_status')->nullable();
             $table->string('community')->nullable();
