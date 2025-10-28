@@ -5,7 +5,7 @@ namespace App\Filament\Candidato\Pages\Auth;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Component;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\TextInput;
+use App\Filament\Components\StrictTextInput;
 use Illuminate\Validation\ValidationException;
 
 class Login extends \Filament\Auth\Pages\Login
@@ -33,7 +33,7 @@ class Login extends \Filament\Auth\Pages\Login
 
     protected function getCpfFormComponent(): Component
     {
-        return TextInput::make('cpf')
+        return StrictTextInput::make('cpf')
             ->label('CPF')
             ->required()
             // ->rules(['cpf'])

@@ -6,7 +6,7 @@
             <li><strong>Transgênero:</strong> pessoa que se identifica com gênero diferente do atribuído ao nascer.</li>
             <li><strong>Não-binário:</strong> pessoa que não se identifica exclusivamente como homem ou mulher.</li>
             <li><strong>Travesti:</strong> identidade de gênero feminina, não reduzida a homem/mulher.</li>
-            <li><strong>Outro:</strong> possibilidade de autodeclaração personalizada.</li>
+            <li><strong>Outro:</strong> nenhuma das anteriores.</li>
         </ul>
     </div>
 
@@ -14,7 +14,6 @@
         <h3 class="font-semibold text-gray-900">Nome Social</h3>
         <p class="mt-2">
             É o nome pelo qual a pessoa prefere ser identificada em sociedade, diferente do seu nome civil.
-            Pode ser informado caso deseje utilizar nos registros e comunicações oficiais do concurso.
         </p>
     </div>
 
@@ -33,7 +32,7 @@
         <h3 class="font-semibold text-gray-900">Pessoa com Deficiência</h3>
         <p class="mt-2">
             Inclui deficiência física, sensorial, intelectual, transtorno global do desenvolvimento,
-            altas habilidades ou superdotação. Caso positivo, especifique para garantir acessibilidade adequada.
+            altas habilidades ou superdotação.
         </p>
     </div>
 

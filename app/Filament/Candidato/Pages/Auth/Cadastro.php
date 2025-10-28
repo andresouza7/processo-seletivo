@@ -2,6 +2,7 @@
 
 namespace App\Filament\Candidato\Pages\Auth;
 
+use App\Filament\Components\StrictTextInput;
 use Filament\Auth\Pages\Register;
 use Filament\Support\Enums\Width;
 use Filament\Schemas\Schema;
@@ -17,7 +18,6 @@ use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Exception;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -93,17 +93,17 @@ class Cadastro extends Register
     public static function getIdentificacaoSection(?Candidate $record = null): array
     {
         return [
-            TextInput::make('name')
+            StrictTextInput::make('name')
                 ->label('Nome Completo')
                 ->disabled(fn() => filled($record?->name))
                 ->required(),
 
-            TextInput::make('mother_name')
+            StrictTextInput::make('mother_name')
                 ->label('Nome da Mãe')
                 ->disabled(fn() => filled($record?->mother_name))
                 ->required(),
 
-            TextInput::make('cpf')
+            StrictTextInput::make('cpf')
                 ->label('CPF')
                 ->unique('candidates', 'cpf', ignorable: $record)
                 ->mask('99999999999')
@@ -113,7 +113,7 @@ class Cadastro extends Register
                 // ->rules(['cpf'])
                 ->maxLength(11),
 
-            TextInput::make('rg')
+            StrictTextInput::make('rg')
                 ->label('RG')
                 ->maxLength(20)
                 ->disabled(fn() => filled($record?->rg))
@@ -149,28 +149,22 @@ class Cadastro extends Register
             Select::make('gender_identity')
                 ->label('Identidade de gênero')
                 ->options([
-                    'C'  => 'Cisgênero',
-                    'T'  => 'Transgênero',
-                    'NB' => 'Não-binário',
-                    'TV' => 'Travesti',
-                    'O'  => 'Outro',
+                    'Cisgênero'  => 'Cisgênero',
+                    'Transgênero'  => 'Transgênero',
+                    'Não-binário' => 'Não-binário',
+                    'Travesti' => 'Travesti',
+                    'Outro'  => 'Outro',
                 ])
                 ->reactive()
                 ->required()
                 ->columnSpanFull(),
 
-            TextInput::make('gender_identity_description')
-                ->label('Especificar identidade de gênero (caso tenha selecionado "Outro")')
-                ->columnSpanFull()
-                ->visible(fn(Get $get) => $get('gender_identity') === 'O'),
-
             Checkbox::make('has_social_name')
                 ->label('Usar nome social')
                 ->reactive()
                 ->columnSpanFull(),
-                // ->visible(fn(Get $get) => in_array($get('gender_identity'), ['T', 'TV', 'NB', 'O'])),
 
-            TextInput::make('social_name')
+            StrictTextInput::make('social_name')
                 ->label('Nome social')
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('has_social_name')),
@@ -196,7 +190,7 @@ class Cadastro extends Register
                 ->reactive()
                 ->columnSpanFull(),
 
-            TextInput::make('disability_description')
+            StrictTextInput::make('disability_description')
                 ->label('Especificar deficiência, transtorno ou condição')
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('has_disability')),
@@ -246,12 +240,12 @@ class Cadastro extends Register
     public static function getContatoSection(?Candidate $record = null): array
     {
         return [
-            TextInput::make('email')
+            StrictTextInput::make('email')
                 ->label('Email')
                 ->email()
                 ->required(),
 
-            TextInput::make('phone')
+            StrictTextInput::make('phone')
                 ->label('Telefone')
                 ->mask('(99)99999-9999')
                 ->required(),
@@ -261,7 +255,7 @@ class Cadastro extends Register
                 'md' => 2,
             ])
                 ->schema([
-                    TextInput::make('postal_code')
+                    StrictTextInput::make('postal_code')
                         ->label('CEP')
                         ->required()
                         ->rules(['formato_cep'])
@@ -283,11 +277,11 @@ class Cadastro extends Register
                                 // Handle error silently
                             }
                         }),
-                    TextInput::make('address')->label('Logradouro')->required(),
-                    TextInput::make('district')->label('Bairro')->required(),
-                    TextInput::make('address_number')->label('Número')->required(),
-                    TextInput::make('address_complement')->label('Complemento'),
-                    TextInput::make('city')->label('Cidade')->required(),
+                    StrictTextInput::make('address')->label('Logradouro')->required(),
+                    StrictTextInput::make('district')->label('Bairro')->required(),
+                    StrictTextInput::make('address_number')->label('Número')->required(),
+                    StrictTextInput::make('address_complement')->label('Complemento'),
+                    StrictTextInput::make('city')->label('Cidade')->required(),
                 ])
         ];
     }

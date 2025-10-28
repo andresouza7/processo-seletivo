@@ -27,7 +27,6 @@ return new class extends Migration
             $table->string('marital_status')->nullable();
             $table->string('community')->nullable();
             $table->string('gender_identity')->nullable();
-            $table->string('gender_identity_description')->nullable();
             $table->string('sex')->nullable();
             $table->string('rg')->nullable();
             $table->char('cpf', 11)->unique();

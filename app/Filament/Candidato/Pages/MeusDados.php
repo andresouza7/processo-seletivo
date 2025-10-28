@@ -4,18 +4,10 @@ namespace App\Filament\Candidato\Pages;
 
 use App\Filament\Candidato\Pages\Auth\Cadastro;
 use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Checkbox;
-use Exception;
 use Filament\Schemas\Components\Actions;
 use Filament\Actions\Action;
 use App\Models\Candidate;
 use BackedEnum;
-use Canducci\Cep\Facades\Cep;
-use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
