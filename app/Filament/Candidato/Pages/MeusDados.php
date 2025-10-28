@@ -68,7 +68,6 @@ class MeusDados extends Page implements HasSchemas
         $data = $this->form->getState();
 
         $data['social_name'] = $data['has_social_name'] ? $data['social_name'] : null;
-        $data['disability_description'] = $data['has_disability'] ? $data['disability_description'] : null;
 
         $this->record->update($data);
 
