@@ -10,7 +10,7 @@ use App\Filament\Gps\Resources\Candidates\Pages\EditCandidate;
 use App\Filament\Gps\Resources\Candidates\Schemas\CandidateForm;
 use App\Filament\Gps\Resources\Candidates\Schemas\CandidateInfolist;
 use App\Filament\Gps\Resources\Candidates\Tables\CandidatesTable;
-use App\Filament\Resources\CandidateResource\RelationManagers;
+use App\Filament\Admin\Resources\CandidateResource\RelationManagers;
 use App\Models\Candidate;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
