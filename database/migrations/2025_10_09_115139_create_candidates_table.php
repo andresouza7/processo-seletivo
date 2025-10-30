@@ -12,8 +12,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
-
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -27,7 +25,7 @@ return new class extends Migration
             $table->string('community')->nullable();
             $table->string('gender_identity')->nullable();
             $table->string('sex')->nullable();
-            $table->string('rg')->nullable();
+            $table->string('rg')->unique()->nullable();
             $table->char('cpf', 11)->unique();
             $table->string('postal_code', 20)->nullable();
             $table->string('district')->nullable();
@@ -44,8 +42,6 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-        Schema::enableForeignKeyConstraints();
 
         // Candidate::factory()->create([
         //     'name' => 'Candidato',
