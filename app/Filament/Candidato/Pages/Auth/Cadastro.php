@@ -194,8 +194,7 @@ class Cadastro extends Register
                     'Autismo'        => 'Transtorno do espectro autista (TEA)',
                     'Superdotação'        => 'Altas habilidades / superdotação',
                 ])
-                ->required()
-                ->native(false)
+                // ->native(false)
                 ->columnSpanFull(),
 
             // Raça/Cor
@@ -235,7 +234,6 @@ class Cadastro extends Register
                     'Comunidade indígena' => 'Comunidade indígena',
                     'Comunidade tradicional' => 'Comunidade tradicional (extrativista)',
                 ])
-                ->required()
                 ->reactive(),
         ];
     }
