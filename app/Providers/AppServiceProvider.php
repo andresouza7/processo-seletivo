@@ -62,6 +62,10 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(Login::class, function ($event) {
             $user = $event->user;
 
+            if ($user instanceof Candidate) {
+                return;
+            }
+
             $service = app(RoleService::class);
 
             $service->revokeExpiredUserRoles($user);
