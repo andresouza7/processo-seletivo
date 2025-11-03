@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Pages\Dashboard;
+use Filament\Widgets\AccountWidget;
 use App\Filament\Candidato\Pages\Auth\RequestPasswordReset;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -10,6 +12,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -26,6 +29,8 @@ class GpsPanelProvider extends PanelProvider
         return $panel
             ->id('gps')
             ->path('gps')
+            ->viteTheme('resources/css/filament/gps/theme.css')
+            // ->maxContentWidth(Width::Full)
             ->login()
             ->brandName('GPS - UEAP')
             ->profile()
@@ -37,11 +42,12 @@ class GpsPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Gps/Resources'), for: 'App\\Filament\\Gps\\Resources')
             ->discoverPages(in: app_path('Filament/Gps/Pages'), for: 'App\\Filament\\Gps\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
+            ->resourceCreatePageRedirect('index')
             ->discoverWidgets(in: app_path('Filament/Gps/Widgets'), for: 'App\\Filament\\Gps\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
@@ -55,7 +61,7 @@ class GpsPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-             ->passwordReset(RequestPasswordReset::class)
+            ->passwordReset(RequestPasswordReset::class)
             ->authMiddleware([
                 Authenticate::class,
             ]);

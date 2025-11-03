@@ -2,14 +2,15 @@
 
 namespace App\Actions;
 
-use App\Models\InscricaoPessoa;
+use Throwable;
+use App\Models\Candidate;
 use Closure;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Str;
 
 class ResetCandidatoPasswordAction
 {
-    public function reset(InscricaoPessoa $user)
+    public function reset(Candidate $user)
     {
         try {
             // gera senha temporária
@@ -23,7 +24,7 @@ class ResetCandidatoPasswordAction
                     ->body($senha)
                     ->success()
                     ->send();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             //throw $th;
             Notification::make()
                 ->title('Erro.')

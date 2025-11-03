@@ -5,7 +5,7 @@
             class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" />
 
         <div
-            class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 flex flex-col justify-center px-8 py-6">
+            class="absolute inset-0 bg-linear-to-b from-black/60 via-black/40 to-black/60 flex flex-col justify-center px-8 py-6">
             <h1 class="text-3xl dashboard-banner-title font-bold text-white leading-tight drop-shadow-md">
                 Universidade do Estado do Amapá
             </h1>
@@ -36,7 +36,7 @@
         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden relative">
             <!-- Top green border with narrower edges -->
             <div class="absolute top-0 left-0 right-0 flex justify-center">
-                <div class="bg-green-600 h-1 w-[100%] rounded-t-md"></div>
+                <div class="bg-green-600 h-1 w-full rounded-t-md"></div>
             </div>
             @php
                 $menus = [
@@ -46,23 +46,32 @@
                         'label' => 'Área do Candidato',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
-                            'status' => 'inscricoes_abertas',
-                        ]),
+                        'url' => \App\Filament\App\Resources\Processes\ProcessResource::getUrl(
+                            'index',
+                            [
+                                'status' => 'inscricoes_abertas',
+                            ],
+                        ),
                         'img' => '/img/menu/inscricoes-abertas.jpg',
                         'label' => 'Inscrições Abertas',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
-                            'status' => 'em_andamento',
-                        ]),
+                        'url' => \App\Filament\App\Resources\Processes\ProcessResource::getUrl(
+                            'index',
+                            [
+                                'status' => 'em_andamento',
+                            ],
+                        ),
                         'img' => '/img/menu/editais-andamento.jpg',
                         'label' => 'Editais em Andamento',
                     ],
                     [
-                        'url' => \App\Filament\App\Resources\ProcessoSeletivoResource::getUrl('index', [
-                            'status' => 'finalizados',
-                        ]),
+                        'url' => \App\Filament\App\Resources\Processes\ProcessResource::getUrl(
+                            'index',
+                            [
+                                'status' => 'finalizados',
+                            ],
+                        ),
                         'img' => '/img/menu/editais-finalizados.jpg',
                         'label' => 'Editais Encerrados',
                     ],
@@ -82,14 +91,14 @@
                     {{-- Itera sobre os menus e cria os links --}}
                     @foreach ($menus as $menu)
                         <a href="{{ $menu['url'] }}"
-                            class="w-[72px] h-[72px] md:w-[90px] md:h-[90px] relative group flex-shrink-0 overflow-hidden img-overlay"
+                            class="w-[72px] h-[72px] md:w-[90px] md:h-[90px] relative group shrink-0 overflow-hidden img-overlay"
                             @if (isset($menu['target'])) target="{{ $menu['target'] }}" @endif>
 
                             {{-- Imagem redonda --}}
                             <div
                                 class="w-[72px] h-[72px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border border-gray-300 dark:border-gray-700 shadow-sm">
                                 <img src="{{ $menu['img'] }}" alt="{{ $menu['label'] }}"
-                                    class="object-cover w-[100%] h-[100%] transition-transform duration-300 group-hover:scale-110" />
+                                    class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110" />
                             </div>
 
                             {{-- Texto sobre a imagem --}}
@@ -123,7 +132,7 @@
         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden relative p-4">
             <!-- Top green border with narrower edges -->
             <div class="absolute top-0 left-0 right-0 flex justify-center">
-                <div class="bg-yellow-400 h-1 w-[100%] rounded-t-md"></div>
+                <div class="bg-yellow-400 h-1 w-full rounded-t-md"></div>
             </div>
             {{-- Custom tab wrapper to remove border --}}
             <div class="border-b border-transparent mb-4">
@@ -154,74 +163,63 @@
             <div>
                 <div x-show="tab === 'tab1'">
                     @php
-
-                        $processos = \App\Models\ProcessoSeletivo::emAndamento()
-                            ->latest('data_criacao')
-                            ->limit(10)
-                            ->get();
+                        $processos = \App\Models\Process::emAndamento()->latest('created_at')->limit(10)->get();
                     @endphp
 
                     <div class="divide-y divide-gray-200">
                         @foreach ($processos as $processo)
-                            <div class="py-4">
-                                <div class="flex items-start gap-4 text-sm text-gray-700">
-                                    <div class="w-20 text-xs text-gray-500">
-                                        {{ \Carbon\Carbon::parse($processo->data_criacao)->format('d/m/Y') }}
+                            <div class="flex items-start gap-4 text-sm text-gray-700 py-2">
+                                <div class="w-20 text-xs text-gray-500">
+                                    {{ \Carbon\Carbon::parse($processo->data_criacao)->format('d/m/Y') }}
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="text-xs font-medium text-gray-800">
+                                        Edital nº {{ $processo->number }}
                                     </div>
 
-                                    <div class="flex-1">
-                                        <div class="text-xs font-medium text-gray-800">
-                                            Edital nº {{ $processo->numero }}
-                                        </div>
-
-                                        <a href="{{ route('filament.app.resources.processo-seletivos.view', ['record' => $processo->idprocesso_seletivo]) }}"
-                                            class="text-primary-600 text-sm font-medium hover:underline mt-1.5"
-                                            title="{{ $processo->titulo }}">
-                                            {{ \Illuminate\Support\Str::limit($processo->titulo, 100) }}
-                                        </a>
-                                    </div>
+                                    <a href="{{ \App\Filament\App\Resources\Processes\ProcessResource::getUrl('view', ['record' => $processo]) }}"
+                                        class="text-primary-600 text-sm font-medium hover:underline mt-1.5"
+                                        title="{{ $processo->title }}">
+                                        {{ \Illuminate\Support\Str::limit($processo->title, 100) }}
+                                    </a>
                                 </div>
                             </div>
                         @endforeach
                     </div>
 
-
-                    {{-- @livewire('public-dashboard-table-processos') --}}
                 </div>
 
                 <div x-show="tab === 'tab2'">
                     @php
-                        $anexos = \App\Models\ProcessoSeletivoAnexo::latest('data_publicacao')->limit(10)->get();
+                        $anexos = \App\Models\ProcessAttachment::published()->latest('created_at')->limit(10)->get();
                     @endphp
 
                     <div class="divide-y divide-gray-200">
                         @foreach ($anexos as $anexo)
-                            <div class="py-4">
-                                <div class="flex items-start gap-4">
-                                    {{-- Coluna da Data --}}
-                                    <div class="w-20 shrink-0">
-                                        <span class="text-xs text-gray-500 block">
-                                            {{ \Carbon\Carbon::parse($anexo->data_publicacao)->format('d/m/Y') }}
-                                        </span>
-                                    </div>
+                            <div class="flex items-start gap-4 py-2">
+                                {{-- Coluna da Data --}}
+                                <div class="w-20 shrink-0">
+                                    <span class="text-xs text-gray-500 block">
+                                        {{ \Carbon\Carbon::parse($anexo->created_at)->format('d/m/Y') }}
+                                    </span>
+                                </div>
 
-                                    {{-- Coluna do Conteúdo --}}
-                                    <div class="flex-1 text-sm text-gray-700">
-                                        <div class="text-xs font-medium text-gray-800">
-                                            {{ $anexo->processo_seletivo->titulo }} – Edital nº
-                                            {{ $anexo->processo_seletivo->numero }}
-                                        </div>
-                                        <a href="{{ $anexo->url_arquivo }}" target="_blank"
-                                            class="text-primary-600 text-sm font-medium hover:underline mt-1.5">
-                                            {{ \Illuminate\Support\Str::limit($anexo->descricao, 100) }}
-                                        </a>
+                                {{-- Coluna do Conteúdo --}}
+                                <div class="flex-1 text-sm text-gray-700">
+                                    <div class="text-xs font-medium text-gray-800">
+                                        {{ $anexo->process->title }} – Edital nº
+                                        {{ $anexo->process->number }}
                                     </div>
+                                    <a href="{{ $anexo->file_url }}" target="_blank"
+                                        class="text-primary-600 text-sm font-medium hover:underline mt-1.5">
+                                        {{ \Illuminate\Support\Str::limit($anexo->description, 100) }}
+                                    </a>
                                 </div>
                             </div>
                         @endforeach
                     </div>
 
-                    {{-- @livewire('public-dashboard-table-anexos') --}}
                 </div>
             </div>
         </div>
@@ -275,7 +273,7 @@
         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden relative p-4">
             <!-- Top green border with narrower edges -->
             <div class="absolute top-0 left-0 right-0 flex justify-center">
-                <div class="bg-yellow-400 h-1 w-[100%] rounded-t-md"></div>
+                <div class="bg-yellow-400 h-1 w-full rounded-t-md"></div>
             </div>
 
             <div class="space-y-3">
@@ -290,11 +288,10 @@
                                 stroke-width="1.5" stroke="currentColor"
                                 class="w-5 h-5 text-gray-400 transition-transform duration-300"
                                 :class="{ 'rotate-180': open }">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                             </svg>
                         </button>
-                        <div x-show="open" x-collapse class="px-4 py-3 border-t">
+                        <div x-show="open" x-collapse class="px-4 py-3 border-t border-gray-200">
                             <p class="text-sm text-gray-600">
                                 {!! $faq['resposta'] !!}
                             </p>

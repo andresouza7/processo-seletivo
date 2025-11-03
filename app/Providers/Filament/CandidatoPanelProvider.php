@@ -3,11 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Candidato\Pages\Auth\Cadastro;
-use App\Filament\Candidato\Pages\Auth\EditProfile;
 use App\Filament\Candidato\Pages\Auth\Login;
-use App\Filament\App\Resources\ProcessoSeletivoResource;
-use App\Filament\Candidato\Pages\Auth\ConfirmEmail;
-use App\Helpers\FilamentSettings;
+use App\Filament\Candidato\Pages\Auth\EditPassword;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -25,7 +22,9 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Candidato\Pages\Auth\RequestPasswordReset;
-use App\Filament\Pages\ResetPassword;
+use App\Filament\Admin\Pages\ResetPassword;
+use App\Http\Middleware\MustChangePassword;
+use Filament\Actions\Action;
 
 class CandidatoPanelProvider extends PanelProvider
 {
@@ -43,7 +42,12 @@ class CandidatoPanelProvider extends PanelProvider
             ->widgets([
                 // Widgets\AccountWidget::class,
             ])
+            ->resourceCreatePageRedirect('index')
+            ->resourceEditPageRedirect('index')
             ->collapsibleNavigationGroups(false)
+            ->userMenuItems([
+                'profile' => fn(Action $action) => $action->label('Perfil')->url(route('filament.candidato.pages.meus-dados')),
+            ])
             ->navigationItems([
                 NavigationItem::make('Nova Inscrição')
                     ->url('/candidato/inscricoes/create')
@@ -52,7 +56,7 @@ class CandidatoPanelProvider extends PanelProvider
                     ->sort(2)
                     ->isActiveWhen(fn(): bool => request()->routeIs('filament.candidato.resources.inscricoes.create')),
                 NavigationItem::make('Alterar Senha')
-                    ->url('/candidato/profile')
+                    ->url(fn() => EditPassword::getUrl())
                     ->icon('heroicon-o-lock-closed')
                     ->group('Área do Candidato')
                     ->sort(4)
@@ -71,13 +75,14 @@ class CandidatoPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                MustChangePassword::class
             ])
             ->authGuard('candidato')
             ->login(Login::class)
             ->registration(Cadastro::class)
-            ->profile(EditProfile::class)
-            ->authPasswordBroker('inscricao_pessoa')
-            ->passwordReset(RequestPasswordReset::class, ResetPassword::class)
+            ->profile(EditPassword::class)
+            ->authPasswordBroker('candidate')
+            ->passwordReset(RequestPasswordReset::class, ResetPassword::class) // use to edit password only
             // ->emailVerification(ConfirmEmail::class)
             ->authMiddleware([
                 Authenticate::class,

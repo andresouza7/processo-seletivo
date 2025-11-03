@@ -2,8 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Pages\Dashboard;
+use Filament\Widgets\AccountWidget;
 use App\Filament\Candidato\Pages\Auth\ConfirmPassword;
-use App\Filament\Resources\ActivityLogResource;
+use App\Filament\Admin\Resources\ActivityLogResource;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -23,7 +25,6 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Rmsramos\Activitylog\ActivitylogPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -41,19 +42,15 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->font('Montserrat')
             ->profile()
-            // ->userMenuItems([
-            //     'profile' => MenuItem::make()->label('Minha Conta')
-            //         ->url('/'),
-            // ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
+            ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->discoverResources(in: app_path('Filament/Gps/Resources'), for: 'App\\Filament\\Gps\\Resources')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
@@ -71,9 +68,6 @@ class AdminPanelProvider extends PanelProvider
             // ->emailVerification(ConfirmPassword::class)
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->plugins([
-                ActivitylogPlugin::make()
             ]);
     }
 }

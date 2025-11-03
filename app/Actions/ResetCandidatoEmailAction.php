@@ -2,7 +2,8 @@
 
 namespace App\Actions;
 
-use App\Models\InscricaoPessoa;
+use Throwable;
+use App\Models\Candidate;
 use App\Notifications\ResetEmailNotification;
 use Closure;
 use Filament\Notifications\Notification;
@@ -10,11 +11,11 @@ use Illuminate\Support\Str;
 
 class ResetCandidatoEmailAction
 {
-    public function reset(InscricaoPessoa $user, string $newEmail, Closure $callback)
+    public function reset(Candidate $user, string $newEmail, Closure $callback)
     {
         try {
             // checa se o email já está em uso
-            $emailMatch = InscricaoPessoa::where('email', $newEmail)->first();
+            $emailMatch = Candidate::where('email', $newEmail)->first();
 
             if ($emailMatch) {
                 Notification::make()
@@ -33,13 +34,14 @@ class ResetCandidatoEmailAction
             $senha = Str::random(8);
             $hash = bcrypt($senha);
             $user->forceFill(['password' => $hash]);
+            $user->must_change_password = true;
             $user->save();
 
             // comunica por email
             $user->notify(new ResetEmailNotification($senha));
 
             $callback();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             //throw $th;
             Notification::make()
                 ->title('Erro.')

@@ -23,11 +23,11 @@ class ResetEmailNotification extends Notification
  
     public function toMail(object $notifiable): MailMessage
     {
-        $firstName = explode(' ', trim($notifiable->nome))[0];
+         $name = $notifiable->getFilamentName();
 
         return (new MailMessage)
             ->subject(Lang::get('Notificação de Redefinição de Email'))
-            ->greeting(Lang::get('Olá') . " {$firstName},")
+            ->greeting(Lang::get('Olá') . " {$name},")
             ->line(Lang::get('Você está recebendo este e-mail porque recebemos uma solicitação de redefinição de email para a sua conta.'))
             ->line(Lang::get('Seu novo email foi cadastrado com sucesso. Acesse a área do candidato pelo link abaixo'))
             ->action(Lang::get('Área do Candidato'), route('filament.candidato.pages.dashboard'))->success()

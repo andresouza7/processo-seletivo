@@ -2,150 +2,72 @@
 
 namespace App\Filament\Candidato\Pages;
 
-use App\Models\InscricaoPessoa;
-use Filament\Forms;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
+use App\Filament\Candidato\Pages\Auth\Cadastro;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
+use App\Models\Candidate;
+use BackedEnum;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
-class MeusDados extends Page implements Forms\Contracts\HasForms
+class MeusDados extends Page implements HasSchemas
 {
-    use Forms\Concerns\InteractsWithForms;
+    use InteractsWithSchemas;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-    protected static ?string $navigationGroup = 'Área do Candidato';
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedUserCircle;
+    protected static string | UnitEnum | null $navigationGroup = 'Área do Candidato';
     protected static ?int $navigationSort = 3;
-
-    protected static string $view = 'filament.candidato.pages.meus-dados';
-
-    public InscricaoPessoa $record;
+    protected string $view = 'filament.candidato.pages.meus-dados';
+    public Candidate $record;
     public ?array $data = [];
 
     public function mount(): void
     {
-        $record = InscricaoPessoa::where('idpessoa', Auth::guard('candidato')->id())->firstOrFail();
+        $record       = Candidate::where('id', Auth::guard('candidato')->id())->firstOrFail();
         $this->record = $record;
+
         $this->form->fill([
             ...$record->toArray(),
-            'usar_nome_social' => !blank($record->nome_social),
+            'has_social_name' => filled($record->social_name),
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->statePath('data')
-            ->schema([
-                Section::make('Dados Pessoais')
-                    ->description('Entre em contato com a DIPS para alterar estes dados')
-                    ->columns(3)
-                    ->schema([
-                        Forms\Components\TextInput::make('nome')
-                            ->label('Nome')
-                            ->disabled()
-                            ->required(),
-
-                        Forms\Components\TextInput::make('mae')
-                            ->label('Nome da Mãe')
-                            ->disabled()
-                            ->required(),
-
-                        Forms\Components\TextInput::make('cpf')
-                            ->label('CPF')
-                            ->disabled()
-                            ->required(),
-
-                        Forms\Components\TextInput::make('ci')
-                            ->label('RG')
-                            ->disabled()
-                            ->required(),
-
-                        Forms\Components\DatePicker::make('data_nascimento')
-                            ->label('Data de Nascimento')
-                            ->disabled()
-                            ->required(),
-
-                        Forms\Components\TextInput::make('email')
-                            ->label('Email')
-                            ->disabled()
-                            ->email()
-                            ->required(),
-
-                        Forms\Components\Select::make('sexo')
-                            ->label('Sexo')
-                            ->options([
-                                'F' => 'Feminino',
-                                'M' => 'Masculino',
-                                'O' => 'Outro'
-                            ])
-                            ->reactive()
-                            ->required()
-                            ->columnSpanFull(), // Ocupa linha inteira
-
-                        Forms\Components\TextInput::make('identidade_genero')
-                            ->label('Identidade de Gênero')
-                            ->visible(fn($get) => $get('sexo') === 'O')
-                            ->required()
-                            ->columnSpanFull(),
-
-                        Forms\Components\Checkbox::make('usar_nome_social')
-                            ->label('Usar nome social')
-                            ->reactive()
-                            ->columnSpanFull(),
-
-                        Forms\Components\TextInput::make('nome_social')
-                            ->label('Nome Social')
-                            ->visible(fn($get) => $get('usar_nome_social'))
-                            ->required()
-                            ->columnSpanFull(),
-                    ]),
-
-                Section::make('Endereço e contato')
-                    ->columns(2)
-                    ->schema([
-                        Forms\Components\TextInput::make('endereco')
-                            ->label('Endereço')
-                            ->required(),
-                        Forms\Components\TextInput::make('numero')
-                            ->label('Número')
-                            ->numeric()
-                            ->required(),
-                        Forms\Components\TextInput::make('complemento')
-                            ->label('Complemento'),
-                        Forms\Components\TextInput::make('bairro')
-                            ->label('Bairro')
-                            ->required(),
-                        Forms\Components\TextInput::make('cidade')
-                            ->label('Cidade')
-                            ->required(),
-                        Forms\Components\TextInput::make('telefone')
-                            ->label('Telefone')
-                            ->required(),
-                    ]),
-
-                Actions::make([
-                    Action::make('submit')
-                        ->label('Salvar')
-                        ->submit('save')
-                        ->color('primary'),
-                ])
+            ->components([
+                ...Cadastro::getProfileSections($this->record),
+                ...$this->formActions(),
             ]);
+    }
+
+    /**
+     * Form Actions
+     */
+    private function formActions(): array
+    {
+        return [
+            Actions::make([
+                Action::make('submit')
+                    ->label('Salvar')
+                    ->submit('save') // method to call
+                    ->color('primary'),
+            ]),
+        ];
     }
 
     public function save()
     {
         $data = $this->form->getState();
 
-        if (!$data['usar_nome_social']) {
-            $data['nome_social'] = "";
-        }
-        if ($data['sexo'] !== 'O') {
-            $data['identidade_genero'] = "";
-        }
+        $data['social_name'] = $data['has_social_name'] ? $data['social_name'] : null;
 
         $this->record->update($data);
 

@@ -2,92 +2,56 @@
 
 namespace App\Services\MediaLibrary;
 
-use App\Models\Inscricao;
-use App\Models\ProcessoSeletivoAnexo;
-use App\Models\Recurso;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * Este gerador de caminhos personalizado define como os arquivos de mídia são armazenados
- * com base no modelo associado ao arquivo (media).
+ * Define onde os arquivos de mídia serão armazenados, conforme o modelo associado.
  *
- * Regras de armazenamento:
- * 
- * 1. Se o modelo for uma instância de:
- *    - ProcessoSeletivoAnexo: os arquivos são armazenados em:
- *        {tipo}/{diretorio}/{idprocesso_seletivo_anexo}/
- * 
- *    - Inscricao: os arquivos são armazenados em:
- *        {tipo}/{diretorio}/inscricoes/
- * 
- *    - Recurso: os arquivos são armazenados em:
- *        {tipo}/{diretorio}/recursos/
+ * Regras:
+ * 1. Se o model tiver o relacionamento `process`, usa a estrutura:
+ *      {type}/{diretorio}
+ * 2. Caso contrário, gera um caminho padrão com hash MD5:
+ *      media/md5(media_id + app_key)
+ * 3. Conversões e imagens responsivas ficam em:
+ *      conversions/ e responsive-images/
  *
- * 2. Se o modelo não for um dos acima, um caminho padrão é gerado com um hash MD5:
- *        md5(media_id + app_key)
+ * Observações:
+ * - Anexos de processo seletivo são públicos.
+ * - Demais arquivos ficam no disco local, acessíveis apenas por rota protegida.
  *
- * 3. Conversões e imagens responsivas são armazenadas dentro dos respectivos diretórios:
- *    - conversions/
- *    - responsive-images/
- *
- * Observação:
- * - Arquivos vinculados ao modelo ProcessoSeletivoAnexo são de acesso público na web.
- * - Arquivos vinculados a outros modelos são armazenados localmente e acessados
- *   somente através de uma rota protegida personalizada.
- *
- * Exemplo de caminho gerado:
- *    "seletivo2025/documentos/inscricoes/conversions/"
+ * Exemplo:
+ *   "editais/01_2025/"
  */
 
 class CustomPathGenerator implements PathGenerator
 {
     public function getPath(Media $media): string
     {
-        return $this->getBasePath($media);
+        return $this->basePath($media);
     }
 
     public function getPathForConversions(Media $media): string
     {
-        return $this->getBasePath($media) . 'conversions/';
+        return $this->basePath($media) . 'conversions/';
     }
 
     public function getPathForResponsiveImages(Media $media): string
     {
-        return $this->getBasePath($media) . 'responsive-images/';
+        return $this->basePath($media) . 'responsive-images/';
     }
 
-    private function getBasePath(Media $media): string
+    private function basePath(Media $media): string
     {
-        if (! $this->shouldHaveCustomPath($media)) {
-            return $this->getDefaultPath($media);
-        }
+        $process = $media->model?->process;
 
-        $model = $media->model;
-
-        $subfolder = match (true) {
-            $model instanceof ProcessoSeletivoAnexo => $model->getAttribute('idprocesso_seletivo_anexo'),
-            $model instanceof Inscricao             => 'inscricoes',
-            $model instanceof Recurso               => 'recursos',
-            default                                 => 'outros',
-        };
-
-        $processoSeletivo = optional($model->getAttribute('processo_seletivo'));
-        $tipo = optional($processoSeletivo->tipo)->chave;
-        $diretorio = $processoSeletivo->diretorio;
-
-        return "{$tipo}/{$diretorio}/{$subfolder}/";
+        return $process
+            ? "{$process->type->slug}/{$process->directory}/"
+            : $this->defaultPath($media);
     }
 
-    private function getDefaultPath(Media $media): string
+    private function defaultPath(Media $media): string
     {
         return md5($media->id . config('app.key'));
-    }
-
-    private function shouldHaveCustomPath(Media $media): bool
-    {
-        return $media->model instanceof ProcessoSeletivoAnexo
-            || $media->model instanceof Inscricao
-            || $media->model instanceof Recurso;
     }
 }

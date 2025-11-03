@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
@@ -23,11 +24,9 @@ class User extends Authenticatable implements FilamentUser
      * @var array<int, string>
      */
     protected $fillable = [
-        'pessoa_id',
         'name',
         'email',
         'password',
-        'role'
     ];
 
     /**
@@ -55,7 +54,9 @@ class User extends Authenticatable implements FilamentUser
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults();
+        return LogOptions::defaults()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     public function canAccessPanel(Panel $panel): bool
@@ -65,5 +66,17 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return true;
+    }
+
+    // recursos atribuídos a um avaliador externo
+    public function appeals()
+    {
+        return $this->belongsToMany(Appeal::class);
+    }
+
+    // histórico de atribuições de perfis
+    public function userRoles()
+    {
+        return $this->hasMany(UserRole::class);
     }
 }

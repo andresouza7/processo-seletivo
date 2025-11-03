@@ -20,13 +20,13 @@ class Arquivo extends Model
         'height',
         'name',
         'mimetype',
-        'descricao',
+        'description',
         'codname'
     ];
 
     public $timestamps = false;
     
-    public function processo_seletivo_anexo() {
-        return $this->hasOne(ProcessoSeletivoAnexo::class, 'idarquivo', 'idarquivo');
+    public function process_attachment() {
+        return $this->hasOne(ProcessAttachment::class, 'idarquivo', 'idarquivo');
     }
 }

@@ -1,16 +1,39 @@
+
 .fi-sidebar-header,
-.fi-topbar nav {
-    background: #017840 !important;
+.fi-topbar {
+    background: #017840;
 }
 
-.fi-icon-btn-icon {
+.fi-topbar-open-sidebar-btn .fi-icon {
     stroke: white;
     stroke-width: 2;
 }
+
 .fi-logo {
     color: white !important;
 }
 
 html {
     scroll-behavior: smooth;
+}
+
+    /* Por padrão, o texto não aparece */
+.mobile-title {
+    display: none;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 10px;
+    color: #fff;
+}
+
+/* Mobile: até 768px mostra o texto e ajusta a busca */
+@media (max-width: 768px) {
+    .mobile-title {
+        display: inline-block;
+    }
+
+    /* reduz a largura da busca global */
+    .fi-global-search {
+        max-width: 150px; /* ajuste conforme ficar melhor */
+    }
 }

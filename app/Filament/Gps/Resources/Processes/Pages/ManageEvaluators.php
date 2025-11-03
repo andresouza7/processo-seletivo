@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Filament\Gps\Resources\Processes\Pages;
+
+use App\Filament\Gps\Resources\Appeals\Schemas\AppealForm;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use App\Filament\Gps\Resources\Processes\ProcessResource;
+use App\Models\Appeal;
+use App\Models\User;
+use Filament\Actions;
+use Filament\Actions\BulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+
+class ManageEvaluators extends ManageRelatedRecords
+{
+    protected static string $resource = ProcessResource::class;
+    protected static ?string $title = 'Gerenciar Recursos';
+    protected static ?string $navigationLabel = 'Recursos';
+    protected static string $relationship = 'appeals';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
+
+    public function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([]);
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([]);
+    }
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->recordTitleAttribute('id')
+            ->inverseRelationship('evaluator')
+            ->heading('Avaliadores')
+            ->description('Atribua os recursos aos seus respectivos avaliadores')
+            ->modelLabel('Avaliador')
+            ->columns([
+                TextColumn::make('id')
+                    ->label('ID Recurso'),
+                TextColumn::make('appeal_stage.title')
+                    ->label('Etapa')
+                    ->searchable(),
+                TextColumn::make('application.position.description')
+                    ->label('Vaga'),
+            ])
+            ->filters([
+                Tables\Filters\Filter::make('pendentes')
+                    ->label('Pendentes')
+                    ->query(fn(Builder $query) =>
+                    $query->whereNull('evaluator_id')
+                        ->whereNull('result'))
+                    ->default(),
+            ])
+            ->recordActions([
+                // ViewAction::make(),
+                Actions\Action::make('atribuirAvaliador')
+                    ->label('Atribuir Avaliador')
+                    ->visible(fn($record) => auth()->user()->can('update', $record))
+                    ->schema([
+                        Forms\Components\Select::make('evaluator_id')
+                            ->label('Usuário')
+                            ->options(User::query()->pluck('name', 'id'))
+                            ->searchable()
+                            ->required(),
+                    ])
+                    ->action(function (array $data, $record) {
+                        $record->update([
+                            'evaluator_id' => $data['evaluator_id'],
+                        ]);
+                        $this->sendAssociateNotification();
+                    }),
+                EditAction::make()
+                    ->label('Responder')
+                    ->schema(fn($schema) => AppealForm::configure($schema))
+                    ->mutateDataUsing(function(array $data) {
+                        $data['evaluator_id'] = auth()->id();
+                        $data['evaluated_at'] = now();
+
+                        return $data;
+                    }),
+                Actions\Action::make('linkInscricao')
+                    ->label('Inscrição')
+                    ->url(fn($record) => ManageApplications::getUrl([
+                        'record' => $record->process,
+                        'search' => $record->application->code
+                    ]))
+                    ->openUrlInNewTab()
+            ])
+            ->toolbarActions([
+                // Bulk Assign Evaluator
+                BulkAction::make('atribuirAvaliador')
+                    ->label('Atribuir Avaliador')
+                    ->icon('heroicon-o-user-plus')
+                    ->schema([
+                        Forms\Components\Select::make('evaluator_id')
+                            ->label('Usuário')
+                            ->options(User::query()->pluck('name', 'id'))
+                            ->searchable()
+                            ->required(),
+                    ])
+                    ->deselectRecordsAfterCompletion()
+                    ->action(function (array $data, $records) {
+                        Appeal::whereIn('id', $records->pluck('id'))
+                            ->update(['evaluator_id' => $data['evaluator_id']]);
+                        $this->sendSuccessfulNotification('Avaliador vinculado com sucesso.');
+                    }),
+
+                // Bulk Remove Evaluator
+                BulkAction::make('removerAvaliador')
+                    ->label('Remover Avaliador')
+                    ->icon('heroicon-o-user-minus')
+                    ->requiresConfirmation()
+                    ->deselectRecordsAfterCompletion()
+                    ->action(function ($records) {
+                        Appeal::whereIn('id', $records->pluck('id'))
+                            ->update(['evaluator_id' => null]);
+                        $this->sendSuccessfulNotification('Avaliador desvinculado com sucesso.');
+                    }),
+            ]);
+    }
+
+    private function sendSuccessfulNotification(string $message)
+    {
+        Notification::make()
+            ->title('Salvo')
+            ->body($message)
+            ->success()
+            ->send();
+    }
+}

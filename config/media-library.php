@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\ProcessoSeletivoAnexo;
+use App\Models\ProcessAttachment;
 use App\Services\MediaLibrary\CustomPathGenerator;
 
 return [
@@ -9,7 +9,8 @@ return [
      * The disk on which to store added files and derived images by default. Choose
      * one or more of the disks you've configured in config/filesystems.php.
      */
-    'disk_name' => env('MEDIA_DISK', 'public'),
+    'disk_name' => env('FILESYSTEM_DISK', 'local'),
+    // 'disk_name' => env('MEDIA_DISK', 'public'),
 
     /*
      * The maximum file size of an item in bytes.
@@ -86,7 +87,7 @@ return [
      * Here you can specify which path generator should be used for the given class.
      */
     'custom_path_generators' => [
-        // ProcessoSeletivoAnexo::class => CustomPathGenerator::class
+        // ProcessAttachment::class => CustomPathGenerator::class
         // or
         // 'model_morph_alias' => PathGenerator::class
     ],

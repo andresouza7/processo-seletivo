@@ -2,16 +2,28 @@
 
 namespace App\Providers;
 
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use App\ActivityLog\ActivityLogger;
+use App\Enums\RolesEnum;
 use App\Listeners\LogAuthEvent;
+use App\Models\Candidate;
+use App\Models\User;
 use App\Services\ActivityLog\CustomCauserResolver;
+use App\Services\SelectionProcess\RoleService;
+use Carbon\Carbon;
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
+use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Table;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\CauserResolver;
 
@@ -35,12 +47,37 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
-        // User::observe(UserObserver::class);
+        // bypasses authorization for admin role
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole(RolesEnum::ADMIN) ? true : null;
+        });
 
+        // logs user logins and registration attempts
         Event::listen(Login::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Logout::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Registered::class, [LogAuthEvent::class, 'handle']);
         Event::listen(Failed::class, [LogAuthEvent::class, 'handle']);
+
+        // expires user permission if expiry date is due
+        Event::listen(Login::class, function ($event) {
+            $user = $event->user;
+
+            $service = app(RoleService::class);
+
+            $service->revokeExpiredUserRoles($user);
+        });
+
+        // sets some filament components default behavior
+        Fieldset::configureUsing(fn(Fieldset $fieldset) => $fieldset
+            ->columnSpanFull());
+
+        Grid::configureUsing(fn(Grid $grid) => $grid
+            ->columnSpanFull());
+
+        Section::configureUsing(fn(Section $section) => $section
+            ->columnSpanFull());
+
+        Table::configureUsing(fn(Table $table) => $table
+            ->emptyStateDescription(null));
     }
 }

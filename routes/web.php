@@ -1,34 +1,31 @@
 <?php
 
-use App\Http\Controllers\AnexoController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\MediaController;
+use App\Models\Process;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return (Auth::guard('candidato')->check())
-        ? redirect()->route('filament.candidato.pages.dashboard')
-        : redirect()->route('filament.app.pages.dashboard');
-})->name('home');
+// rota que entrega o arquivo
+Route::get('/media/{uuid}', [MediaController::class, 'serveMedia'])
+    ->name('media.serve')
+    ->middleware('signed');
 
-Route::get('/login', function () {
-    // Check if the user is coming from a protected route
-    $protectedRoutes = [
-        route('log-viewer.index'),
-    ];
+// rota que gera URL temporária sob demanda
+Route::get('/media/temp/{media}', [MediaController::class, 'getTemporaryUrl'])
+    ->name('media.temp')
+    ->middleware('auth'); // só usuários logados
 
-    if (in_array(url()->previous(), $protectedRoutes)) {
-        return redirect()->route('filament.admin.auth.login');
-    }
+Route::get('/media/view/{attachment}', [MediaController::class, 'showProcessAttachment'])
+    ->name('media.view');
 
-    // Default behavior
-    return redirect()->route('filament.candidato.auth.login');
-})->name('login');
+Route::get('/sitemap.xml', function () {
+    $processes = Process::where('is_published', true)->limit(15)->get();
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/recurso/{id}/anexo', [AnexoController::class, 'showAnexoRecurso'])
-        ->name('recurso.anexo');
-    Route::get('/inscricoes/{id}/anexo', [AnexoController::class, 'showAnexoInscricao'])
-        ->name('inscricoes.anexo');
-    Route::get('/inscricoes/{id}/laudo', [AnexoController::class, 'showAnexoLaudoMedico'])
-        ->name('inscricoes.laudo');
+    $xml = view('sitemap', [
+        'processes' => $processes,
+    ])->render();
+
+    return Response::make($xml, 200, [
+        'Content-Type' => 'application/xml',
+    ]);
 });
