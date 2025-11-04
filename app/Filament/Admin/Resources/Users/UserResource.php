@@ -50,7 +50,7 @@ class UserResource extends Resource
                         TextInput::make('role')
                             ->formatStateUsing(
                                 fn($record, RoleService $service) =>
-                                $service->getUserRole($record)?->name ?? 'nenhum'
+                                $record ? $service->getUserRole($record)->name : 'nenhum'
                             )
                             ->label('Perfil')
                             ->readOnly()
