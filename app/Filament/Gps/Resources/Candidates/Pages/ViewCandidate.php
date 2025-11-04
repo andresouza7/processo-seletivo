@@ -26,7 +26,7 @@ class ViewCandidate extends ViewRecord
                 ->schema([
                     TextInput::make('email')->label('Novo Email')->email()->required()->unique('candidates', 'email', ignoreRecord: true)
                 ])
-                ->action(function (Candidate $record, array $data, ResetCandidatoEmailAction $action) {
+                ->action(function (Candidate $record, array $data) {
 
                     $action = new ResetCandidatoEmailAction();
                     $action->reset($record, $data['email'], fn() => Notification::make()
