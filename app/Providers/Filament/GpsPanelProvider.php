@@ -26,10 +26,13 @@ class GpsPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $path = env('APP_ENV') === 'production' ? '' : 'gps';
+        $domain = env('APP_ENV') === 'production' ? env('GPS_URL') : null;
+
         return $panel
             ->id('gps')
-            ->path('')
-            ->domain(env('GPS_URL'))
+            ->path($path)
+            ->domain($domain)
             ->viteTheme('resources/css/filament/gps/theme.css')
             // ->maxContentWidth(Width::Full)
             ->login()
