@@ -26,17 +26,15 @@ class ViewCandidate extends ViewRecord
                 ->schema([
                     TextInput::make('email')->label('Novo Email')->email()->required()->unique('candidates', 'email', ignoreRecord: true)
                 ])
-                ->action(function (Candidate $record, array $data, ResetCandidatoPasswordAction $resetAction) {
+                ->action(function (Candidate $record, array $data, ResetCandidatoEmailAction $action) {
 
-                    $resetAction->reset($record);
-
-                    // $action = new ResetCandidatoEmailAction();
-                    // $action->reset($record, $data['email'], fn() => Notification::make()
-                    //     ->title('Email alterado com sucesso')
-                    //     ->body('Uma senha temporária foi enviada para o email do usuário')
-                    //     ->success()
-                    //     ->persistent()
-                    //     ->send());
+                    $action = new ResetCandidatoEmailAction();
+                    $action->reset($record, $data['email'], fn() => Notification::make()
+                        ->title('Email alterado com sucesso')
+                        ->body('Uma senha temporária foi enviada para o email do usuário')
+                        ->success()
+                        ->persistent()
+                        ->send());
                 })
                 ->color('danger')
                 ->icon('heroicon-o-key'),
