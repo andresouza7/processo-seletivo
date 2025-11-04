@@ -28,7 +28,8 @@ class GpsPanelProvider extends PanelProvider
     {
         return $panel
             ->id('gps')
-            ->path('gps')
+            ->path('')
+            ->domain(env('GPS_URL'))
             ->viteTheme('resources/css/filament/gps/theme.css')
             // ->maxContentWidth(Width::Full)
             ->login()

@@ -31,6 +31,7 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('')
+            ->domain(env('SITE_URL'))
             ->login()
             ->viteTheme('resources/css/filament/app/theme.css')
             ->renderHook(
