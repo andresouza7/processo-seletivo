@@ -48,9 +48,10 @@ class UserResource extends Resource
                             ->label('Nome'),
                         TextInput::make('email'),
                         TextInput::make('role')
+                            ->hiddenOn('create')
                             ->formatStateUsing(
                                 fn($record, RoleService $service) =>
-                                $record ? $service->getUserRole($record)->name : 'nenhum'
+                                $record ? $service->getUserRole($record)?->name : 'nenhum'
                             )
                             ->label('Perfil')
                             ->readOnly()
