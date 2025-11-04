@@ -83,7 +83,7 @@ class ManageEvaluators extends ManageRelatedRecords
                         $record->update([
                             'evaluator_id' => $data['evaluator_id'],
                         ]);
-                        $this->sendAssociateNotification();
+                        $this->sendSuccessfulNotification('Avaliador vinculado com sucesso.');
                     }),
                 EditAction::make()
                     ->label('Responder')
