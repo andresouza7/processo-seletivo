@@ -59,6 +59,7 @@ class ProcessForm
                     ])->columns(3),
 
                     RichEditor::make('description')
+                        ->disableToolbarButtons(['attachFiles'])
                         ->required()
                         ->label('Descrição'),
 
