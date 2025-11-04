@@ -68,9 +68,9 @@ class ProcessesTable
                 // ForceDeleteAction::make()
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }
