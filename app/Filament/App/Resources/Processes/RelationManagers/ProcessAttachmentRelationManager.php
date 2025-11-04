@@ -17,6 +17,8 @@ class ProcessAttachmentRelationManager extends RelationManager
 {
     protected static string $relationship = 'attachments';
 
+    protected static bool $shouldSkipAuthorization = true;
+
     public function table(Table $table): Table
     {
 
