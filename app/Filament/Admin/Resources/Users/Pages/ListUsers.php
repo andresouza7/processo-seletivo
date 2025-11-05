@@ -26,6 +26,8 @@ class ListUsers extends ListRecords
                     FileUpload::make('file')
                         ->label('Upload Manual do Usuário')
                         ->disk('public')
+                        ->rules(['file', 'mimes:pdf', 'max:15000'])
+                        ->acceptedFileTypes(['application/pdf'])
                         ->getUploadedFileNameForStorageUsing(fn() => 'manual-usuario.pdf')
                 ])
                 ->successNotification(
