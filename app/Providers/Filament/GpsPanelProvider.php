@@ -13,6 +13,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -20,12 +21,15 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class GpsPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        // condiciona o subdomínio apenas para o servidor de produção
+        // pois não é possível acessar esse caminho no ambiente local
         $path = env('APP_ENV') === 'production' ? '' : 'gps';
         $domain = env('APP_ENV') === 'production' ? env('GPS_URL') : null;
 
@@ -34,6 +38,10 @@ class GpsPanelProvider extends PanelProvider
             ->path($path)
             ->domain($domain)
             ->viteTheme('resources/css/filament/gps/theme.css')
+            ->renderHook(
+                PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+                fn(): string => Blade::render(view('filament.gps.botao-manual')->render())
+            )
             // ->maxContentWidth(Width::Full)
             ->login()
             ->brandName('GPS - UEAP')
