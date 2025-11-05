@@ -22,6 +22,7 @@ use App\Filament\Gps\Resources\Processes\Pages\ViewProcess;
 use App\Filament\Gps\Resources\Processes\Schemas\ProcessForm;
 use App\Filament\Gps\Resources\Processes\Schemas\ProcessInfolist;
 use App\Filament\Gps\Resources\Processes\Tables\ProcessesTable;
+use App\Http\Middleware\CheckProcessAccess;
 use App\Http\Middleware\CheckProcessRole;
 use App\Models\Process;
 use Filament\Navigation\NavigationGroup;
@@ -45,6 +46,8 @@ class ProcessResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'title';
     protected static int $globalSearchResultsLimit = 20;
+
+    protected static string | array $routeMiddleware = [CheckProcessAccess::class];
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
