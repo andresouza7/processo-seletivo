@@ -4,11 +4,13 @@ namespace App\Filament\Gps\Resources\Processes\Schemas;
 
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
@@ -121,6 +123,61 @@ class ProcessForm
                         ->defaultItems(function ($record) {
                             return $record->attachment_fields ?? [];
                         }),
+
+                    Repeater::make('formFields')
+                        ->label('Campos do Formulário')
+                        ->relationship() // usa o hasMany 'formFields'
+                        ->orderColumn('order')
+                        ->schema([
+                            TextInput::make('label')
+                                ->label('Rótulo do campo')
+                                ->required()
+                                ->maxLength(255),
+
+                            TextInput::make('name')
+                                ->label('Nome do campo (slug)')
+                                ->helperText('Use letras minúsculas e underscore, ex: cpf, data_nascimento')
+                                ->required()
+                                ->maxLength(255),
+
+                            Select::make('type')
+                                ->label('Tipo do campo')
+                                ->required()
+                                ->options([
+                                    'text' => 'Texto',
+                                    'textarea' => 'Área de texto',
+                                    'number' => 'Número',
+                                    'email' => 'E-mail',
+                                    'date' => 'Data',
+                                    'select' => 'Seleção (Select)',
+                                    'checkbox' => 'Caixa de seleção',
+                                    'file' => 'Upload de arquivo',
+                                ])
+                                ->reactive(),
+
+                            Toggle::make('required')
+                                ->label('Obrigatório')
+                                ->default(false),
+
+                            KeyValue::make('options')
+                                ->label('Opções (para selects)')
+                                ->keyLabel('Valor')
+                                ->valueLabel('Rótulo')
+                                ->visible(fn(callable $get) => $get('type') === 'select')
+                                ->helperText('Adicione as opções disponíveis para o campo select.')
+                                ->columnSpanFull(),
+
+                            Textarea::make('helper_text')
+                                ->label('Texto de ajuda (opcional)')
+                                ->columnSpanFull()
+                                ->visible(fn(callable $get) => $get('type') !== 'checkbox')
+                                ->placeholder('Ex: Informe seu CPF sem pontos e traços'),
+                        ])
+                        ->columns(2)
+                        ->collapsible()
+                        ->defaultItems(0)
+                        ->addActionLabel('Adicionar novo campo'),
+
                 ])
             ])->columns(2);
     }

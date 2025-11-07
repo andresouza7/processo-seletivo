@@ -96,6 +96,11 @@ class Process extends Model
         return $this->hasMany(AppealStage::class);
     }
 
+    public function formFields()
+    {
+        return $this->hasMany(FormField::class);
+    }
+
     public function scopeInscricoesAbertas(Builder $query): void
     {
         $query->where('is_published', true)

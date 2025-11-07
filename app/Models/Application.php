@@ -30,6 +30,11 @@ class Application extends Model implements HasMedia
         'submitted_at',
         'requires_assistance',
         'assistance_details',
+        'form_data'
+    ];
+
+    protected $casts = [
+        'form_data' => 'array',
     ];
 
     protected static function booted()
