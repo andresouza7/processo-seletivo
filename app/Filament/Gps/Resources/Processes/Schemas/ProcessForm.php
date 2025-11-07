@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules\Unique;
+use Illuminate\Support\Str;
 
 class ProcessForm
 {
@@ -128,17 +129,18 @@ class ProcessForm
                         ->label('Campos do Formulário')
                         ->relationship() // usa o hasMany 'formFields'
                         ->orderColumn('order')
+                        ->reorderableWithDragAndDrop()
                         ->schema([
                             TextInput::make('label')
-                                ->label('Rótulo do campo')
+                                ->label('Nome do campo')
                                 ->required()
                                 ->maxLength(255),
 
-                            TextInput::make('name')
-                                ->label('Nome do campo (slug)')
-                                ->helperText('Use letras minúsculas e underscore, ex: cpf, data_nascimento')
-                                ->required()
-                                ->maxLength(255),
+                            // TextInput::make('name')
+                            //     ->label('Nome do campo (slug)')
+                            //     ->helperText('Use letras minúsculas e underscore, ex: cpf, data_nascimento')
+                            //     ->required()
+                            //     ->maxLength(255),
 
                             Select::make('type')
                                 ->label('Tipo do campo')
@@ -150,14 +152,15 @@ class ProcessForm
                                     'email' => 'E-mail',
                                     'date' => 'Data',
                                     'select' => 'Seleção (Select)',
-                                    'checkbox' => 'Caixa de seleção',
+                                    'checkbox' => 'Caixa de seleção (Checkbox)',
                                     'file' => 'Upload de arquivo',
                                 ])
                                 ->reactive(),
 
                             Toggle::make('required')
                                 ->label('Obrigatório')
-                                ->default(false),
+                                ->default(false)
+                                ->columnSpanFull(),
 
                             KeyValue::make('options')
                                 ->label('Opções (para selects)')
@@ -173,9 +176,16 @@ class ProcessForm
                                 ->visible(fn(callable $get) => $get('type') !== 'checkbox')
                                 ->placeholder('Ex: Informe seu CPF sem pontos e traços'),
                         ])
+                        ->itemLabel(fn(array $state): ?string => $state['label'] ?? null)
                         ->columns(2)
                         ->collapsible()
+                        ->collapsed()
                         ->defaultItems(0)
+                        ->mutateRelationshipDataBeforeCreateUsing(function($data) {
+                            $data['name'] = Str::slug($data['label']);
+
+                            return $data;
+                        })
                         ->addActionLabel('Adicionar novo campo'),
 
                 ])

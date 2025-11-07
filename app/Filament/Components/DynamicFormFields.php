@@ -18,11 +18,6 @@ class DynamicFormFields extends Field
 
     public mixed $processId = null;
 
-    public static function make(?string $name = null): static
-    {
-        return parent::make($name);
-    }
-
     public function processId(int|string|Closure|null $id): static
     {
         $this->processId = $id;
@@ -33,10 +28,8 @@ class DynamicFormFields extends Field
     {
         parent::setUp();
 
-        $this->dehydrated(false);
-
         // Aqui está o segredo: gerar os campos dinamicamente
-        $this->childComponents(fn () => $this->resolveDynamicFields());
+        $this->childComponents(fn() => $this->resolveDynamicFields());
     }
 
     protected function resolveDynamicFields(): array
@@ -51,46 +44,46 @@ class DynamicFormFields extends Field
             ->orderBy('order')
             ->get();
 
-        return $fields->map(fn ($field) => $this->buildField($field))->toArray();
+        return $fields->map(fn($field) => $this->buildField($field))->toArray();
     }
 
     protected function buildField(FormField $field)
-{
-    $fieldPath = "form_data.{$field->name}"; // <-- ESSENCIAL
+    {
+        $fieldPath = "form_data.{$field->name}"; // <-- ESSENCIAL
 
-    return match ($field->type) {
-        'text' => TextInput::make($fieldPath)
-            ->label($field->label),
+        return match ($field->type) {
+            'text' => TextInput::make($fieldPath)
+                ->label($field->label),
 
-        'textarea' => Textarea::make($fieldPath)
-            ->label($field->label),
+            'textarea' => Textarea::make($fieldPath)
+                ->label($field->label),
 
-        'number' => TextInput::make($fieldPath)
-            ->numeric()
-            ->label($field->label),
+            'number' => TextInput::make($fieldPath)
+                ->numeric()
+                ->label($field->label),
 
-        'email' => TextInput::make($fieldPath)
-            ->email()
-            ->label($field->label),
+            'email' => TextInput::make($fieldPath)
+                ->email()
+                ->label($field->label),
 
-        'date' => DatePicker::make($fieldPath)
-            ->label($field->label),
+            'date' => DatePicker::make($fieldPath)
+                ->label($field->label),
 
-        'select' => Select::make($fieldPath)
-            ->label($field->label)
-            ->options($field->options ?? []),
+            'select' => Select::make($fieldPath)
+                ->label($field->label)
+                ->options($field->options ?? []),
 
-        'checkbox' => Checkbox::make($fieldPath)
-            ->label($field->label),
+            'checkbox' => Checkbox::make($fieldPath)
+                ->label($field->label),
 
-        'file' => FileUpload::make($fieldPath)
-            ->label($field->label)
-            ->directory("applications/{$field->process_id}")
-            ->preserveFilenames(),
+            'file' => AttachmentUpload::make($fieldPath)
+                ->helperText($field->helper_text)
+                ->label($field->label)
+                ->mediaName($field->label)
+                ->disk('local'),
 
-        default => TextInput::make($fieldPath)
-            ->label($field->label),
-    };
-}
-
+            default => TextInput::make($fieldPath)
+                ->label($field->label),
+        };
+    }
 }

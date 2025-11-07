@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('type');           // Ex: text, textarea, file, select, checkbox, number, date, etc.
             $table->boolean('required')->default(false);
             $table->json('options')->nullable(); // Ex: ["Sim","Não"] para selects
+            $table->string('helper_text')->nullable();
             $table->integer('order')->default(0);
             $table->timestamps();
         });

@@ -17,6 +17,7 @@ class FormField extends Model
         'required',
         'options',
         'order',
+        'helper_text'
     ];
 
     protected $casts = [
