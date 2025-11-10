@@ -4,6 +4,7 @@ namespace App\Filament\Exports;
 
 use Throwable;
 use App\Models\Application;
+use App\Models\FormField;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -14,11 +15,11 @@ class ApplicationExporter extends Exporter
 
     public static function getColumns(): array
     {
-        return [
+        $columns = [
             // Dados Inscrição
             ExportColumn::make('link_inscricao')
                 ->label('Link Inscrição')
-                ->state(function (Application $record): ?string {
+                ->state(function (Application $record) {
                     try {
                         $url = route(
                             'filament.gps.resources.processos.inscritos',
@@ -66,6 +67,20 @@ class ApplicationExporter extends Exporter
             ExportColumn::make('candidate.email')->label('Email'),
             ExportColumn::make('candidate.phone')->label('Telefone'),
         ];
+
+        // 🔄 Agora adiciona dinamicamente os campos personalizados
+        $formFields = FormField::select('name', 'label')->distinct()->get();
+
+        foreach ($formFields as $field) {
+            $columns[] = ExportColumn::make("form_data->{$field->name}")
+                ->label($field->label)
+                ->state(function (Application $record) use ($field) {
+                    $data = $record->form_data ?? [];
+                    return $data[$field->name] ?? '';
+                });
+        }
+
+        return $columns;
     }
 
     public static function getCompletedNotificationBody(Export $export): string

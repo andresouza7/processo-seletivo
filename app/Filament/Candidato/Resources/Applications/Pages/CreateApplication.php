@@ -26,6 +26,7 @@ class CreateApplication extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        // dd($data);
         $data['code'] = Application::generateUniqueCode();
         $data['candidate_id'] = Auth::guard('candidato')->id();
 

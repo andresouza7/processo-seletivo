@@ -48,6 +48,7 @@ class CheckProcessAccess
         if ($user->hasRole(['admin', 'dips'])) return true;
 
         $userRoleIds = $user->roles->pluck('id');
+        
         return $process->roles()->whereIn('roles.id', $userRoleIds)->exists();
     }
 }

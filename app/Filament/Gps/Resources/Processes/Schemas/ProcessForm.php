@@ -4,11 +4,15 @@ namespace App\Filament\Gps\Resources\Processes\Schemas;
 
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
@@ -16,6 +20,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules\Unique;
+use Illuminate\Support\Str;
 
 class ProcessForm
 {
@@ -98,8 +103,108 @@ class ProcessForm
                     Checkbox::make('multiple_applications')
                         ->label('Permitir inscrição em mais de uma vaga'),
 
+                    Repeater::make('position')
+                        ->relationship()
+                        ->label('Vagas')
+                        ->table([
+                            TableColumn::make('Descrição')->alignStart()->markAsRequired(),
+                            TableColumn::make('Código')->alignStart()->width('180px')
+                        ])
+                        ->schema([
+                            TextInput::make('description')->label('Descrição')->required(),
+                            TextInput::make('code')->label('Código'),
+                        ])
+                        ->deletable(false)
+                        ->minItems(1)
+                        ->compact()
+                        ->columnSpanFull(),
+
+                    Repeater::make('formFields')
+                        ->label('Campos do Formulário')
+                        ->relationship() // usa o hasMany 'formFields'
+                        ->orderColumn('order')
+                        ->reorderableWithDragAndDrop()
+                        ->schema([
+                            TextInput::make('label')
+                                ->label('Nome do campo')
+                                ->required()
+                                ->maxLength(255),
+
+                            // TextInput::make('name')
+                            //     ->label('Nome do campo (slug)')
+                            //     ->helperText('Use letras minúsculas e underscore, ex: cpf, data_nascimento')
+                            //     ->required()
+                            //     ->maxLength(255),
+
+                            Select::make('type')
+                                ->label('Tipo do campo')
+                                ->required()
+                                ->options([
+                                    'text' => 'Texto',
+                                    'textarea' => 'Área de texto',
+                                    'number' => 'Número',
+                                    'email' => 'E-mail',
+                                    'date' => 'Data',
+                                    'select' => 'Seleção (Select)',
+                                    'checkbox' => 'Caixa de seleção (Checkbox)',
+                                    // 'file' => 'Upload de arquivo',
+                                ])
+                                ->reactive(),
+
+                            Toggle::make('required')
+                                ->label('Obrigatório')
+                                ->default(false)
+                                ->columnSpanFull(),
+
+                            Repeater::make('options')
+                                ->label('Opções (para selects)')
+                                ->table([
+                                    TableColumn::make('Opção')->alignStart()
+                                ])
+                                ->schema([
+                                    TextInput::make('label')
+                                        ->label('Rótulo')
+                                        ->afterStateUpdated(function (callable $set, $state) {
+                                            $set('value', Str::slug($state));
+                                        }),
+                                    Hidden::make('value'),
+                                ])
+                                ->visible(fn(callable $get) => $get('type') === 'select')
+                                ->helperText('Adicione as opções disponíveis para o campo select.')
+                                ->compact()
+                                ->columns(1)
+                                ->columnSpanFull(),
+
+                            // KeyValue::make('options')
+                            //     ->label('Opções (para selects)')
+                            //     ->keyLabel('Valor')
+                            //     ->editableKeys(false)
+                            //     ->editableValues(false)
+                            //     ->valueLabel('Rótulo')
+                            //     ->visible(fn(callable $get) => $get('type') === 'select')
+                            //     ->helperText('Adicione as opções disponíveis para o campo select.')
+                            //     ->columnSpanFull(),
+
+                            Textarea::make('helper_text')
+                                ->label('Texto de ajuda (opcional)')
+                                ->columnSpanFull()
+                                ->visible(fn(callable $get) => $get('type') !== 'checkbox')
+                                ->placeholder('Ex: Informe seu CPF sem pontos e traços'),
+                        ])
+                        ->itemLabel(fn(array $state): ?string => $state['label'] ?? null)
+                        ->columns(2)
+                        ->collapsible()
+                        ->collapsed()
+                        ->defaultItems(0)
+                        ->mutateRelationshipDataBeforeCreateUsing(function ($data) {
+                            $data['name'] = Str::slug($data['label']);
+
+                            return $data;
+                        })
+                        ->addActionLabel('Adicionar novo campo'),
+
                     Repeater::make('attachment_fields')
-                        ->label('Documentos Requeridos')
+                        ->label('Documentos Anexos')
                         ->schema([
                             TextInput::make('item')
                                 ->label('Nome do Documento')
@@ -117,11 +222,12 @@ class ProcessForm
                         ->columnSpanFull()
                         // ->minItems(1)
                         ->maxItems(15)
-                        ->addActionLabel('Adicionar Documento')
+                        ->addActionLabel('Adicionar documento')
                         ->defaultItems(function ($record) {
                             return $record->attachment_fields ?? [];
                         }),
-                ])
+
+                ]),
             ])->columns(2);
     }
 }

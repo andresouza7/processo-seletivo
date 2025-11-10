@@ -3,6 +3,7 @@
 namespace App\Filament\Candidato\Resources\Applications\Schemas;
 
 use App\Filament\Components\AttachmentUpload;
+use App\Filament\Components\DynamicFormFields;
 use App\Models\Position;
 use App\Models\Process;
 use Filament\Forms\Components\Checkbox;
@@ -83,6 +84,12 @@ class ApplicationForm
     private static function getDocumentosSection(): array
     {
         return [
+            DynamicFormFields::make('')
+                ->label('Campos do formulário')
+                ->columnSpanFull()
+                ->hidden(fn(Get $get) => blank($get('process_id')))
+                ->processId(fn(Get $get) => $get('process_id')),
+
             Group::make()
                 ->hidden(fn(Get $get) => empty($get('attachment_fields')))
                 ->schema(function (Get $get) {
