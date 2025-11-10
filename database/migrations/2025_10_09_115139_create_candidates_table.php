@@ -43,11 +43,11 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        // Candidate::factory()->create([
-        //     'name' => 'Candidato',
-        //     'cpf' => '12345678910',
-        //     'password' => bcrypt('123456')
-        // ]);
+        Candidate::factory()->create([
+            'name' => 'Candidato',
+            'cpf' => '12345678910',
+            'password' => bcrypt('123456')
+        ]);
     }
 
     /**

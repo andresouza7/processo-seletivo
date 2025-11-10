@@ -28,7 +28,7 @@ class DynamicFormFields extends Field
     {
         parent::setUp();
 
-        // Aqui está o segredo: gerar os campos dinamicamente
+        // Gerar os campos dinamicamente
         $this->childComponents(fn() => $this->resolveDynamicFields());
     }
 
@@ -53,36 +53,51 @@ class DynamicFormFields extends Field
 
         return match ($field->type) {
             'text' => TextInput::make($fieldPath)
+                ->required($field->required)
                 ->label($field->label),
 
             'textarea' => Textarea::make($fieldPath)
+                ->required($field->required)
                 ->label($field->label),
 
             'number' => TextInput::make($fieldPath)
+                ->required($field->required)
                 ->numeric()
                 ->label($field->label),
 
             'email' => TextInput::make($fieldPath)
+                ->required($field->required)
                 ->email()
                 ->label($field->label),
 
             'date' => DatePicker::make($fieldPath)
+                ->required($field->required)
                 ->label($field->label),
-
+                
             'select' => Select::make($fieldPath)
+                ->required($field->required)
                 ->label($field->label)
-                ->options($field->options ?? []),
+                ->options(function () use ($field) {
+                    return collect($field->options ?? [])
+                        ->mapWithKeys(fn($opt) => [
+                            $opt['value'] => $opt['label'],
+                        ])
+                        ->toArray();
+                }),
 
             'checkbox' => Checkbox::make($fieldPath)
+                ->required($field->required)
                 ->label($field->label),
 
             'file' => AttachmentUpload::make($fieldPath)
+                ->required($field->required)
                 ->helperText($field->helper_text)
                 ->label($field->label)
                 ->mediaName($field->label)
                 ->disk('local'),
 
             default => TextInput::make($fieldPath)
+                ->required($field->required)
                 ->label($field->label),
         };
     }

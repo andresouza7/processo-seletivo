@@ -4,8 +4,10 @@ namespace App\Filament\Gps\Resources\Processes\Schemas;
 
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -101,29 +103,21 @@ class ProcessForm
                     Checkbox::make('multiple_applications')
                         ->label('Permitir inscrição em mais de uma vaga'),
 
-                    Repeater::make('attachment_fields')
-                        ->label('Documentos Requeridos')
-                        ->schema([
-                            TextInput::make('item')
-                                ->label('Nome do Documento')
-                                ->maxLength(100)
-                                ->required(), //causou problemas com testes (factory), mas deixa como está
-                            Textarea::make('description')
-                                ->label('Descrição')
-                                ->maxLength(250)
-                                ->required()
+                    Repeater::make('position')
+                        ->relationship()
+                        ->label('Vagas')
+                        ->table([
+                            TableColumn::make('Descrição')->alignStart()->markAsRequired(),
+                            TableColumn::make('Código')->alignStart()->width('180px')
                         ])
-                        ->itemLabel(fn(array $state): ?string => $state['item'] ?? null)
-                        ->cloneable()
+                        ->schema([
+                            TextInput::make('description')->label('Descrição')->required(),
+                            TextInput::make('code')->label('Código'),
+                        ])
+                        ->deletable(false)
+                        ->minItems(1)
                         ->compact()
-                        ->collapsed()
-                        ->columnSpanFull()
-                        // ->minItems(1)
-                        ->maxItems(15)
-                        ->addActionLabel('Adicionar Documento')
-                        ->defaultItems(function ($record) {
-                            return $record->attachment_fields ?? [];
-                        }),
+                        ->columnSpanFull(),
 
                     Repeater::make('formFields')
                         ->label('Campos do Formulário')
@@ -153,7 +147,7 @@ class ProcessForm
                                     'date' => 'Data',
                                     'select' => 'Seleção (Select)',
                                     'checkbox' => 'Caixa de seleção (Checkbox)',
-                                    'file' => 'Upload de arquivo',
+                                    // 'file' => 'Upload de arquivo',
                                 ])
                                 ->reactive(),
 
@@ -162,13 +156,34 @@ class ProcessForm
                                 ->default(false)
                                 ->columnSpanFull(),
 
-                            KeyValue::make('options')
+                            Repeater::make('options')
                                 ->label('Opções (para selects)')
-                                ->keyLabel('Valor')
-                                ->valueLabel('Rótulo')
+                                ->table([
+                                    TableColumn::make('Opção')->alignStart()
+                                ])
+                                ->schema([
+                                    TextInput::make('label')
+                                        ->label('Rótulo')
+                                        ->afterStateUpdated(function (callable $set, $state) {
+                                            $set('value', Str::slug($state));
+                                        }),
+                                    Hidden::make('value'),
+                                ])
                                 ->visible(fn(callable $get) => $get('type') === 'select')
                                 ->helperText('Adicione as opções disponíveis para o campo select.')
+                                ->compact()
+                                ->columns(1)
                                 ->columnSpanFull(),
+
+                            // KeyValue::make('options')
+                            //     ->label('Opções (para selects)')
+                            //     ->keyLabel('Valor')
+                            //     ->editableKeys(false)
+                            //     ->editableValues(false)
+                            //     ->valueLabel('Rótulo')
+                            //     ->visible(fn(callable $get) => $get('type') === 'select')
+                            //     ->helperText('Adicione as opções disponíveis para o campo select.')
+                            //     ->columnSpanFull(),
 
                             Textarea::make('helper_text')
                                 ->label('Texto de ajuda (opcional)')
@@ -181,14 +196,38 @@ class ProcessForm
                         ->collapsible()
                         ->collapsed()
                         ->defaultItems(0)
-                        ->mutateRelationshipDataBeforeCreateUsing(function($data) {
+                        ->mutateRelationshipDataBeforeCreateUsing(function ($data) {
                             $data['name'] = Str::slug($data['label']);
 
                             return $data;
                         })
                         ->addActionLabel('Adicionar novo campo'),
 
-                ])
+                    Repeater::make('attachment_fields')
+                        ->label('Documentos Anexos')
+                        ->schema([
+                            TextInput::make('item')
+                                ->label('Nome do Documento')
+                                ->maxLength(100)
+                                ->required(), //causou problemas com testes (factory), mas deixa como está
+                            Textarea::make('description')
+                                ->label('Descrição')
+                                ->maxLength(250)
+                                ->required()
+                        ])
+                        ->itemLabel(fn(array $state): ?string => $state['item'] ?? null)
+                        ->cloneable()
+                        ->compact()
+                        ->collapsed()
+                        ->columnSpanFull()
+                        // ->minItems(1)
+                        ->maxItems(15)
+                        ->addActionLabel('Adicionar documento')
+                        ->defaultItems(function ($record) {
+                            return $record->attachment_fields ?? [];
+                        }),
+
+                ]),
             ])->columns(2);
     }
 }
