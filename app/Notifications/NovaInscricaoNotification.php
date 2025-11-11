@@ -32,7 +32,7 @@ class NovaInscricaoNotification extends Notification implements ShouldQueue
             ->line('Código da inscrição: ' . $this->application->code)
             ->line('Processo Seletivo: ' . $this->application->process->title)
             ->line('Vaga: ' . $this->application->position->description)
-            ->line('Tipo: ' . $this->application->quota->description)
+            ->line('Tipo: ' . $this->application->quota?->description)
             ->action('Visualizar Inscrição', route('filament.candidato.resources.inscricoes.view', $this->application))->success()
             ->line('Para qualquer dúvida, entrar em contato com dips@ueap.edu.br');
     }

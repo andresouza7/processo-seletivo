@@ -30,9 +30,9 @@ class ApplicationForm
                         ->columnSpan(['default' => 1, 'lg' => 1])
                         ->schema([
                             ...self::getProcessoSeletivoSection(),
-                            ...self::getDocumentosSection(),
                             ...self::getVagaSection(),
                             ...self::getTipoVagaSection(),
+                            ...self::getDocumentosSection(),
                             ...self::getAtendimentoSection(),
                             ...self::getIsencaoSection(),
                             ...self::getTermosSection(),
@@ -148,13 +148,15 @@ class ApplicationForm
         return [
             Select::make('quota_id')
                 ->label('Tipo da vaga')
-                ->disabled(fn($get) => blank($get('process_id')))
+                ->visible(function (callable $get) {
+                    return Process::where('id', $get('process_id'))->whereHas('quotas')->exists();
+                })
                 ->required()
                 ->columnSpanFull()
                 ->live()
                 ->options(function (callable $get) {
                     $process = Process::find($get('process_id'));
-                    return $process?->type->quotas()->get()
+                    return $process?->quotas()->get()
                         ->mapWithKeys(fn($p) => [$p->id => "{$p->description}"])
                         ->toArray();
                 }),
@@ -174,6 +176,10 @@ class ApplicationForm
     {
         return [
             Checkbox::make('requires_assistance')
+                ->visible(function (callable $get) {
+                    $process = Process::find($get('process_id'));
+                    return (bool) $process?->has_assistance;
+                })
                 ->label('Solicitar atendimento especial')
                 ->columnSpanFull()
                 ->live()

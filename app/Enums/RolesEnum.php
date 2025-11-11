@@ -9,4 +9,6 @@ enum RolesEnum: string
     case DIPS = 'dips';
     case ASCOM = 'ascom';
     case PROGRAD = 'prograd';
+    case PROEXT = 'proext';
+    case PROPESP = 'propesp';
 }

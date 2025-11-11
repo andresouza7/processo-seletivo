@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('quota_id')->nullable()->constrained();
             $table->boolean('requires_assistance')->default(false);
             $table->text('assistance_details')->nullable();
+            $table->jsonb('form_data')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

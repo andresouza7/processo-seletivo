@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('application_start_date');
             $table->date('application_end_date');
             $table->boolean('has_fee')->default(false)->nullable();
+            $table->boolean('has_assistance')->default(false)->nullable();
             $table->jsonb('attachment_fields')->nullable();
             $table->boolean('multiple_applications')->default(false)->nullable();
             $table->timestamps();

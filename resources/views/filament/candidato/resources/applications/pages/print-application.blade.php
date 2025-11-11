@@ -67,7 +67,7 @@
                     <div><strong>Inscrição:</strong> {{ $record->code }}</div>
                     <div><strong>Processo Seletivo:</strong> {{ $record->process->title }}</div>
                     <div><strong>Vaga:</strong> {{ $record->position->description }}</div>
-                    <div><strong>Tipo de Vaga:</strong> {{ $record->quota->description }}</div>
+                    <div><strong>Tipo de Vaga:</strong> {{ $record->quota?->description }}</div>
                 </div>
             </div>
 

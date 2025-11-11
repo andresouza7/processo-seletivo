@@ -38,6 +38,7 @@ class Process extends Model
         'application_start_date',
         'application_end_date',
         'has_fee',
+        'has_assistance',
         'multiple_applications',
         'attachment_fields'
     ];
@@ -94,6 +95,10 @@ class Process extends Model
     public function appeal_stage()
     {
         return $this->hasMany(AppealStage::class);
+    }
+
+    public function quotas() {
+        return $this->belongsToMany(Quota::class);
     }
 
     public function formFields()

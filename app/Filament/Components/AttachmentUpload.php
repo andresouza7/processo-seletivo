@@ -13,6 +13,7 @@ class AttachmentUpload extends SpatieMediaLibraryFileUpload
         // Apply your defaults once, but still return a full component instance
         $instance
             ->maxFiles(1)
+            // ->placeholder('Arraste e solte o arquivo ou clique aqui')
             ->required()
             ->hint('(máx. 2MB)')
             ->rules(['file', 'mimes:pdf', 'max:2048'])

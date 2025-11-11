@@ -58,7 +58,7 @@ class ApplicationPolicy
      */
     public function delete($user, Application $application): bool
     {
-        return $user->hasRole(RolesEnum::ADMIN);
+        return false;
     }
 
     /**
@@ -66,7 +66,7 @@ class ApplicationPolicy
      */
     public function restore($user, Application $application): bool
     {
-        return $user->hasRole(RolesEnum::ADMIN);
+        return false;
     }
 
     /**
@@ -74,6 +74,6 @@ class ApplicationPolicy
      */
     public function forceDelete($user, Application $application): bool
     {
-        return $user->hasRole(RolesEnum::ADMIN);
+        return false;
     }
 }

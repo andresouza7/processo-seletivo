@@ -13,12 +13,7 @@ class ProcessTypeForm
         return $schema
             ->components([
                 TextInput::make('description')->label('Descrição'),
-                TextInput::make('slug'),
-                Select::make('quota_id')
-                    ->label('Tipos da vaga')
-                    ->multiple()
-                    ->preload()
-                    ->relationship('quotas', 'description')
+                TextInput::make('slug')
             ]);
     }
 }

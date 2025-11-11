@@ -2,6 +2,7 @@
 
 namespace App\Filament\Gps\Resources\Processes\Schemas;
 
+use App\Models\Quota;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
@@ -68,24 +69,7 @@ class ProcessForm
                         ->required()
                         ->label('Descrição'),
 
-                    Select::make('roles')
-                        ->label('Administradores do PS')
-                        ->relationship('roles', 'name', modifyQueryUsing: fn(Builder $query) => $query->whereNotIn('name', ['admin', 'avaliador']))
-                        ->multiple()
-                        ->searchable()
-                        ->preload()
-                        ->required(),
-
                     Group::make([
-                        Fieldset::make('Período de Publicação')
-                            ->schema([
-                                DatePicker::make('publication_start_date')
-                                    ->label('Início')
-                                    ->required(),
-                                DatePicker::make('publication_end_date')
-                                    ->label('Fim')
-                                    ->required()
-                            ])->columnSpan(1),
                         Fieldset::make('Período de Inscrições')
                             ->schema([
                                 DatePicker::make('application_start_date')
@@ -95,17 +79,40 @@ class ProcessForm
                                     ->label('Fim')
                                     ->required(),
                             ])->columnSpan(1),
+                        Fieldset::make('Período de Publicação')
+                            ->schema([
+                                DatePicker::make('publication_start_date')
+                                    ->label('Início')
+                                    ->required(),
+                                DatePicker::make('publication_end_date')
+                                    ->label('Fim')
+                                    ->required()
+                            ])->columnSpan(1),
                     ])->columns(2),
 
                     Checkbox::make('has_fee')
-                        ->label('Permitir isenção da taxa de inscrição'),
+                        ->label('Ofertar isenção da taxa de inscrição')
+                        ->helperText('Para certames com taxa de inscrição. Será disponibilizado campo para upload do comprovante.'),
+                        
+                    Checkbox::make('has_assistance')
+                        ->label('Ofertar atendimento especial')
+                        ->helperText('Para certames com aplicação de prova. Será disponibilizado campo para especificação do atendimento.'),
 
-                    Checkbox::make('multiple_applications')
-                        ->label('Permitir inscrição em mais de uma vaga'),
+                    Select::make('roles')
+                        ->label('Compartilhar com:')
+                       ->helperText('Apenas o autor e usuários com o mesmo perfil podem gerenciar o processo seletivo. Compartilhe para extender esse privilégio a outros perfis.')
+                        ->relationship('roles', 'name', modifyQueryUsing: fn(Builder $query) => $query->whereNotIn('name', ['admin', 'avaliador']))
+                        ->multiple()
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                ])
+                    ->heading('Dados do Processo'),
 
+                Section::make([
                     Repeater::make('position')
                         ->relationship()
-                        ->label('Vagas')
+                        ->hiddenLabel()
                         ->table([
                             TableColumn::make('Descrição')->alignStart()->markAsRequired(),
                             TableColumn::make('Código')->alignStart()->width('180px')
@@ -115,12 +122,31 @@ class ProcessForm
                             TextInput::make('code')->label('Código'),
                         ])
                         ->deletable(false)
+                        ->addActionLabel('Adicionar vaga')
                         ->minItems(1)
                         ->compact()
                         ->columnSpanFull(),
 
+                    Checkbox::make('multiple_applications')
+                        ->label('Permitir inscrição em mais de uma vaga')
+                        ->helperText('Aceitará a última inscrição por vaga'),
+
+                    Select::make('quota_id')
+                        ->label('Disponibilizar Cotas')
+                        ->helperText('O edital aplica políticas de inclusão')
+                        ->placeholder('Selecione as opções')
+                        ->relationship('quotas', 'description')
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                ])
+                    ->heading('Gerenciar Vagas')
+                    ->description('Vagas ofertadas no edital. Por padrão, apenas a última inscrição do candidato é validada, independente da vaga.'),
+
+                Section::make([
                     Repeater::make('formFields')
-                        ->label('Campos do Formulário')
+                        // ->label('Campos do Formulário')
+                        ->hiddenLabel()
                         ->relationship() // usa o hasMany 'formFields'
                         ->orderColumn('order')
                         ->reorderableWithDragAndDrop()
@@ -202,9 +228,14 @@ class ProcessForm
                             return $data;
                         })
                         ->addActionLabel('Adicionar novo campo'),
+                ])
+                    ->heading('Campos do Formulário')
+                    ->description('Personalize o formulário de inscrição com perguntas e respostas customizadas.'),
 
+                Section::make([
                     Repeater::make('attachment_fields')
-                        ->label('Documentos Anexos')
+                        // ->label('Documentos Anexos')
+                        ->hiddenLabel()
                         ->schema([
                             TextInput::make('item')
                                 ->label('Nome do Documento')
@@ -226,8 +257,11 @@ class ProcessForm
                         ->defaultItems(function ($record) {
                             return $record->attachment_fields ?? [];
                         }),
+                ])
+                    ->heading('Anexos do Candidato')
+                    ->description('Exigir o envio de documentos em formato PDF no momento da inscrição.')
 
-                ]),
+
             ])->columns(2);
     }
 }

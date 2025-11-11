@@ -36,15 +36,11 @@ return new class extends Migration
 
         // 3️⃣ Atribuir permissões aos papéis
         Role::where('name', RolesEnum::AVALIADOR)->first()?->givePermissionTo([
-            PermissionsEnum::CONSULTAR_RECURSO,
             PermissionsEnum::AVALIAR_RECURSO,
         ]);
 
         Role::where('name', RolesEnum::DIPS)->first()?->givePermissionTo([
             PermissionsEnum::GERENCIAR_PROCESSO,
-            PermissionsEnum::GERENCIAR_ANEXO,
-            PermissionsEnum::GERENCIAR_ETAPA_RECURSO,
-            PermissionsEnum::GERENCIAR_VAGA,
             PermissionsEnum::ATRIBUIR_AVALIADOR,
             PermissionsEnum::AVALIAR_RECURSO,
             PermissionsEnum::CONSULTAR_INSCRICAO,
@@ -53,15 +49,10 @@ return new class extends Migration
 
         Role::where('name', RolesEnum::ASCOM)->first()?->givePermissionTo([
             PermissionsEnum::GERENCIAR_PROCESSO,
-            PermissionsEnum::GERENCIAR_ANEXO,
-            PermissionsEnum::GERENCIAR_ETAPA_RECURSO,
         ]);
 
         Role::where('name', RolesEnum::PROGRAD)->first()?->givePermissionTo([
             PermissionsEnum::GERENCIAR_PROCESSO,
-            PermissionsEnum::GERENCIAR_ANEXO,
-            PermissionsEnum::GERENCIAR_ETAPA_RECURSO,
-            PermissionsEnum::GERENCIAR_VAGA,
             PermissionsEnum::ATRIBUIR_AVALIADOR,
             PermissionsEnum::CONSULTAR_INSCRICAO,
             PermissionsEnum::CONSULTAR_CANDIDATO,

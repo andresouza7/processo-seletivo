@@ -18,7 +18,7 @@ class AppealPolicy
      */
     public function viewAny(AuthUser $user): bool
     {
-        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_RECURSO, PermissionsEnum::AVALIAR_RECURSO, PermissionsEnum::ATRIBUIR_AVALIADOR]);
+        return $user->hasAnyPermission([PermissionsEnum::AVALIAR_RECURSO, PermissionsEnum::ATRIBUIR_AVALIADOR]);
     }
 
     /**
@@ -26,7 +26,7 @@ class AppealPolicy
      */
     public function view(AuthUser $user, Appeal $appeal): bool
     {
-        return $user->hasAnyPermission([PermissionsEnum::CONSULTAR_RECURSO, PermissionsEnum::AVALIAR_RECURSO, PermissionsEnum::ATRIBUIR_AVALIADOR]);
+        return $user->hasAnyPermission([PermissionsEnum::AVALIAR_RECURSO, PermissionsEnum::ATRIBUIR_AVALIADOR]);
     }
 
     /**

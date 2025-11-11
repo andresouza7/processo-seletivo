@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('applications', function (Blueprint $table) {
-            $table->jsonb('form_data')->nullable();
+        Schema::create('process_quota', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('process_id')->constrained();
+            $table->foreignId('quota_id')->constrained();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('applications', function (Blueprint $table) {
-            $table->dropColumn('form_data');
-        });
+        Schema::dropIfExists('process_quota');
     }
 };

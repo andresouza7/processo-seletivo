@@ -23,8 +23,4 @@ class ProcessType extends Model
         'description',
         'slug'
     ];
-
-    public function quotas() {
-        return $this->belongsToMany(Quota::class);
-    }
 }

@@ -94,7 +94,7 @@ class ProcessResource extends Resource
                         EditProcess::class,
                         ManageAttachments::class,
                         ManageApplications::class,
-                        ManagePositions::class,
+                        // ManagePositions::class,
                     ]),
                 ]),
 
