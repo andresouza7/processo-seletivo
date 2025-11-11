@@ -103,8 +103,8 @@ return new class extends Migration
                     'model_has_roles_role_model_type_primary'
                 );
             }
-            
-            $table->unique(['role_id', 'model_id']);
+
+            $table->unique(['role_id', 'model_type', 'model_id']);
         });
 
         Schema::create($tableNames['role_has_permissions'], static function (Blueprint $table) use ($tableNames, $pivotRole, $pivotPermission) {

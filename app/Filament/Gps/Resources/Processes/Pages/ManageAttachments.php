@@ -25,6 +25,7 @@ class ManageAttachments extends ManageRelatedRecords
     protected static ?string $title = 'Gerenciar Anexos';
     protected static ?string $navigationLabel = 'Anexos';
     protected static string $relationship = 'attachments';
+    protected static ?string $breadcrumb = 'Anexos';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-paper-clip';
 
     public function form(Schema $schema): Schema

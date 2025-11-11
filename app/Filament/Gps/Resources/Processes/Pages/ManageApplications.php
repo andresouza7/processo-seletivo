@@ -158,6 +158,7 @@ class ManageApplications extends ManageRelatedRecords
                     ->label('Exportar para planilha')
                     ->color('primary')
                     ->exporter(ApplicationExporter::class)
+                    ->columnMappingColumns(3)
                     ->options(['process_id' => $this->getOwnerRecord()->id])
             ])
             ->recordActions([

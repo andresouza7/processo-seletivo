@@ -5,6 +5,7 @@ namespace App\Filament\Exports;
 use Throwable;
 use App\Models\Application;
 use App\Models\FormField;
+use App\Models\Process;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -15,7 +16,7 @@ class ApplicationExporter extends Exporter
 
     public static function getColumns(): array
     {
-        $columns = [
+        return [
             // Dados Inscrição
             ExportColumn::make('link_inscricao')
                 ->label('Link Inscrição')
@@ -66,13 +67,76 @@ class ApplicationExporter extends Exporter
             ExportColumn::make('candidate.city')->label('Cidade'),
             ExportColumn::make('candidate.email')->label('Email'),
             ExportColumn::make('candidate.phone')->label('Telefone'),
-        ];
+            ExportColumn::make('form_data.campo-teste')->label('campo teste'),
 
-        // 🔄 Agora adiciona dinamicamente os campos personalizados
+        ];
+    }
+
+    public static function getDynamicColumns(): array
+    {
+        $columns = [];
+
+        $processId = null;
+
+        ExportColumn::make('hidden')->formatStateUsing(function(array $options) use ($processId) {
+            $processId = $options['process_id'];
+        });
+
+        if (!$processId) {
+            return $columns;
+        }
+
+        // 🔍 Busca os campos do processo
+        $fields = FormField::where('process_id', $processId)->get();
+
+        foreach ($fields as $field) {
+            $columns[] = ExportColumn::make($field->name)
+                ->label($field->label)
+                ->formatStateUsing(function ($state, $record) use ($field) {
+                    // 🔎 Busca o Application correspondente
+                    $application = \App\Models\Application::find($record->id);
+
+                    if (!$application) {
+                        return '';
+                    }
+
+                    // 🔍 Procura o valor dentro do JSON form_data
+                    $formData = $application->form_data ?? [];
+
+                    // Se o form_data tiver estrutura tipo: [ ['label' => 'Nome', 'value' => 'João'], ... ]
+                    // fazemos uma busca pelo label:
+                    foreach ($formData as $entry) {
+                        if (
+                            isset($entry['label'], $entry['value']) &&
+                            $entry['label'] === $field->label
+                        ) {
+                            return $entry['value'];
+                        }
+                    }
+
+                    // Caso não encontre
+                    return '';
+                });
+        }
+
+        return $columns;
+    }
+
+    public function getCachedColumns(): array
+    {
+        if (isset($this->cachedColumns)) {
+            return $this->cachedColumns;
+        }
+
+        // 🧱 Pega as colunas fixas
+        $baseColumns = static::getColumns();
+
+        // 🔄 Adiciona os campos dinâmicos do banco
+        $dynamicColumns = [];
         $formFields = FormField::select('name', 'label')->distinct()->get();
 
         foreach ($formFields as $field) {
-            $columns[] = ExportColumn::make("form_data->{$field->name}")
+            $dynamicColumns[] = ExportColumn::make("form_data->{$field->name}")
                 ->label($field->label)
                 ->state(function (Application $record) use ($field) {
                     $data = $record->form_data ?? [];
@@ -80,7 +144,14 @@ class ApplicationExporter extends Exporter
                 });
         }
 
-        return $columns;
+        // 🔗 Junta tudo
+        $allColumns = array_merge($baseColumns, $dynamicColumns);
+
+        // 💾 Cacheia para não refazer a consulta
+        return $this->cachedColumns = array_reduce($allColumns, function (array $carry, ExportColumn $column): array {
+            $carry[$column->getName()] = $column->exporter($this);
+            return $carry;
+        }, []);
     }
 
     public static function getCompletedNotificationBody(Export $export): string
